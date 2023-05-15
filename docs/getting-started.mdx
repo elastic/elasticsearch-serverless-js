@@ -1,0 +1,108 @@
+---
+id: gettingStarted
+slug: /serverless-js/docs/getting-started
+title: Getting started with the Serverless Node.js client
+description: This page contains quickstart information about the Serverless Node.js client.
+date: 2023-04-27
+tags:
+  - serverless
+  - node.js
+  - javascript
+  - client
+  - docs
+  - getting started
+---
+
+This page guides you through the installation process of the Serverless Node.js client, shows you how to instantiate the client, and how to perform basic Elasticsearch operations with it.
+
+## Requirements
+
+* Node.js 16 or higher installed on your system.
+
+## Installation
+
+### Using the command line
+
+You can install the Elasticsearch Serverless Node.js client with the following 
+commands:
+
+```bash
+npm install @elastic/elasticsearch-serverless
+```
+
+## Instantiate a client
+
+You can instantiate a client by running the following command:
+
+```js
+const { Client } = require('@elastic/elasticsearch-serverless')
+const client = new Client({
+  cloud: { id: '<cloud-id>' },
+  auth: { apiKey: 'base64EncodedKey' }
+})
+```
+
+You can find the Elasticsearch endpoint on the Cloud deployment management page.
+
+<DocImage url="images/copy-endpoint.gif" alt="Copy the endpoint for Elasticsearch"/>
+
+You can create a new API Key under **Stack Management** > **Security**:
+
+<DocImage url="images/setup-api-key.gif" alt="Create and copy Apy Key"/>
+
+## Using the API
+
+After you instantiate a client with your API key and Elasticsearch endpoint, you can start ingesting documents into the Elasticsearch Service.
+You can use the Bulk API for this.
+This API enables you to index, update, and delete several documents in one request.
+
+### Creating an index and ingesting documents
+
+You can call the `bulk` helper API with a list of documents and a handler for what action to perform on each handler. 
+
+The following is an example of bulk indexing some classic books into the `books` index:
+
+```js
+// First we build our data:
+const body = [
+  {name: "Snow Crash", "author": "Neal Stephenson", "release_date": "1992-06-01", "page_count": 470},
+  {name: "Revelation Space", "author": "Alastair Reynolds", "release_date": "2000-03-15", "page_count": 585},
+  {name: "1984", "author": "George Orwell", "release_date": "1985-06-01", "page_count": 328},
+  {name: "Fahrenheit 451", "author": "Ray Bradbury", "release_date": "1953-10-15", "page_count": 227},
+  {name: "Brave New World", "author": "Aldous Huxley", "release_date": "1932-06-01", "page_count": 268},
+  {name: "The Handmaid's Tale", "author": "Margaret Atwood", "release_date": "1985-06-01", "page_count": 311}
+]
+
+// Then we send the data using the bulk API helper:
+const result = await client.helpers.bulk({
+  datasource: body,
+  onDocument (doc) {
+    // instructs the bulk indexer to add each item in `body` to the books index
+    // you can optionally inspect each `doc` object to alter what action is performed per document
+    return {
+      index: { _index: 'books' }
+    }
+  }
+})
+```
+
+### Searching
+
+Now that some data is available, you can search your documents using the **Search API**:
+
+```js
+const result = await client.search({
+  index: 'books',
+  query: {
+    match: {
+      author: 'Ray Bradbury'
+    }
+  }
+})
+console.log(result.hits.hits)
+```
+
+## TypeScript
+
+The Node.js client is implemented in TypeScript, so any IDEs supporting TypeScript-based autocompletion should automatically find and load the appropriate declaration files in the package's `lib` directory.
+The source TypeScript can also be [viewed on GitHub](https://github.com/elastic/elasticsearch-serverless-js/tree/main/src).
