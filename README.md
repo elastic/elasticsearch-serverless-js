@@ -8,7 +8,14 @@ If you're looking to develop your Node.js application with Elastic Enterprise Se
 
 ## Installation
 
-This package is published to npm's public registry at `@elastic/elasticsearch-serverless`:
+:warning: The package is currently not published anywhere publicly, until it is in a stable state and ready for Elastic customers to start trying out.
+In the meantime, install directly from GitHub if you want to try it out:
+
+```shell
+npm install elastic/elasticsearch-serverless-js
+```
+
+When published, package will be available on npm's public registry at `@elastic/elasticsearch-serverless`:
 
 ```shell
 npm install @elastic/elasticsearch-serverless
