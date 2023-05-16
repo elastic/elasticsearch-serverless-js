@@ -8,8 +8,9 @@ If you're looking to develop your Node.js application with Elastic Enterprise Se
 
 ## Installation
 
-:warning: The package is currently not published anywhere publicly, until it is in a stable state and ready for Elastic customers to start trying out.
-In the meantime, install directly from GitHub if you want to try it out:
+:warning: The package is a prototype!
+It will not be published anywhere publicly until it is in a stable state and ready for Elastic customers to start trying out.
+In the meantime, Elastic emplyoees can install directly from GitHub to try it out:
 
 ```shell
 npm install elastic/elasticsearch-serverless-js

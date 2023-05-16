@@ -36,6 +36,16 @@ client.bulk(...)
 ----
 
 [discrete]
+=== clear_scroll
+Explicitly clears the search context for a scroll.
+
+{ref}/clear-scroll-api.html[Endpoint documentation]
+[source,ts]
+----
+client.clearScroll(...)
+----
+
+[discrete]
 === info
 Returns basic information about the cluster.
 
@@ -46,6 +56,36 @@ client.info(...)
 ----
 
 [discrete]
+=== msearch
+Allows to execute several search operations in one request.
+
+{ref}/search-multi-search.html[Endpoint documentation]
+[source,ts]
+----
+client.msearch(...)
+----
+
+[discrete]
+=== msearch_template
+Allows to execute several search template operations in one request.
+
+{ref}/search-multi-search.html[Endpoint documentation]
+[source,ts]
+----
+client.msearchTemplate(...)
+----
+
+[discrete]
+=== scroll
+Allows to retrieve a large numbers of results from a single search request.
+
+{ref}/search-request-body.html[Endpoint documentation]
+[source,ts]
+----
+client.scroll(...)
+----
+
+[discrete]
 === search
 Returns results matching a query.
 
@@ -53,5 +93,17 @@ Returns results matching a query.
 [source,ts]
 ----
 client.search(...)
+----
+
+[discrete]
+=== indices
+[discrete]
+==== refresh
+Performs the refresh operation in one or more indices.
+
+{ref}/indices-refresh.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.refresh(...)
 ----
 

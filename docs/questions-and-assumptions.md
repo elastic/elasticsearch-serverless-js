@@ -26,5 +26,19 @@ One of the outcomes of this work is coordinating with the docs team to create do
 
 ### Code generation
 
-The code for the current APIs `info`, `bulk` and `search` was taken from the Elasticsearch client's code for this prototype, but there'll be further work with code generation.
-As such, a lot of the code used in `@elastic/elasticsearch` is being duplicated here.
+The code for this prototype was generated using a process nearly identical to how we generate the Elasticsearch client's code, just filtering out most APIs except for a short list (see below).
+As such, a lot of the code used in `@elastic/elasticsearch` is duplicated here.
+There will be further work done on refining the code generation process when a serverless API spec is made available.
+
+The APIs available in this prototype include `bulk`, `search`, and `info`, along with several other APIs to support functions in the `helpers` namespace, which is nearly identical to [the `helpers` namespace in `@elastic/elasticsearch`](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/client-helpers.html).
+The full list of included APIs in this prototype:
+
+- `bulk`
+- `info`
+- `search`
+- `msearch`
+- `msearch_template`
+- `scroll`
+- `clear_scroll`
+- `indices.refresh`
+

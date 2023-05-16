@@ -198,7 +198,7 @@ export default class Helpers {
       throw new ResponseError(response)
     }
 
-    let scroll_id = response.body._scroll_id
+    let scroll_id: string | undefined
     let stop = false
     const clear = async (): Promise<void> => {
       stop = true
@@ -275,7 +275,7 @@ export default class Helpers {
    * @param {object} reqOptions - The client optional configuration for this request.
    * @return {object} The possible operations to run.
    */
-  msearch (options: MsearchHelperOptions = {}, reqOptions: TransportRequestOptions = {}): MsearchHelper {
+  msearch (options: MsearchHelperOptions = { searches: [] }, reqOptions: TransportRequestOptions = {}): MsearchHelper {
     const client = this[kClient]
     const {
       operations = 5,

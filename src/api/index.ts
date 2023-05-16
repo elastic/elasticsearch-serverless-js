@@ -27,25 +27,45 @@
 // and elastic/elastic-client-generator-js to regenerate this file again.
 
 import bulkApi from './api/bulk'
+import clearScrollApi from './api/clear_scroll'
+import IndicesApi from './api/indices'
 import infoApi from './api/info'
+import msearchApi from './api/msearch'
+import msearchTemplateApi from './api/msearch_template'
+import scrollApi from './api/scroll'
 import searchApi from './api/search'
 
 export default interface API {
   new(): API
   bulk: typeof bulkApi
+  clearScroll: typeof clearScrollApi
+  indices: IndicesApi
   info: typeof infoApi
+  msearch: typeof msearchApi
+  msearchTemplate: typeof msearchTemplateApi
+  scroll: typeof scrollApi
   search: typeof searchApi
 }
 
+const kIndices = Symbol('Indices')
 
 export default class API {
+  [kIndices]: symbol | null
   constructor () {
+    this[kIndices] = null
   }
 }
 
 API.prototype.bulk = bulkApi
+API.prototype.clearScroll = clearScrollApi
 API.prototype.info = infoApi
+API.prototype.msearch = msearchApi
+API.prototype.msearchTemplate = msearchTemplateApi
+API.prototype.scroll = scrollApi
 API.prototype.search = searchApi
 
-Object.defineProperties(API.prototype, 
+Object.defineProperties(API.prototype, {
+  indices: {
+    get () { return this[kIndices] === null ? (this[kIndices] = new IndicesApi(this.transport)) : this[kIndices] }
+  }
 })
