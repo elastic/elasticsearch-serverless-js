@@ -1,5 +1,5 @@
 ---
-id: gettingStarted
+id: gettingStartedServerlessJs
 slug: /serverless-js/docs/getting-started
 title: Getting started with the Serverless Node.js client
 description: This page contains quickstart information about the Serverless Node.js client.
@@ -13,7 +13,9 @@ tags:
   - getting started
 ---
 
-This page guides you through the installation process of the Serverless Node.js client, shows you how to instantiate the client, and how to perform basic Elasticsearch operations with it.
+This page guides you through the installation process of the Serverless Node.js 
+client, shows you how to instantiate the client, and how to perform basic 
+Elasticsearch operations with it.
 
 ## Requirements
 
@@ -52,15 +54,18 @@ You can create a new API Key under **Stack Management** > **Security**:
 
 ## Using the API
 
-After you instantiate a client with your API key and Elasticsearch endpoint, you can start ingesting documents into the Elasticsearch Service.
-You can use the Bulk API for this.
-This API enables you to index, update, and delete several documents in one request.
+After you instantiate a client with your API key and Elasticsearch endpoint, you 
+can start ingesting documents into the Elasticsearch Service. You can use the 
+Bulk API for this. This API enables you to index, update, and delete several 
+documents in one request.
 
 ### Creating an index and ingesting documents
 
-You can call the `bulk` helper API with a list of documents and a handler for what action to perform on each handler. 
+You can call the `bulk` helper API with a list of documents and a handler for 
+what action to perform on each handler. 
 
-The following is an example of bulk indexing some classic books into the `books` index:
+The following is an example of bulk indexing some classic books into the `books` 
+index:
 
 ```js
 // First we build our data:
@@ -88,7 +93,8 @@ const result = await client.helpers.bulk({
 
 ### Searching
 
-Now that some data is available, you can search your documents using the **Search API**:
+Now that some data is available, you can search your documents using the 
+**Search API**:
 
 ```js
 const result = await client.search({
@@ -104,5 +110,8 @@ console.log(result.hits.hits)
 
 ## TypeScript
 
-The Node.js client is implemented in TypeScript, so any IDEs supporting TypeScript-based autocompletion should automatically find and load the appropriate declaration files in the package's `lib` directory.
-The source TypeScript can also be [viewed on GitHub](https://github.com/elastic/elasticsearch-serverless-js/tree/main/src).
+The Node.js client is implemented in TypeScript, so any IDEs supporting 
+TypeScript-based autocompletion should automatically find and load the 
+appropriate declaration files in the package's `lib` directory.
+The source TypeScript can also be 
+[viewed on GitHub](https://github.com/elastic/elasticsearch-serverless-js/tree/main/src).
