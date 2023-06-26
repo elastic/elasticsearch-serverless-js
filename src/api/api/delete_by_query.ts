@@ -38,15 +38,15 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Explicitly clears the search context for a scroll.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/clear-scroll-api.html Elasticsearch API docs}
+  * Deletes documents matching the provided query.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/docs-delete-by-query.html Elasticsearch API docs}
   */
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ClearScrollResponse, unknown>>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = []
-  const acceptedBody: string[] = ['scroll_id']
+export default async function DeleteByQueryApi (this: That, params: T.DeleteByQueryRequest | TB.DeleteByQueryRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.DeleteByQueryResponse>
+export default async function DeleteByQueryApi (this: That, params: T.DeleteByQueryRequest | TB.DeleteByQueryRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.DeleteByQueryResponse, unknown>>
+export default async function DeleteByQueryApi (this: That, params: T.DeleteByQueryRequest | TB.DeleteByQueryRequest, options?: TransportRequestOptions): Promise<T.DeleteByQueryResponse>
+export default async function DeleteByQueryApi (this: That, params: T.DeleteByQueryRequest | TB.DeleteByQueryRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = ['index']
+  const acceptedBody: string[] = ['max_docs', 'query', 'slice']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
   const userBody: any = params?.body
@@ -57,7 +57,6 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     body = userBody != null ? { ...userBody } : undefined
   }
 
-  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
       body = body ?? {}
@@ -71,7 +70,7 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     }
   }
 
-  const method = 'DELETE'
-  const path = '/_search/scroll'
+  const method = 'POST'
+  const path = `/${encodeURIComponent(params.index.toString())}/_delete_by_query`
   return await this.transport.request({ path, method, querystring, body }, options)
 }

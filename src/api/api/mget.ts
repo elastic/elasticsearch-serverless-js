@@ -38,23 +38,31 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Allows to execute several search template operations in one request.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/search-multi-search.html Elasticsearch API docs}
+  * Allows to get multiple documents in one request.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/docs-multi-get.html Elasticsearch API docs}
   */
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MsearchTemplateResponse<TDocument, TAggregations>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.MsearchTemplateResponse<TDocument, TAggregations>, unknown>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptions): Promise<T.MsearchTemplateResponse<TDocument, TAggregations>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptions): Promise<any> {
+export default async function MgetApi<TDocument = unknown> (this: That, params?: T.MgetRequest | TB.MgetRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MgetResponse<TDocument>>
+export default async function MgetApi<TDocument = unknown> (this: That, params?: T.MgetRequest | TB.MgetRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.MgetResponse<TDocument>, unknown>>
+export default async function MgetApi<TDocument = unknown> (this: That, params?: T.MgetRequest | TB.MgetRequest, options?: TransportRequestOptions): Promise<T.MgetResponse<TDocument>>
+export default async function MgetApi<TDocument = unknown> (this: That, params?: T.MgetRequest | TB.MgetRequest, options?: TransportRequestOptions): Promise<any> {
   const acceptedPath: string[] = ['index']
-  const acceptedBody: string[] = ['search_templates']
+  const acceptedBody: string[] = ['docs', 'ids']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
-  let body: any = params.body ?? undefined
+  const userBody: any = params?.body
+  let body: Record<string, any> | string
+  if (typeof userBody === 'string') {
+    body = userBody
+  } else {
+    body = userBody != null ? { ...userBody } : undefined
+  }
 
+  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
+      body = body ?? {}
       // @ts-expect-error
-      body = params[key]
+      body[key] = params[key]
     } else if (acceptedPath.includes(key)) {
       continue
     } else if (key !== 'body') {
@@ -67,10 +75,10 @@ export default async function MsearchTemplateApi<TDocument = unknown, TAggregati
   let path = ''
   if (params.index != null) {
     method = body != null ? 'POST' : 'GET'
-    path = `/${encodeURIComponent(params.index.toString())}/_msearch/template`
+    path = `/${encodeURIComponent(params.index.toString())}/_mget`
   } else {
     method = body != null ? 'POST' : 'GET'
-    path = '/_msearch/template'
+    path = '/_mget'
   }
-  return await this.transport.request({ path, method, querystring, bulkBody: body }, options)
+  return await this.transport.request({ path, method, querystring, body }, options)
 }

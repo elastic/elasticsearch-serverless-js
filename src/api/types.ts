@@ -67,7 +67,7 @@ export interface BulkRequest<TDocument = unknown, TPartialDocument = unknown> ex
   timeout?: Duration
   wait_for_active_shards?: WaitForActiveShards
   require_alias?: boolean
-  operations: (BulkOperationContainer | BulkUpdateAction<TDocument, TPartialDocument> | TDocument)[]
+  operations?: (BulkOperationContainer | BulkUpdateAction<TDocument, TPartialDocument> | TDocument)[]
 }
 
 export interface BulkResponse {
@@ -164,7 +164,7 @@ export interface CreateRequest<TDocument = unknown> extends RequestBase {
   version?: VersionNumber
   version_type?: VersionType
   wait_for_active_shards?: WaitForActiveShards
-  document: TDocument
+  document?: TDocument
 }
 
 export type CreateResponse = WriteResponseBase
@@ -229,9 +229,9 @@ export interface DeleteByQueryResponse {
   slice_id?: integer
   task?: TaskId
   throttled?: Duration
-  throttled_millis: DurationValue<UnitMillis>
+  throttled_millis?: DurationValue<UnitMillis>
   throttled_until?: Duration
-  throttled_until_millis: DurationValue<UnitMillis>
+  throttled_until_millis?: DurationValue<UnitMillis>
   timed_out?: boolean
   took?: DurationValue<UnitMillis>
   total?: long
@@ -517,6 +517,7 @@ export interface HealthReportIndicators {
   repository_integrity?: HealthReportRepositoryIntegrityIndicator
   ilm?: HealthReportIlmIndicator
   slm?: HealthReportSlmIndicator
+  shards_capacity?: HealthReportShardsCapacityIndicator
 }
 
 export interface HealthReportMasterIsStableIndicator extends HealthReportBaseIndicator {
@@ -579,6 +580,20 @@ export interface HealthReportShardsAvailabilityIndicatorDetails {
   unassigned_replicas: long
 }
 
+export interface HealthReportShardsCapacityIndicator extends HealthReportBaseIndicator {
+  details?: HealthReportShardsCapacityIndicatorDetails
+}
+
+export interface HealthReportShardsCapacityIndicatorDetails {
+  data: HealthReportShardsCapacityIndicatorTierDetail
+  frozen: HealthReportShardsCapacityIndicatorTierDetail
+}
+
+export interface HealthReportShardsCapacityIndicatorTierDetail {
+  max_shards_in_cluster: integer
+  current_used_shards?: integer
+}
+
 export interface HealthReportSlmIndicator extends HealthReportBaseIndicator {
   details?: HealthReportSlmIndicatorDetails
 }
@@ -608,7 +623,7 @@ export interface IndexRequest<TDocument = unknown> extends RequestBase {
   version_type?: VersionType
   wait_for_active_shards?: WaitForActiveShards
   require_alias?: boolean
-  document: TDocument
+  document?: TDocument
 }
 
 export type IndexResponse = WriteResponseBase
@@ -759,7 +774,7 @@ export interface MsearchRequest extends RequestBase {
   routing?: Routing
   search_type?: SearchType
   typed_keys?: boolean
-  searches: MsearchRequestItem[]
+  searches?: MsearchRequestItem[]
 }
 
 export type MsearchRequestItem = MsearchMultisearchHeader | MsearchMultisearchBody
@@ -775,7 +790,7 @@ export interface MsearchTemplateRequest extends RequestBase {
   search_type?: SearchType
   rest_total_hits_as_int?: boolean
   typed_keys?: boolean
-  search_templates: MsearchTemplateRequestItem[]
+  search_templates?: MsearchTemplateRequestItem[]
 }
 
 export type MsearchTemplateRequestItem = MsearchMultisearchHeader | MsearchTemplateTemplateConfig
@@ -1140,6 +1155,7 @@ export interface SearchRequest extends RequestBase {
   indices_boost?: Record<IndexName, double>[]
   docvalue_fields?: (QueryDslFieldAndFormat | Field)[]
   knn?: KnnQuery | KnnQuery[]
+  rank?: RankContainer
   min_score?: double
   post_filter?: QueryDslQueryContainer
   profile?: boolean
@@ -1969,6 +1985,10 @@ export type Bytes = 'b' | 'kb' | 'mb' | 'gb' | 'tb' | 'pb'
 
 export type CategoryId = string
 
+export type ClusterInfoTarget = '_all' | 'http' | 'ingest' | 'thread_pool' | 'script'
+
+export type ClusterInfoTargets = ClusterInfoTarget | ClusterInfoTarget[]
+
 export interface ClusterStatistics {
   skipped: integer
   successful: integer
@@ -2368,6 +2388,13 @@ export interface QueryVectorBuilder {
   text_embedding?: TextEmbedding
 }
 
+export interface RankBase {
+}
+
+export interface RankContainer {
+  rrf?: RrfRank
+}
+
 export interface RecoveryStats {
   current_as_source: long
   current_as_target: long
@@ -2411,6 +2438,11 @@ export interface Retries {
 }
 
 export type Routing = string
+
+export interface RrfRank {
+  rank_constant?: long
+  window_size?: long
+}
 
 export interface ScoreSort {
   order?: SortOrder
@@ -5138,7 +5170,7 @@ export interface MappingTextProperty extends MappingCorePropertyBase {
   type: 'text'
 }
 
-export type MappingTimeSeriesMetricType = 'gauge' | 'counter' | 'summary' | 'histogram'
+export type MappingTimeSeriesMetricType = 'gauge' | 'counter' | 'summary' | 'histogram' | 'position'
 
 export interface MappingTokenCountProperty extends MappingDocValuesPropertyBase {
   analyzer?: string
@@ -5695,6 +5727,7 @@ export interface QueryDslQueryContainer {
   term?: Partial<Record<Field, QueryDslTermQuery | FieldValue>>
   terms?: QueryDslTermsQuery
   terms_set?: Partial<Record<Field, QueryDslTermsSetQuery>>
+  text_expansion?: QueryDslTextExpansionQuery | Field
   wildcard?: Partial<Record<Field, QueryDslWildcardQuery | string>>
   wrapper?: QueryDslWrapperQuery
   type?: QueryDslTypeQuery
@@ -5908,6 +5941,12 @@ export interface QueryDslTermsSetQuery extends QueryDslQueryBase {
   terms: string[]
 }
 
+export interface QueryDslTextExpansionQuery extends QueryDslQueryBase {
+  value: Field
+  model_id: string
+  model_text: string
+}
+
 export type QueryDslTextQueryType = 'best_fields' | 'most_fields' | 'cross_fields' | 'phrase' | 'phrase_prefix' | 'bool_prefix'
 
 export interface QueryDslTypeQuery extends QueryDslQueryBase {
@@ -6108,7 +6147,7 @@ export type AutoscalingGetAutoscalingPolicyResponse = AutoscalingAutoscalingPoli
 
 export interface AutoscalingPutAutoscalingPolicyRequest extends RequestBase {
   name: Name
-  policy: AutoscalingAutoscalingPolicy
+  policy?: AutoscalingAutoscalingPolicy
 }
 
 export type AutoscalingPutAutoscalingPolicyResponse = AcknowledgedResponseBase
@@ -6300,6 +6339,7 @@ export interface CatHealthHealthRecord {
 }
 
 export interface CatHealthRequest extends CatCatRequestBase {
+  time?: TimeUnit
   ts?: boolean
 }
 
@@ -7270,6 +7310,7 @@ export interface CatNodesNodesRecord {
 export interface CatNodesRequest extends CatCatRequestBase {
   bytes?: Bytes
   full_id?: boolean | string
+  include_unloaded_segments?: boolean
 }
 
 export type CatNodesResponse = CatNodesNodesRecord[]
@@ -7703,7 +7744,7 @@ export interface CatTasksRequest extends CatCatRequestBase {
   actions?: string[]
   detailed?: boolean
   node_id?: string[]
-  parent_task?: long
+  parent_task_id?: string
 }
 
 export type CatTasksResponse = CatTasksTasksRecord[]
@@ -8378,6 +8419,18 @@ export interface ClusterHealthShardHealthStats {
   unassigned_shards: integer
 }
 
+export interface ClusterInfoRequest extends RequestBase {
+  target: ClusterInfoTargets
+}
+
+export interface ClusterInfoResponse {
+  cluster_name: Name
+  http?: NodesHttp
+  ingest?: NodesIngest
+  thread_pool?: Record<string, NodesThreadCount>
+  script?: NodesScripting
+}
+
 export interface ClusterPendingTasksPendingTask {
   executing: boolean
   insert_order: integer
@@ -9046,7 +9099,7 @@ export interface FleetMsearchRequest extends RequestBase {
   typed_keys?: boolean
   wait_for_checkpoints?: FleetCheckpoint[]
   allow_partial_search_results?: boolean
-  searches: MsearchRequestItem[]
+  searches?: MsearchRequestItem[]
 }
 
 export interface FleetMsearchResponse<TDocument = unknown> {
@@ -10093,7 +10146,7 @@ export type IndicesDiskUsageResponse = any
 export interface IndicesDownsampleRequest extends RequestBase {
   index: IndexName
   target_index: IndexName
-  config: IndicesDownsampleConfig
+  config?: IndicesDownsampleConfig
 }
 
 export type IndicesDownsampleResponse = any
@@ -10493,7 +10546,7 @@ export interface IndicesPutSettingsRequest extends RequestBase {
   master_timeout?: Duration
   preserve_existing?: boolean
   timeout?: Duration
-  settings: IndicesIndexSettings
+  settings?: IndicesIndexSettings
 }
 
 export type IndicesPutSettingsResponse = AcknowledgedResponseBase
@@ -10850,7 +10903,7 @@ export interface IndicesSimulateTemplateRequest extends RequestBase {
   create?: boolean
   master_timeout?: Duration
   include_defaults?: boolean
-  template: IndicesIndexTemplate
+  template?: IndicesIndexTemplate
 }
 
 export interface IndicesSimulateTemplateResponse {
@@ -11683,7 +11736,7 @@ export type LogstashGetPipelineResponse = Record<Id, LogstashPipeline>
 
 export interface LogstashPutPipelineRequest extends RequestBase {
   id: Id
-  pipeline: LogstashPipeline
+  pipeline?: LogstashPipeline
 }
 
 export type LogstashPutPipelineResponse = boolean
@@ -13596,7 +13649,7 @@ export interface MlPostDataRequest<TData = unknown> extends RequestBase {
   job_id: Id
   reset_end?: DateTime
   reset_start?: DateTime
-  data: TData[]
+  data?: TData[]
 }
 
 export interface MlPostDataResponse {
@@ -14162,7 +14215,7 @@ export interface MlValidateRequest extends RequestBase {
 export type MlValidateResponse = AcknowledgedResponseBase
 
 export interface MlValidateDetectorRequest extends RequestBase {
-  detector: MlDetector
+  detector?: MlDetector
 }
 
 export type MlValidateDetectorResponse = AcknowledgedResponseBase
@@ -14172,7 +14225,7 @@ export interface MonitoringBulkRequest<TDocument = unknown, TPartialDocument = u
   system_id: string
   system_api_version: string
   interval: Duration
-  operations: (BulkOperationContainer | BulkUpdateAction<TDocument, TPartialDocument> | TDocument)[]
+  operations?: (BulkOperationContainer | BulkUpdateAction<TDocument, TPartialDocument> | TDocument)[]
 }
 
 export interface MonitoringBulkResponse {
@@ -15276,6 +15329,14 @@ export interface RollupStopJobResponse {
   stopped: boolean
 }
 
+export interface SearchApplicationAnalyticsCollection {
+  event_data_stream: SearchApplicationEventDataStream
+}
+
+export interface SearchApplicationEventDataStream {
+  name: IndexName
+}
+
 export interface SearchApplicationSearchApplication {
   name: Name
   indices: IndexName[]
@@ -15294,11 +15355,23 @@ export interface SearchApplicationDeleteRequest extends RequestBase {
 
 export type SearchApplicationDeleteResponse = AcknowledgedResponseBase
 
+export interface SearchApplicationDeleteBehavioralAnalyticsRequest extends RequestBase {
+  name: Name
+}
+
+export type SearchApplicationDeleteBehavioralAnalyticsResponse = AcknowledgedResponseBase
+
 export interface SearchApplicationGetRequest extends RequestBase {
   name: Name
 }
 
 export type SearchApplicationGetResponse = SearchApplicationSearchApplication
+
+export interface SearchApplicationGetBehavioralAnalyticsRequest extends RequestBase {
+  name?: Name[]
+}
+
+export type SearchApplicationGetBehavioralAnalyticsResponse = Record<Name, SearchApplicationAnalyticsCollection>
 
 export interface SearchApplicationListRequest extends RequestBase {
   q?: string
@@ -15321,12 +15394,22 @@ export interface SearchApplicationListSearchApplicationListItem {
 export interface SearchApplicationPutRequest extends RequestBase {
   name: Name
   create?: boolean
-  search_application: SearchApplicationSearchApplication
+  search_application?: SearchApplicationSearchApplication
 }
 
 export interface SearchApplicationPutResponse {
   result: Result
 }
+
+export interface SearchApplicationPutBehavioralAnalyticsAnalyticsAcknowledgeResponseBase extends AcknowledgedResponseBase {
+  name: Name
+}
+
+export interface SearchApplicationPutBehavioralAnalyticsRequest extends RequestBase {
+  name: Name
+}
+
+export type SearchApplicationPutBehavioralAnalyticsResponse = SearchApplicationPutBehavioralAnalyticsAnalyticsAcknowledgeResponseBase
 
 export interface SearchApplicationSearchRequest extends RequestBase {
   name: Name
@@ -16099,7 +16182,7 @@ export interface SecurityPutPrivilegesActions {
 
 export interface SecurityPutPrivilegesRequest extends RequestBase {
   refresh?: Refresh
-  privileges: Record<string, Record<string, SecurityPutPrivilegesActions>>
+  privileges?: Record<string, Record<string, SecurityPutPrivilegesActions>>
 }
 
 export type SecurityPutPrivilegesResponse = Record<string, Record<string, SecurityCreatedStatus>>
@@ -16988,7 +17071,7 @@ export interface TextStructureFindStructureRequest<TJsonDocument = unknown> {
   timeout?: Duration
   timestamp_field?: Field
   timestamp_format?: string
-  text_files: TJsonDocument[]
+  text_files?: TJsonDocument[]
 }
 
 export interface TextStructureFindStructureResponse {

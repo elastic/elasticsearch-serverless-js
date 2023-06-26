@@ -38,15 +38,16 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Explicitly clears the search context for a scroll.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/clear-scroll-api.html Elasticsearch API docs}
+  * Performs an update on every document in the index without changing the source,
+for example to pick up a mapping change.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/docs-update-by-query.html Elasticsearch API docs}
   */
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ClearScrollResponse, unknown>>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = []
-  const acceptedBody: string[] = ['scroll_id']
+export default async function UpdateByQueryApi (this: That, params: T.UpdateByQueryRequest | TB.UpdateByQueryRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.UpdateByQueryResponse>
+export default async function UpdateByQueryApi (this: That, params: T.UpdateByQueryRequest | TB.UpdateByQueryRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.UpdateByQueryResponse, unknown>>
+export default async function UpdateByQueryApi (this: That, params: T.UpdateByQueryRequest | TB.UpdateByQueryRequest, options?: TransportRequestOptions): Promise<T.UpdateByQueryResponse>
+export default async function UpdateByQueryApi (this: That, params: T.UpdateByQueryRequest | TB.UpdateByQueryRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = ['index']
+  const acceptedBody: string[] = ['max_docs', 'query', 'script', 'slice', 'conflicts']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
   const userBody: any = params?.body
@@ -57,7 +58,6 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     body = userBody != null ? { ...userBody } : undefined
   }
 
-  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
       body = body ?? {}
@@ -71,7 +71,7 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     }
   }
 
-  const method = 'DELETE'
-  const path = '/_search/scroll'
+  const method = 'POST'
+  const path = `/${encodeURIComponent(params.index.toString())}/_update_by_query`
   return await this.transport.request({ path, method, querystring, body }, options)
 }

@@ -38,15 +38,15 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Explicitly clears the search context for a scroll.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/clear-scroll-api.html Elasticsearch API docs}
+  * The terms enum API  can be used to discover terms in the index that begin with the provided string. It is designed for low-latency look-ups used in auto-complete scenarios.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/search-terms-enum.html Elasticsearch API docs}
   */
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ClearScrollResponse, unknown>>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = []
-  const acceptedBody: string[] = ['scroll_id']
+export default async function TermsEnumApi (this: That, params: T.TermsEnumRequest | TB.TermsEnumRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.TermsEnumResponse>
+export default async function TermsEnumApi (this: That, params: T.TermsEnumRequest | TB.TermsEnumRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.TermsEnumResponse, unknown>>
+export default async function TermsEnumApi (this: That, params: T.TermsEnumRequest | TB.TermsEnumRequest, options?: TransportRequestOptions): Promise<T.TermsEnumResponse>
+export default async function TermsEnumApi (this: That, params: T.TermsEnumRequest | TB.TermsEnumRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = ['index']
+  const acceptedBody: string[] = ['field', 'size', 'timeout', 'case_insensitive', 'index_filter', 'string', 'search_after']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
   const userBody: any = params?.body
@@ -57,7 +57,6 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     body = userBody != null ? { ...userBody } : undefined
   }
 
-  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
       body = body ?? {}
@@ -71,7 +70,7 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     }
   }
 
-  const method = 'DELETE'
-  const path = '/_search/scroll'
+  const method = body != null ? 'POST' : 'GET'
+  const path = `/${encodeURIComponent(params.index.toString())}/_terms_enum`
   return await this.transport.request({ path, method, querystring, body }, options)
 }

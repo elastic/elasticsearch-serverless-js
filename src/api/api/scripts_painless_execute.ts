@@ -38,15 +38,15 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Explicitly clears the search context for a scroll.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/clear-scroll-api.html Elasticsearch API docs}
+  * Allows an arbitrary script to be executed and a result to be returned
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/painless/main/painless-execute-api.html Elasticsearch API docs}
   */
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ClearScrollResponse, unknown>>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<any> {
+export default async function ScriptsPainlessExecuteApi<TResult = unknown> (this: That, params?: T.ScriptsPainlessExecuteRequest | TB.ScriptsPainlessExecuteRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ScriptsPainlessExecuteResponse<TResult>>
+export default async function ScriptsPainlessExecuteApi<TResult = unknown> (this: That, params?: T.ScriptsPainlessExecuteRequest | TB.ScriptsPainlessExecuteRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ScriptsPainlessExecuteResponse<TResult>, unknown>>
+export default async function ScriptsPainlessExecuteApi<TResult = unknown> (this: That, params?: T.ScriptsPainlessExecuteRequest | TB.ScriptsPainlessExecuteRequest, options?: TransportRequestOptions): Promise<T.ScriptsPainlessExecuteResponse<TResult>>
+export default async function ScriptsPainlessExecuteApi<TResult = unknown> (this: That, params?: T.ScriptsPainlessExecuteRequest | TB.ScriptsPainlessExecuteRequest, options?: TransportRequestOptions): Promise<any> {
   const acceptedPath: string[] = []
-  const acceptedBody: string[] = ['scroll_id']
+  const acceptedBody: string[] = ['context', 'context_setup', 'script']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
   const userBody: any = params?.body
@@ -71,7 +71,7 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     }
   }
 
-  const method = 'DELETE'
-  const path = '/_search/scroll'
+  const method = body != null ? 'POST' : 'GET'
+  const path = '/_scripts/painless/_execute'
   return await this.transport.request({ path, method, querystring, body }, options)
 }

@@ -38,23 +38,31 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Allows to execute several search template operations in one request.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/search-multi-search.html Elasticsearch API docs}
+  * Allows to use the Mustache language to pre-render a search definition.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/render-search-template-api.html Elasticsearch API docs}
   */
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MsearchTemplateResponse<TDocument, TAggregations>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.MsearchTemplateResponse<TDocument, TAggregations>, unknown>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptions): Promise<T.MsearchTemplateResponse<TDocument, TAggregations>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = ['index']
-  const acceptedBody: string[] = ['search_templates']
+export default async function RenderSearchTemplateApi (this: That, params?: T.RenderSearchTemplateRequest | TB.RenderSearchTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.RenderSearchTemplateResponse>
+export default async function RenderSearchTemplateApi (this: That, params?: T.RenderSearchTemplateRequest | TB.RenderSearchTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.RenderSearchTemplateResponse, unknown>>
+export default async function RenderSearchTemplateApi (this: That, params?: T.RenderSearchTemplateRequest | TB.RenderSearchTemplateRequest, options?: TransportRequestOptions): Promise<T.RenderSearchTemplateResponse>
+export default async function RenderSearchTemplateApi (this: That, params?: T.RenderSearchTemplateRequest | TB.RenderSearchTemplateRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = ['id']
+  const acceptedBody: string[] = ['file', 'params', 'source']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
-  let body: any = params.body ?? undefined
+  const userBody: any = params?.body
+  let body: Record<string, any> | string
+  if (typeof userBody === 'string') {
+    body = userBody
+  } else {
+    body = userBody != null ? { ...userBody } : undefined
+  }
 
+  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
+      body = body ?? {}
       // @ts-expect-error
-      body = params[key]
+      body[key] = params[key]
     } else if (acceptedPath.includes(key)) {
       continue
     } else if (key !== 'body') {
@@ -65,12 +73,12 @@ export default async function MsearchTemplateApi<TDocument = unknown, TAggregati
 
   let method = ''
   let path = ''
-  if (params.index != null) {
+  if (params.id != null) {
     method = body != null ? 'POST' : 'GET'
-    path = `/${encodeURIComponent(params.index.toString())}/_msearch/template`
+    path = `/_render/template/${encodeURIComponent(params.id.toString())}`
   } else {
     method = body != null ? 'POST' : 'GET'
-    path = '/_msearch/template'
+    path = '/_render/template'
   }
-  return await this.transport.request({ path, method, querystring, bulkBody: body }, options)
+  return await this.transport.request({ path, method, querystring, body }, options)
 }
