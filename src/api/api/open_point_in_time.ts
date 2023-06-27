@@ -38,32 +38,19 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Explicitly clears the search context for a scroll.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/clear-scroll-api.html Elasticsearch API docs}
+  * Open a point in time that can be used in subsequent searches
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/point-in-time-api.html Elasticsearch API docs}
   */
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ClearScrollResponse, unknown>>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<T.ClearScrollResponse>
-export default async function ClearScrollApi (this: That, params?: T.ClearScrollRequest | TB.ClearScrollRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = []
-  const acceptedBody: string[] = ['scroll_id']
+export default async function OpenPointInTimeApi (this: That, params: T.OpenPointInTimeRequest | TB.OpenPointInTimeRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.OpenPointInTimeResponse>
+export default async function OpenPointInTimeApi (this: That, params: T.OpenPointInTimeRequest | TB.OpenPointInTimeRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.OpenPointInTimeResponse, unknown>>
+export default async function OpenPointInTimeApi (this: That, params: T.OpenPointInTimeRequest | TB.OpenPointInTimeRequest, options?: TransportRequestOptions): Promise<T.OpenPointInTimeResponse>
+export default async function OpenPointInTimeApi (this: That, params: T.OpenPointInTimeRequest | TB.OpenPointInTimeRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = ['index']
   const querystring: Record<string, any> = {}
-  // @ts-expect-error
-  const userBody: any = params?.body
-  let body: Record<string, any> | string
-  if (typeof userBody === 'string') {
-    body = userBody
-  } else {
-    body = userBody != null ? { ...userBody } : undefined
-  }
+  const body = undefined
 
-  params = params ?? {}
   for (const key in params) {
-    if (acceptedBody.includes(key)) {
-      body = body ?? {}
-      // @ts-expect-error
-      body[key] = params[key]
-    } else if (acceptedPath.includes(key)) {
+    if (acceptedPath.includes(key)) {
       continue
     } else if (key !== 'body') {
       // @ts-expect-error
@@ -71,7 +58,7 @@ export default async function ClearScrollApi (this: That, params?: T.ClearScroll
     }
   }
 
-  const method = 'DELETE'
-  const path = '/_search/scroll'
+  const method = 'POST'
+  const path = `/${encodeURIComponent(params.index.toString())}/_pit`
   return await this.transport.request({ path, method, querystring, body }, options)
 }

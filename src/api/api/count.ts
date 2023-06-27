@@ -38,23 +38,31 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Allows to execute several search template operations in one request.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/search-multi-search.html Elasticsearch API docs}
+  * Returns number of documents matching a query.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/search-count.html Elasticsearch API docs}
   */
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MsearchTemplateResponse<TDocument, TAggregations>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.MsearchTemplateResponse<TDocument, TAggregations>, unknown>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptions): Promise<T.MsearchTemplateResponse<TDocument, TAggregations>>
-export default async function MsearchTemplateApi<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.MsearchTemplateRequest | TB.MsearchTemplateRequest, options?: TransportRequestOptions): Promise<any> {
+export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CountResponse>
+export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.CountResponse, unknown>>
+export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<T.CountResponse>
+export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<any> {
   const acceptedPath: string[] = ['index']
-  const acceptedBody: string[] = ['search_templates']
+  const acceptedBody: string[] = ['query']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
-  let body: any = params.body ?? undefined
+  const userBody: any = params?.body
+  let body: Record<string, any> | string
+  if (typeof userBody === 'string') {
+    body = userBody
+  } else {
+    body = userBody != null ? { ...userBody } : undefined
+  }
 
+  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
+      body = body ?? {}
       // @ts-expect-error
-      body = params[key]
+      body[key] = params[key]
     } else if (acceptedPath.includes(key)) {
       continue
     } else if (key !== 'body') {
@@ -67,10 +75,10 @@ export default async function MsearchTemplateApi<TDocument = unknown, TAggregati
   let path = ''
   if (params.index != null) {
     method = body != null ? 'POST' : 'GET'
-    path = `/${encodeURIComponent(params.index.toString())}/_msearch/template`
+    path = `/${encodeURIComponent(params.index.toString())}/_count`
   } else {
     method = body != null ? 'POST' : 'GET'
-    path = '/_msearch/template'
+    path = '/_count'
   }
-  return await this.transport.request({ path, method, querystring, bulkBody: body }, options)
+  return await this.transport.request({ path, method, querystring, body }, options)
 }

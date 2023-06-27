@@ -110,7 +110,6 @@ export interface BulkHelperOptions<TDocument = unknown> extends T.BulkRequest {
   retries?: number
   wait?: number
   onDrop?: (doc: OnDropDocument<TDocument>) => void
-  refreshOnCompletion?: boolean | string
 }
 
 export interface BulkHelper<T> extends Promise<BulkStats> {
@@ -374,7 +373,7 @@ export default class Helpers {
         clearTimeout(timeoutRef)
       }
 
-      // In some cases the previos http call does not have finished,
+      // In some cases the previous http call does not have finished,
       // or we didn't reach the flush bytes threshold, so we force one last operation.
       if (loadedOperations > 0) {
         const send = await semaphore()
@@ -541,7 +540,6 @@ export default class Helpers {
       retries = this[kMaxRetries],
       wait = 5000,
       onDrop = noop,
-      refreshOnCompletion = false,
       ...bulkOptions
     } = options
 
@@ -655,7 +653,7 @@ export default class Helpers {
       }
 
       clearTimeout(timeoutRef)
-      // In some cases the previos http call does not have finished,
+      // In some cases the previous http call does not have finished,
       // or we didn't reach the flush bytes threshold, so we force one last operation.
       if (!shouldAbort && chunkBytes > 0) {
         const send = await semaphore()
@@ -664,14 +662,6 @@ export default class Helpers {
       }
 
       await finish()
-
-      if (refreshOnCompletion !== false) {
-        await client.indices.refresh({
-          index: typeof refreshOnCompletion === 'string'
-            ? refreshOnCompletion
-            : '_all'
-        }, reqOptions)
-      }
 
       stats.time = Date.now() - startTime
       stats.total = stats.successful + stats.failed
@@ -699,8 +689,8 @@ export default class Helpers {
     // to guarantee that no more than the number of operations
     // allowed to run at the same time are executed.
     // It returns a semaphore function which resolves in the next tick
-    // if we didn't reach the maximim concurrency yet, otherwise it returns
-    // a promise that resolves as soon as one of the running request has finshed.
+    // if we didn't reach the maximum concurrency yet, otherwise it returns
+    // a promise that resolves as soon as one of the running request has finished.
     // The semaphore function resolves a send function, which will be used
     // to send the actual bulk request.
     // It also returns a finish function, which returns a promise that is resolved
@@ -832,7 +822,7 @@ export default class Helpers {
               const indexSlice = operation !== 'delete' ? i * 2 : i
 
               if (responseItem.status >= 400) {
-                // 429 is the only staus code where we might want to retry
+                // 429 is the only status code where we might want to retry
                 // a document, because it was not an error in the document itself,
                 // but the ES node were handling too many operations.
                 if (responseItem.status === 429) {

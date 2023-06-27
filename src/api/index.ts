@@ -26,46 +26,212 @@
 // DO NOT MODIFY IT BY HAND. Instead, modify the source open api file,
 // and elastic/elastic-client-generator-js to regenerate this file again.
 
+import AsyncSearchApi from './api/async_search'
 import bulkApi from './api/bulk'
+import CatApi from './api/cat'
 import clearScrollApi from './api/clear_scroll'
+import closePointInTimeApi from './api/close_point_in_time'
+import ClusterApi from './api/cluster'
+import countApi from './api/count'
+import createApi from './api/create'
+import deleteApi from './api/delete'
+import deleteByQueryApi from './api/delete_by_query'
+import deleteScriptApi from './api/delete_script'
+import EnrichApi from './api/enrich'
+import existsApi from './api/exists'
+import existsSourceApi from './api/exists_source'
+import fieldCapsApi from './api/field_caps'
+import getApi from './api/get'
+import getScriptApi from './api/get_script'
+import getSourceApi from './api/get_source'
+import GraphApi from './api/graph'
+import indexApi from './api/index'
 import IndicesApi from './api/indices'
 import infoApi from './api/info'
+import IngestApi from './api/ingest'
+import LogstashApi from './api/logstash'
+import mgetApi from './api/mget'
+import MlApi from './api/ml'
 import msearchApi from './api/msearch'
 import msearchTemplateApi from './api/msearch_template'
+import mtermvectorsApi from './api/mtermvectors'
+import openPointInTimeApi from './api/open_point_in_time'
+import pingApi from './api/ping'
+import putScriptApi from './api/put_script'
+import rankEvalApi from './api/rank_eval'
+import renderSearchTemplateApi from './api/render_search_template'
+import scriptsPainlessExecuteApi from './api/scripts_painless_execute'
 import scrollApi from './api/scroll'
 import searchApi from './api/search'
+import SearchApplicationApi from './api/search_application'
+import searchTemplateApi from './api/search_template'
+import SecurityApi from './api/security'
+import termsEnumApi from './api/terms_enum'
+import termvectorsApi from './api/termvectors'
+import TransformApi from './api/transform'
+import updateApi from './api/update'
+import updateByQueryApi from './api/update_by_query'
 
 export default interface API {
   new(): API
+  asyncSearch: AsyncSearchApi
   bulk: typeof bulkApi
+  cat: CatApi
   clearScroll: typeof clearScrollApi
+  closePointInTime: typeof closePointInTimeApi
+  cluster: ClusterApi
+  count: typeof countApi
+  create: typeof createApi
+  delete: typeof deleteApi
+  deleteByQuery: typeof deleteByQueryApi
+  deleteScript: typeof deleteScriptApi
+  enrich: EnrichApi
+  exists: typeof existsApi
+  existsSource: typeof existsSourceApi
+  fieldCaps: typeof fieldCapsApi
+  get: typeof getApi
+  getScript: typeof getScriptApi
+  getSource: typeof getSourceApi
+  graph: GraphApi
+  index: typeof indexApi
   indices: IndicesApi
   info: typeof infoApi
+  ingest: IngestApi
+  logstash: LogstashApi
+  mget: typeof mgetApi
+  ml: MlApi
   msearch: typeof msearchApi
   msearchTemplate: typeof msearchTemplateApi
+  mtermvectors: typeof mtermvectorsApi
+  openPointInTime: typeof openPointInTimeApi
+  ping: typeof pingApi
+  putScript: typeof putScriptApi
+  rankEval: typeof rankEvalApi
+  renderSearchTemplate: typeof renderSearchTemplateApi
+  scriptsPainlessExecute: typeof scriptsPainlessExecuteApi
   scroll: typeof scrollApi
   search: typeof searchApi
+  searchApplication: SearchApplicationApi
+  searchTemplate: typeof searchTemplateApi
+  security: SecurityApi
+  termsEnum: typeof termsEnumApi
+  termvectors: typeof termvectorsApi
+  transform: TransformApi
+  update: typeof updateApi
+  updateByQuery: typeof updateByQueryApi
 }
 
+const kAsyncSearch = Symbol('AsyncSearch')
+const kCat = Symbol('Cat')
+const kCluster = Symbol('Cluster')
+const kEnrich = Symbol('Enrich')
+const kGraph = Symbol('Graph')
 const kIndices = Symbol('Indices')
+const kIngest = Symbol('Ingest')
+const kLogstash = Symbol('Logstash')
+const kMl = Symbol('Ml')
+const kSearchApplication = Symbol('SearchApplication')
+const kSecurity = Symbol('Security')
+const kTransform = Symbol('Transform')
 
 export default class API {
+  [kAsyncSearch]: symbol | null
+  [kCat]: symbol | null
+  [kCluster]: symbol | null
+  [kEnrich]: symbol | null
+  [kGraph]: symbol | null
   [kIndices]: symbol | null
+  [kIngest]: symbol | null
+  [kLogstash]: symbol | null
+  [kMl]: symbol | null
+  [kSearchApplication]: symbol | null
+  [kSecurity]: symbol | null
+  [kTransform]: symbol | null
   constructor () {
+    this[kAsyncSearch] = null
+    this[kCat] = null
+    this[kCluster] = null
+    this[kEnrich] = null
+    this[kGraph] = null
     this[kIndices] = null
+    this[kIngest] = null
+    this[kLogstash] = null
+    this[kMl] = null
+    this[kSearchApplication] = null
+    this[kSecurity] = null
+    this[kTransform] = null
   }
 }
 
 API.prototype.bulk = bulkApi
 API.prototype.clearScroll = clearScrollApi
+API.prototype.closePointInTime = closePointInTimeApi
+API.prototype.count = countApi
+API.prototype.create = createApi
+API.prototype.delete = deleteApi
+API.prototype.deleteByQuery = deleteByQueryApi
+API.prototype.deleteScript = deleteScriptApi
+API.prototype.exists = existsApi
+API.prototype.existsSource = existsSourceApi
+API.prototype.fieldCaps = fieldCapsApi
+API.prototype.get = getApi
+API.prototype.getScript = getScriptApi
+API.prototype.getSource = getSourceApi
+API.prototype.index = indexApi
 API.prototype.info = infoApi
+API.prototype.mget = mgetApi
 API.prototype.msearch = msearchApi
 API.prototype.msearchTemplate = msearchTemplateApi
+API.prototype.mtermvectors = mtermvectorsApi
+API.prototype.openPointInTime = openPointInTimeApi
+API.prototype.ping = pingApi
+API.prototype.putScript = putScriptApi
+API.prototype.rankEval = rankEvalApi
+API.prototype.renderSearchTemplate = renderSearchTemplateApi
+API.prototype.scriptsPainlessExecute = scriptsPainlessExecuteApi
 API.prototype.scroll = scrollApi
 API.prototype.search = searchApi
+API.prototype.searchTemplate = searchTemplateApi
+API.prototype.termsEnum = termsEnumApi
+API.prototype.termvectors = termvectorsApi
+API.prototype.update = updateApi
+API.prototype.updateByQuery = updateByQueryApi
 
 Object.defineProperties(API.prototype, {
+  asyncSearch: {
+    get () { return this[kAsyncSearch] === null ? (this[kAsyncSearch] = new AsyncSearchApi(this.transport)) : this[kAsyncSearch] }
+  },
+  cat: {
+    get () { return this[kCat] === null ? (this[kCat] = new CatApi(this.transport)) : this[kCat] }
+  },
+  cluster: {
+    get () { return this[kCluster] === null ? (this[kCluster] = new ClusterApi(this.transport)) : this[kCluster] }
+  },
+  enrich: {
+    get () { return this[kEnrich] === null ? (this[kEnrich] = new EnrichApi(this.transport)) : this[kEnrich] }
+  },
+  graph: {
+    get () { return this[kGraph] === null ? (this[kGraph] = new GraphApi(this.transport)) : this[kGraph] }
+  },
   indices: {
     get () { return this[kIndices] === null ? (this[kIndices] = new IndicesApi(this.transport)) : this[kIndices] }
+  },
+  ingest: {
+    get () { return this[kIngest] === null ? (this[kIngest] = new IngestApi(this.transport)) : this[kIngest] }
+  },
+  logstash: {
+    get () { return this[kLogstash] === null ? (this[kLogstash] = new LogstashApi(this.transport)) : this[kLogstash] }
+  },
+  ml: {
+    get () { return this[kMl] === null ? (this[kMl] = new MlApi(this.transport)) : this[kMl] }
+  },
+  searchApplication: {
+    get () { return this[kSearchApplication] === null ? (this[kSearchApplication] = new SearchApplicationApi(this.transport)) : this[kSearchApplication] }
+  },
+  security: {
+    get () { return this[kSecurity] === null ? (this[kSecurity] = new SecurityApi(this.transport)) : this[kSecurity] }
+  },
+  transform: {
+    get () { return this[kTransform] === null ? (this[kTransform] = new TransformApi(this.transport)) : this[kTransform] }
   }
 })

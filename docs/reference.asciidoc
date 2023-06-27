@@ -46,6 +46,138 @@ client.clearScroll(...)
 ----
 
 [discrete]
+=== close_point_in_time
+Close a point in time
+
+{ref}/point-in-time-api.html[Endpoint documentation]
+[source,ts]
+----
+client.closePointInTime(...)
+----
+
+[discrete]
+=== count
+Returns number of documents matching a query.
+
+{ref}/search-count.html[Endpoint documentation]
+[source,ts]
+----
+client.count(...)
+----
+
+[discrete]
+=== create
+Creates a new document in the index.
+
+Returns a 409 response when a document with a same ID already exists in the index.
+
+{ref}/docs-index_.html[Endpoint documentation]
+[source,ts]
+----
+client.create(...)
+----
+
+[discrete]
+=== delete
+Removes a document from the index.
+
+{ref}/docs-delete.html[Endpoint documentation]
+[source,ts]
+----
+client.delete(...)
+----
+
+[discrete]
+=== delete_by_query
+Deletes documents matching the provided query.
+
+{ref}/docs-delete-by-query.html[Endpoint documentation]
+[source,ts]
+----
+client.deleteByQuery(...)
+----
+
+[discrete]
+=== delete_script
+Deletes a script.
+
+{ref}/modules-scripting.html[Endpoint documentation]
+[source,ts]
+----
+client.deleteScript(...)
+----
+
+[discrete]
+=== exists
+Returns information about whether a document exists in an index.
+
+{ref}/docs-get.html[Endpoint documentation]
+[source,ts]
+----
+client.exists(...)
+----
+
+[discrete]
+=== exists_source
+Returns information about whether a document source exists in an index.
+
+{ref}/docs-get.html[Endpoint documentation]
+[source,ts]
+----
+client.existsSource(...)
+----
+
+[discrete]
+=== field_caps
+Returns the information about the capabilities of fields among multiple indices.
+
+{ref}/search-field-caps.html[Endpoint documentation]
+[source,ts]
+----
+client.fieldCaps(...)
+----
+
+[discrete]
+=== get
+Returns a document.
+
+{ref}/docs-get.html[Endpoint documentation]
+[source,ts]
+----
+client.get(...)
+----
+
+[discrete]
+=== get_script
+Returns a script.
+
+{ref}/modules-scripting.html[Endpoint documentation]
+[source,ts]
+----
+client.getScript(...)
+----
+
+[discrete]
+=== get_source
+Returns the source of a document.
+
+{ref}/docs-get.html[Endpoint documentation]
+[source,ts]
+----
+client.getSource(...)
+----
+
+[discrete]
+=== index
+Creates or updates a document in an index.
+
+{ref}/docs-index_.html[Endpoint documentation]
+[source,ts]
+----
+client.index(...)
+----
+
+[discrete]
 === info
 Returns basic information about the cluster.
 
@@ -53,6 +185,16 @@ Returns basic information about the cluster.
 [source,ts]
 ----
 client.info(...)
+----
+
+[discrete]
+=== mget
+Allows to get multiple documents in one request.
+
+{ref}/docs-multi-get.html[Endpoint documentation]
+[source,ts]
+----
+client.mget(...)
 ----
 
 [discrete]
@@ -76,6 +218,76 @@ client.msearchTemplate(...)
 ----
 
 [discrete]
+=== mtermvectors
+Returns multiple termvectors in one request.
+
+{ref}/docs-multi-termvectors.html[Endpoint documentation]
+[source,ts]
+----
+client.mtermvectors(...)
+----
+
+[discrete]
+=== open_point_in_time
+Open a point in time that can be used in subsequent searches
+
+{ref}/point-in-time-api.html[Endpoint documentation]
+[source,ts]
+----
+client.openPointInTime(...)
+----
+
+[discrete]
+=== ping
+Returns whether the cluster is running.
+
+{ref}/index.html[Endpoint documentation]
+[source,ts]
+----
+client.ping(...)
+----
+
+[discrete]
+=== put_script
+Creates or updates a script.
+
+{ref}/modules-scripting.html[Endpoint documentation]
+[source,ts]
+----
+client.putScript(...)
+----
+
+[discrete]
+=== rank_eval
+Allows to evaluate the quality of ranked search results over a set of typical search queries
+
+{ref}/search-rank-eval.html[Endpoint documentation]
+[source,ts]
+----
+client.rankEval(...)
+----
+
+[discrete]
+=== render_search_template
+Allows to use the Mustache language to pre-render a search definition.
+
+{ref}/render-search-template-api.html[Endpoint documentation]
+[source,ts]
+----
+client.renderSearchTemplate(...)
+----
+
+[discrete]
+=== scripts_painless_execute
+Allows an arbitrary script to be executed and a result to be returned
+
+{painless}/painless-execute-api.html[Endpoint documentation]
+[source,ts]
+----
+client.scriptsPainlessExecute(...)
+----
+
+[discrete]
 === scroll
 Allows to retrieve a large numbers of results from a single search request.
 
@@ -96,14 +308,1579 @@ client.search(...)
 ----
 
 [discrete]
-=== indices
-[discrete]
-==== refresh
-Performs the refresh operation in one or more indices.
+=== search_template
+Allows to use the Mustache language to pre-render a search definition.
 
-{ref}/indices-refresh.html[Endpoint documentation]
+{ref}/search-template.html[Endpoint documentation]
 [source,ts]
 ----
-client.indices.refresh(...)
+client.searchTemplate(...)
+----
+
+[discrete]
+=== terms_enum
+The terms enum API  can be used to discover terms in the index that begin with the provided string. It is designed for low-latency look-ups used in auto-complete scenarios.
+
+{ref}/search-terms-enum.html[Endpoint documentation]
+[source,ts]
+----
+client.termsEnum(...)
+----
+
+[discrete]
+=== termvectors
+Returns information and statistics about terms in the fields of a particular document.
+
+{ref}/docs-termvectors.html[Endpoint documentation]
+[source,ts]
+----
+client.termvectors(...)
+----
+
+[discrete]
+=== update
+Updates a document with a script or partial document.
+
+{ref}/docs-update.html[Endpoint documentation]
+[source,ts]
+----
+client.update(...)
+----
+
+[discrete]
+=== update_by_query
+Performs an update on every document in the index without changing the source,
+for example to pick up a mapping change.
+
+{ref}/docs-update-by-query.html[Endpoint documentation]
+[source,ts]
+----
+client.updateByQuery(...)
+----
+
+[discrete]
+=== async_search
+[discrete]
+==== delete
+Deletes an async search by ID. If the search is still running, the search request will be cancelled. Otherwise, the saved search results are deleted.
+
+{ref}/async-search.html[Endpoint documentation]
+[source,ts]
+----
+client.asyncSearch.delete(...)
+----
+
+[discrete]
+==== get
+Retrieves the results of a previously submitted async search request given its ID.
+
+{ref}/async-search.html[Endpoint documentation]
+[source,ts]
+----
+client.asyncSearch.get(...)
+----
+
+[discrete]
+==== status
+Retrieves the status of a previously submitted async search request given its ID.
+
+{ref}/async-search.html[Endpoint documentation]
+[source,ts]
+----
+client.asyncSearch.status(...)
+----
+
+[discrete]
+==== submit
+Executes a search request asynchronously.
+
+{ref}/async-search.html[Endpoint documentation]
+[source,ts]
+----
+client.asyncSearch.submit(...)
+----
+
+[discrete]
+=== cat
+[discrete]
+==== aliases
+Shows information about currently configured aliases to indices including filter and routing infos.
+
+{ref}/cat-alias.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.aliases(...)
+----
+
+[discrete]
+==== component_templates
+Returns information about existing component_templates templates.
+
+{ref}/cat-component-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.componentTemplates(...)
+----
+
+[discrete]
+==== count
+Provides quick access to the document count of the entire cluster, or individual indices.
+
+{ref}/cat-count.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.count(...)
+----
+
+[discrete]
+==== help
+Returns help for the Cat APIs.
+
+{ref}/cat.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.help(...)
+----
+
+[discrete]
+==== indices
+Returns information about indices: number of primaries and replicas, document counts, disk size, ...
+
+{ref}/cat-indices.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.indices(...)
+----
+
+[discrete]
+==== ml_data_frame_analytics
+Gets configuration and usage information about data frame analytics jobs.
+
+{ref}/cat-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.mlDataFrameAnalytics(...)
+----
+
+[discrete]
+==== ml_datafeeds
+Gets configuration and usage information about datafeeds.
+
+{ref}/cat-datafeeds.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.mlDatafeeds(...)
+----
+
+[discrete]
+==== ml_jobs
+Gets configuration and usage information about anomaly detection jobs.
+
+{ref}/cat-anomaly-detectors.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.mlJobs(...)
+----
+
+[discrete]
+==== ml_trained_models
+Gets configuration and usage information about inference trained models.
+
+{ref}/cat-trained-model.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.mlTrainedModels(...)
+----
+
+[discrete]
+==== transforms
+Gets configuration and usage information about transforms.
+
+{ref}/cat-transforms.html[Endpoint documentation]
+[source,ts]
+----
+client.cat.transforms(...)
+----
+
+[discrete]
+=== cluster
+[discrete]
+==== delete_component_template
+Deletes a component template
+
+{ref}/indices-component-template.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.deleteComponentTemplate(...)
+----
+
+[discrete]
+==== exists_component_template
+Returns information about whether a particular component template exist
+
+{ref}/indices-component-template.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.existsComponentTemplate(...)
+----
+
+[discrete]
+==== get_component_template
+Returns one or more component templates
+
+{ref}/indices-component-template.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.getComponentTemplate(...)
+----
+
+[discrete]
+==== get_settings
+Returns cluster settings.
+
+{ref}/cluster-get-settings.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.getSettings(...)
+----
+
+[discrete]
+==== info
+Returns different information about the cluster.
+
+{ref}/cluster-info.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.info(...)
+----
+
+[discrete]
+==== pending_tasks
+Returns a list of any cluster-level changes (e.g. create index, update mapping,
+allocate or fail shard) which have not yet been executed.
+
+{ref}/cluster-pending.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.pendingTasks(...)
+----
+
+[discrete]
+==== put_component_template
+Creates or updates a component template
+
+{ref}/indices-component-template.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.putComponentTemplate(...)
+----
+
+[discrete]
+==== put_settings
+Updates the cluster settings.
+
+{ref}/cluster-update-settings.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.putSettings(...)
+----
+
+[discrete]
+==== stats
+Returns high-level overview of cluster statistics.
+
+{ref}/cluster-stats.html[Endpoint documentation]
+[source,ts]
+----
+client.cluster.stats(...)
+----
+
+[discrete]
+=== enrich
+[discrete]
+==== delete_policy
+Deletes an existing enrich policy and its enrich index.
+
+{ref}/delete-enrich-policy-api.html[Endpoint documentation]
+[source,ts]
+----
+client.enrich.deletePolicy(...)
+----
+
+[discrete]
+==== execute_policy
+Creates the enrich index for an existing enrich policy.
+
+{ref}/execute-enrich-policy-api.html[Endpoint documentation]
+[source,ts]
+----
+client.enrich.executePolicy(...)
+----
+
+[discrete]
+==== get_policy
+Gets information about an enrich policy.
+
+{ref}/get-enrich-policy-api.html[Endpoint documentation]
+[source,ts]
+----
+client.enrich.getPolicy(...)
+----
+
+[discrete]
+==== put_policy
+Creates a new enrich policy.
+
+{ref}/put-enrich-policy-api.html[Endpoint documentation]
+[source,ts]
+----
+client.enrich.putPolicy(...)
+----
+
+[discrete]
+==== stats
+Gets enrich coordinator statistics and information about enrich policies that are currently executing.
+
+{ref}/enrich-stats-api.html[Endpoint documentation]
+[source,ts]
+----
+client.enrich.stats(...)
+----
+
+[discrete]
+=== graph
+[discrete]
+==== explore
+Explore extracted and summarized information about the documents and terms in an index.
+
+{ref}/graph-explore-api.html[Endpoint documentation]
+[source,ts]
+----
+client.graph.explore(...)
+----
+
+[discrete]
+=== indices
+[discrete]
+==== analyze
+Performs the analysis process on a text and return the tokens breakdown of the text.
+
+{ref}/indices-analyze.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.analyze(...)
+----
+
+[discrete]
+==== create
+Creates an index with optional settings and mappings.
+
+{ref}/indices-create-index.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.create(...)
+----
+
+[discrete]
+==== create_data_stream
+Creates a data stream
+
+{ref}/data-streams.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.createDataStream(...)
+----
+
+[discrete]
+==== data_streams_stats
+Provides statistics on operations happening in a data stream.
+
+{ref}/data-streams.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.dataStreamsStats(...)
+----
+
+[discrete]
+==== delete
+Deletes an index.
+
+{ref}/indices-delete-index.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.delete(...)
+----
+
+[discrete]
+==== delete_alias
+Deletes an alias.
+
+{ref}/indices-aliases.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.deleteAlias(...)
+----
+
+[discrete]
+==== delete_data_lifecycle
+Deletes the data lifecycle of the selected data streams.
+
+{ref}/dlm-delete-lifecycle.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.deleteDataLifecycle(...)
+----
+
+[discrete]
+==== delete_data_stream
+Deletes a data stream.
+
+{ref}/data-streams.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.deleteDataStream(...)
+----
+
+[discrete]
+==== delete_index_template
+Deletes an index template.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.deleteIndexTemplate(...)
+----
+
+[discrete]
+==== delete_template
+Deletes an index template.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.deleteTemplate(...)
+----
+
+[discrete]
+==== disk_usage
+Analyzes the disk usage of each field of an index or data stream
+
+{ref}/indices-disk-usage.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.diskUsage(...)
+----
+
+[discrete]
+==== exists
+Returns information about whether a particular index exists.
+
+{ref}/indices-exists.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.exists(...)
+----
+
+[discrete]
+==== exists_alias
+Returns information about whether a particular alias exists.
+
+{ref}/indices-aliases.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.existsAlias(...)
+----
+
+[discrete]
+==== exists_index_template
+Returns information about whether a particular index template exists.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.existsIndexTemplate(...)
+----
+
+[discrete]
+==== exists_template
+Returns information about whether a particular index template exists.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.existsTemplate(...)
+----
+
+[discrete]
+==== explain_data_lifecycle
+Retrieves information about the index's current DLM lifecycle, such as any potential encountered error, time since creation etc.
+
+{ref}/dlm-explain-lifecycle.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.explainDataLifecycle(...)
+----
+
+[discrete]
+==== get
+Returns information about one or more indices.
+
+{ref}/indices-get-index.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.get(...)
+----
+
+[discrete]
+==== get_alias
+Returns an alias.
+
+{ref}/indices-aliases.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.getAlias(...)
+----
+
+[discrete]
+==== get_data_lifecycle
+Returns the data lifecycle of the selected data streams.
+
+{ref}/dlm-get-lifecycle.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.getDataLifecycle(...)
+----
+
+[discrete]
+==== get_data_stream
+Returns data streams.
+
+{ref}/data-streams.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.getDataStream(...)
+----
+
+[discrete]
+==== get_index_template
+Returns an index template.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.getIndexTemplate(...)
+----
+
+[discrete]
+==== get_mapping
+Returns mappings for one or more indices.
+
+{ref}/indices-get-mapping.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.getMapping(...)
+----
+
+[discrete]
+==== get_settings
+Returns settings for one or more indices.
+
+{ref}/indices-get-settings.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.getSettings(...)
+----
+
+[discrete]
+==== get_template
+Returns an index template.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.getTemplate(...)
+----
+
+[discrete]
+==== migrate_to_data_stream
+Migrates an alias to a data stream
+
+{ref}/data-streams.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.migrateToDataStream(...)
+----
+
+[discrete]
+==== modify_data_stream
+Modifies a data stream
+
+{ref}/data-streams.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.modifyDataStream(...)
+----
+
+[discrete]
+==== put_alias
+Creates or updates an alias.
+
+{ref}/indices-aliases.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.putAlias(...)
+----
+
+[discrete]
+==== put_data_lifecycle
+Updates the data lifecycle of the selected data streams.
+
+{ref}/dlm-put-lifecycle.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.putDataLifecycle(...)
+----
+
+[discrete]
+==== put_index_template
+Creates or updates an index template.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.putIndexTemplate(...)
+----
+
+[discrete]
+==== put_mapping
+Updates the index mappings.
+
+{ref}/indices-put-mapping.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.putMapping(...)
+----
+
+[discrete]
+==== put_settings
+Updates the index settings.
+
+{ref}/indices-update-settings.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.putSettings(...)
+----
+
+[discrete]
+==== put_template
+Creates or updates an index template.
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.putTemplate(...)
+----
+
+[discrete]
+==== resolve_index
+Returns information about any matching indices, aliases, and data streams
+
+{ref}/indices-resolve-index-api.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.resolveIndex(...)
+----
+
+[discrete]
+==== rollover
+Updates an alias to point to a new index when the existing index
+is considered to be too large or too old.
+
+{ref}/indices-rollover-index.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.rollover(...)
+----
+
+[discrete]
+==== simulate_index_template
+Simulate matching the given index name against the index templates in the system
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.simulateIndexTemplate(...)
+----
+
+[discrete]
+==== simulate_template
+Simulate resolving the given template name or body
+
+{ref}/indices-templates.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.simulateTemplate(...)
+----
+
+[discrete]
+==== update_aliases
+Updates index aliases.
+
+{ref}/indices-aliases.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.updateAliases(...)
+----
+
+[discrete]
+==== validate_query
+Allows a user to validate a potentially expensive query without executing it.
+
+{ref}/search-validate.html[Endpoint documentation]
+[source,ts]
+----
+client.indices.validateQuery(...)
+----
+
+[discrete]
+=== ingest
+[discrete]
+==== delete_pipeline
+Deletes a pipeline.
+
+{ref}/delete-pipeline-api.html[Endpoint documentation]
+[source,ts]
+----
+client.ingest.deletePipeline(...)
+----
+
+[discrete]
+==== get_pipeline
+Returns a pipeline.
+
+{ref}/get-pipeline-api.html[Endpoint documentation]
+[source,ts]
+----
+client.ingest.getPipeline(...)
+----
+
+[discrete]
+==== processor_grok
+Returns a list of the built-in patterns.
+
+{ref}/grok-processor.html[Endpoint documentation]
+[source,ts]
+----
+client.ingest.processorGrok(...)
+----
+
+[discrete]
+==== put_pipeline
+Creates or updates a pipeline.
+
+{ref}/put-pipeline-api.html[Endpoint documentation]
+[source,ts]
+----
+client.ingest.putPipeline(...)
+----
+
+[discrete]
+==== simulate
+Allows to simulate a pipeline with example documents.
+
+{ref}/simulate-pipeline-api.html[Endpoint documentation]
+[source,ts]
+----
+client.ingest.simulate(...)
+----
+
+[discrete]
+=== logstash
+[discrete]
+==== delete_pipeline
+Deletes Logstash Pipelines used by Central Management
+
+{ref}/logstash-api-delete-pipeline.html[Endpoint documentation]
+[source,ts]
+----
+client.logstash.deletePipeline(...)
+----
+
+[discrete]
+==== get_pipeline
+Retrieves Logstash Pipelines used by Central Management
+
+{ref}/logstash-api-get-pipeline.html[Endpoint documentation]
+[source,ts]
+----
+client.logstash.getPipeline(...)
+----
+
+[discrete]
+==== put_pipeline
+Adds and updates Logstash Pipelines used for Central Management
+
+{ref}/logstash-api-put-pipeline.html[Endpoint documentation]
+[source,ts]
+----
+client.logstash.putPipeline(...)
+----
+
+[discrete]
+=== ml
+[discrete]
+==== close_job
+Closes one or more anomaly detection jobs. A job can be opened and closed multiple times throughout its lifecycle.
+
+{ref}/ml-close-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.closeJob(...)
+----
+
+[discrete]
+==== delete_calendar
+Deletes a calendar.
+
+{ref}/ml-delete-calendar.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteCalendar(...)
+----
+
+[discrete]
+==== delete_calendar_event
+Deletes scheduled events from a calendar.
+
+{ref}/ml-delete-calendar-event.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteCalendarEvent(...)
+----
+
+[discrete]
+==== delete_calendar_job
+Deletes anomaly detection jobs from a calendar.
+
+{ref}/ml-delete-calendar-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteCalendarJob(...)
+----
+
+[discrete]
+==== delete_data_frame_analytics
+Deletes an existing data frame analytics job.
+
+{ref}/delete-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteDataFrameAnalytics(...)
+----
+
+[discrete]
+==== delete_datafeed
+Deletes an existing datafeed.
+
+{ref}/ml-delete-datafeed.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteDatafeed(...)
+----
+
+[discrete]
+==== delete_filter
+Deletes a filter.
+
+{ref}/ml-delete-filter.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteFilter(...)
+----
+
+[discrete]
+==== delete_job
+Deletes an existing anomaly detection job.
+
+{ref}/ml-delete-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteJob(...)
+----
+
+[discrete]
+==== delete_trained_model
+Deletes an existing trained inference model that is currently not referenced by an ingest pipeline.
+
+{ref}/delete-trained-models.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteTrainedModel(...)
+----
+
+[discrete]
+==== delete_trained_model_alias
+Deletes a model alias that refers to the trained model
+
+{ref}/delete-trained-models-aliases.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.deleteTrainedModelAlias(...)
+----
+
+[discrete]
+==== estimate_model_memory
+Estimates the model memory
+
+{ref}/ml-apis.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.estimateModelMemory(...)
+----
+
+[discrete]
+==== evaluate_data_frame
+Evaluates the data frame analytics for an annotated index.
+
+{ref}/evaluate-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.evaluateDataFrame(...)
+----
+
+[discrete]
+==== flush_job
+Forces any buffered data to be processed by the job.
+
+{ref}/ml-flush-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.flushJob(...)
+----
+
+[discrete]
+==== get_calendar_events
+Retrieves information about the scheduled events in calendars.
+
+{ref}/ml-get-calendar-event.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getCalendarEvents(...)
+----
+
+[discrete]
+==== get_calendars
+Retrieves configuration information for calendars.
+
+{ref}/ml-get-calendar.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getCalendars(...)
+----
+
+[discrete]
+==== get_data_frame_analytics
+Retrieves configuration information for data frame analytics jobs.
+
+{ref}/get-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getDataFrameAnalytics(...)
+----
+
+[discrete]
+==== get_data_frame_analytics_stats
+Retrieves usage information for data frame analytics jobs.
+
+{ref}/get-dfanalytics-stats.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getDataFrameAnalyticsStats(...)
+----
+
+[discrete]
+==== get_datafeed_stats
+Retrieves usage information for datafeeds.
+
+{ref}/ml-get-datafeed-stats.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getDatafeedStats(...)
+----
+
+[discrete]
+==== get_datafeeds
+Retrieves configuration information for datafeeds.
+
+{ref}/ml-get-datafeed.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getDatafeeds(...)
+----
+
+[discrete]
+==== get_filters
+Retrieves filters.
+
+{ref}/ml-get-filter.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getFilters(...)
+----
+
+[discrete]
+==== get_job_stats
+Retrieves usage information for anomaly detection jobs.
+
+{ref}/ml-get-job-stats.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getJobStats(...)
+----
+
+[discrete]
+==== get_jobs
+Retrieves configuration information for anomaly detection jobs.
+
+{ref}/ml-get-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getJobs(...)
+----
+
+[discrete]
+==== get_overall_buckets
+Retrieves overall bucket results that summarize the bucket results of multiple anomaly detection jobs.
+
+{ref}/ml-get-overall-buckets.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getOverallBuckets(...)
+----
+
+[discrete]
+==== get_trained_models
+Retrieves configuration information for a trained inference model.
+
+{ref}/get-trained-models.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getTrainedModels(...)
+----
+
+[discrete]
+==== get_trained_models_stats
+Retrieves usage information for trained inference models.
+
+{ref}/get-trained-models-stats.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.getTrainedModelsStats(...)
+----
+
+[discrete]
+==== open_job
+Opens one or more anomaly detection jobs.
+
+{ref}/ml-open-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.openJob(...)
+----
+
+[discrete]
+==== post_calendar_events
+Posts scheduled events in a calendar.
+
+{ref}/ml-post-calendar-event.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.postCalendarEvents(...)
+----
+
+[discrete]
+==== preview_data_frame_analytics
+Previews that will be analyzed given a data frame analytics config.
+
+{ref}/preview-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.previewDataFrameAnalytics(...)
+----
+
+[discrete]
+==== preview_datafeed
+Previews a datafeed.
+
+{ref}/ml-preview-datafeed.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.previewDatafeed(...)
+----
+
+[discrete]
+==== put_calendar
+Instantiates a calendar.
+
+{ref}/ml-put-calendar.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putCalendar(...)
+----
+
+[discrete]
+==== put_calendar_job
+Adds an anomaly detection job to a calendar.
+
+{ref}/ml-put-calendar-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putCalendarJob(...)
+----
+
+[discrete]
+==== put_data_frame_analytics
+Instantiates a data frame analytics job.
+
+{ref}/put-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putDataFrameAnalytics(...)
+----
+
+[discrete]
+==== put_datafeed
+Instantiates a datafeed.
+
+{ref}/ml-put-datafeed.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putDatafeed(...)
+----
+
+[discrete]
+==== put_filter
+Instantiates a filter.
+
+{ref}/ml-put-filter.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putFilter(...)
+----
+
+[discrete]
+==== put_job
+Instantiates an anomaly detection job.
+
+{ref}/ml-put-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putJob(...)
+----
+
+[discrete]
+==== put_trained_model
+Creates an inference trained model.
+
+{ref}/put-trained-models.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putTrainedModel(...)
+----
+
+[discrete]
+==== put_trained_model_alias
+Creates a new model alias (or reassigns an existing one) to refer to the trained model
+
+{ref}/put-trained-models-aliases.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putTrainedModelAlias(...)
+----
+
+[discrete]
+==== put_trained_model_definition_part
+Creates part of a trained model definition
+
+{ref}/put-trained-model-definition-part.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putTrainedModelDefinitionPart(...)
+----
+
+[discrete]
+==== put_trained_model_vocabulary
+Creates a trained model vocabulary
+
+{ref}/put-trained-model-vocabulary.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.putTrainedModelVocabulary(...)
+----
+
+[discrete]
+==== reset_job
+Resets an existing anomaly detection job.
+
+{ref}/ml-reset-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.resetJob(...)
+----
+
+[discrete]
+==== start_data_frame_analytics
+Starts a data frame analytics job.
+
+{ref}/start-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.startDataFrameAnalytics(...)
+----
+
+[discrete]
+==== start_datafeed
+Starts one or more datafeeds.
+
+{ref}/ml-start-datafeed.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.startDatafeed(...)
+----
+
+[discrete]
+==== start_trained_model_deployment
+Start a trained model deployment.
+
+{ref}/start-trained-model-deployment.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.startTrainedModelDeployment(...)
+----
+
+[discrete]
+==== stop_data_frame_analytics
+Stops one or more data frame analytics jobs.
+
+{ref}/stop-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.stopDataFrameAnalytics(...)
+----
+
+[discrete]
+==== stop_datafeed
+Stops one or more datafeeds.
+
+{ref}/ml-stop-datafeed.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.stopDatafeed(...)
+----
+
+[discrete]
+==== stop_trained_model_deployment
+Stop a trained model deployment.
+
+{ref}/stop-trained-model-deployment.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.stopTrainedModelDeployment(...)
+----
+
+[discrete]
+==== update_data_frame_analytics
+Updates certain properties of a data frame analytics job.
+
+{ref}/update-dfanalytics.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.updateDataFrameAnalytics(...)
+----
+
+[discrete]
+==== update_datafeed
+Updates certain properties of a datafeed.
+
+{ref}/ml-update-datafeed.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.updateDatafeed(...)
+----
+
+[discrete]
+==== update_filter
+Updates the description of a filter, adds items, or removes items.
+
+{ref}/ml-update-filter.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.updateFilter(...)
+----
+
+[discrete]
+==== update_job
+Updates certain properties of an anomaly detection job.
+
+{ref}/ml-update-job.html[Endpoint documentation]
+[source,ts]
+----
+client.ml.updateJob(...)
+----
+
+[discrete]
+=== search_application
+[discrete]
+==== delete
+Deletes a search application.
+
+{ref}/put-search-application.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.delete(...)
+----
+
+[discrete]
+==== delete_behavioral_analytics
+Delete a behavioral analytics collection.
+
+{ref}/delete-analytics-collection.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.deleteBehavioralAnalytics(...)
+----
+
+[discrete]
+==== get
+Returns the details about a search application.
+
+{ref}/get-search-application.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.get(...)
+----
+
+[discrete]
+==== get_behavioral_analytics
+Returns the existing behavioral analytics collections.
+
+{ref}/list-analytics-collection.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.getBehavioralAnalytics(...)
+----
+
+[discrete]
+==== list
+Returns the existing search applications.
+
+{ref}/list-search-applications.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.list(...)
+----
+
+[discrete]
+==== put
+Creates or updates a search application.
+
+{ref}/put-search-application.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.put(...)
+----
+
+[discrete]
+==== put_behavioral_analytics
+Creates a behavioral analytics collection.
+
+{ref}/put-analytics-collection.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.putBehavioralAnalytics(...)
+----
+
+[discrete]
+==== search
+Perform a search against a search application
+
+{ref}/search-application-search.html[Endpoint documentation]
+[source,ts]
+----
+client.searchApplication.search(...)
+----
+
+[discrete]
+=== security
+[discrete]
+==== authenticate
+Enables authentication as a user and retrieve information about the authenticated user.
+
+{ref}/security-api-authenticate.html[Endpoint documentation]
+[source,ts]
+----
+client.security.authenticate(...)
+----
+
+[discrete]
+==== clear_api_key_cache
+Clear a subset or all entries from the API key cache.
+
+{ref}/security-api-clear-api-key-cache.html[Endpoint documentation]
+[source,ts]
+----
+client.security.clearApiKeyCache(...)
+----
+
+[discrete]
+==== create_api_key
+Creates an API key for access without requiring basic authentication.
+
+{ref}/security-api-create-api-key.html[Endpoint documentation]
+[source,ts]
+----
+client.security.createApiKey(...)
+----
+
+[discrete]
+==== get_api_key
+Retrieves information for one or more API keys.
+
+{ref}/security-api-get-api-key.html[Endpoint documentation]
+[source,ts]
+----
+client.security.getApiKey(...)
+----
+
+[discrete]
+==== invalidate_api_key
+Invalidates one or more API keys.
+
+{ref}/security-api-invalidate-api-key.html[Endpoint documentation]
+[source,ts]
+----
+client.security.invalidateApiKey(...)
+----
+
+[discrete]
+==== query_api_keys
+Retrieves information for API keys using a subset of query DSL
+
+{ref}/security-api-query-api-key.html[Endpoint documentation]
+[source,ts]
+----
+client.security.queryApiKeys(...)
+----
+
+[discrete]
+==== update_api_key
+Updates attributes of an existing API key.
+
+{ref}/security-api-update-api-key.html[Endpoint documentation]
+[source,ts]
+----
+client.security.updateApiKey(...)
+----
+
+[discrete]
+=== transform
+[discrete]
+==== delete_transform
+Deletes an existing transform.
+
+{ref}/delete-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.deleteTransform(...)
+----
+
+[discrete]
+==== get_transform
+Retrieves configuration information for transforms.
+
+{ref}/get-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.getTransform(...)
+----
+
+[discrete]
+==== get_transform_stats
+Retrieves usage information for transforms.
+
+{ref}/get-transform-stats.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.getTransformStats(...)
+----
+
+[discrete]
+==== preview_transform
+Previews a transform.
+
+{ref}/preview-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.previewTransform(...)
+----
+
+[discrete]
+==== put_transform
+Instantiates a transform.
+
+{ref}/put-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.putTransform(...)
+----
+
+[discrete]
+==== reset_transform
+Resets an existing transform.
+
+{ref}/reset-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.resetTransform(...)
+----
+
+[discrete]
+==== schedule_now_transform
+Schedules now a transform.
+
+{ref}/schedule-now-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.scheduleNowTransform(...)
+----
+
+[discrete]
+==== start_transform
+Starts one or more transforms.
+
+{ref}/start-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.startTransform(...)
+----
+
+[discrete]
+==== stop_transform
+Stops one or more transforms.
+
+{ref}/stop-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.stopTransform(...)
+----
+
+[discrete]
+==== update_transform
+Updates certain properties of a transform.
+
+{ref}/update-transform.html[Endpoint documentation]
+[source,ts]
+----
+client.transform.updateTransform(...)
 ----
 
