@@ -105,7 +105,7 @@ export default class Security {
   async createApiKey (this: That, params?: T.SecurityCreateApiKeyRequest | TB.SecurityCreateApiKeyRequest, options?: TransportRequestOptions): Promise<T.SecurityCreateApiKeyResponse>
   async createApiKey (this: That, params?: T.SecurityCreateApiKeyRequest | TB.SecurityCreateApiKeyRequest, options?: TransportRequestOptions): Promise<any> {
     const acceptedPath: string[] = []
-    const acceptedBody: string[] = ['expiration', 'name', 'role_descriptors', 'metadata']
+    const acceptedBody: string[] = ['expiration', 'name', 'role_descriptors']
     const querystring: Record<string, any> = {}
     // @ts-expect-error
     const userBody: any = params?.body

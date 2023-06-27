@@ -46,7 +46,7 @@ export default async function FieldCapsApi (this: That, params?: T.FieldCapsRequ
 export default async function FieldCapsApi (this: That, params?: T.FieldCapsRequest | TB.FieldCapsRequest, options?: TransportRequestOptions): Promise<T.FieldCapsResponse>
 export default async function FieldCapsApi (this: That, params?: T.FieldCapsRequest | TB.FieldCapsRequest, options?: TransportRequestOptions): Promise<any> {
   const acceptedPath: string[] = ['index']
-  const acceptedBody: string[] = ['fields', 'index_filter', 'runtime_mappings']
+  const acceptedBody: string[] = ['index_filter']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
   const userBody: any = params?.body
