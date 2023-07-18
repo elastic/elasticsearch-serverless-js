@@ -91,6 +91,19 @@ const result = await client.helpers.bulk({
 })
 ```
 
+
+### Getting documents
+
+You can get documents by using the following code:
+
+```js
+await client.get({
+  index: 'books',
+  id: 'a_document_id',
+})
+```
+
+
 ### Searching
 
 Now that some data is available, you can search your documents using the 
@@ -107,6 +120,42 @@ const result = await client.search({
 })
 console.log(result.hits.hits)
 ```
+
+
+### Updating a document
+
+You can call the `update` API to update a document:
+
+```js
+await client.update({
+  index: 'books',
+  id: 'a_document_id',
+  doc: {
+    author: 'S.E. Hinton',
+    new_field: 'new value'
+  }
+})
+```
+
+### Deleting a document
+
+You can call the `delete` API to delete a document:
+
+```js
+await client.delete({
+  index: 'books',
+  id: 'a_document_id',
+})
+```
+
+
+### Deleting an index
+
+
+```js
+await client.indices.delete({ index: 'books' })
+```
+
 
 ## TypeScript
 
