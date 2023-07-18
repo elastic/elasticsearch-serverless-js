@@ -197,7 +197,7 @@ export default class Helpers {
       throw new ResponseError(response)
     }
 
-    let scroll_id: string | undefined
+    let scroll_id = response.body._scroll_id
     let stop = false
     const clear = async (): Promise<void> => {
       stop = true
@@ -274,7 +274,7 @@ export default class Helpers {
    * @param {object} reqOptions - The client optional configuration for this request.
    * @return {object} The possible operations to run.
    */
-  msearch (options: MsearchHelperOptions = { searches: [] }, reqOptions: TransportRequestOptions = {}): MsearchHelper {
+  msearch (options: MsearchHelperOptions = {}, reqOptions: TransportRequestOptions = {}): MsearchHelper {
     const client = this[kClient]
     const {
       operations = 5,
@@ -373,7 +373,7 @@ export default class Helpers {
         clearTimeout(timeoutRef)
       }
 
-      // In some cases the previous http call does not have finished,
+      // In some cases the previos http call does not have finished,
       // or we didn't reach the flush bytes threshold, so we force one last operation.
       if (loadedOperations > 0) {
         const send = await semaphore()
@@ -653,7 +653,7 @@ export default class Helpers {
       }
 
       clearTimeout(timeoutRef)
-      // In some cases the previous http call does not have finished,
+      // In some cases the previos http call does not have finished,
       // or we didn't reach the flush bytes threshold, so we force one last operation.
       if (!shouldAbort && chunkBytes > 0) {
         const send = await semaphore()
@@ -689,8 +689,8 @@ export default class Helpers {
     // to guarantee that no more than the number of operations
     // allowed to run at the same time are executed.
     // It returns a semaphore function which resolves in the next tick
-    // if we didn't reach the maximum concurrency yet, otherwise it returns
-    // a promise that resolves as soon as one of the running request has finished.
+    // if we didn't reach the maximim concurrency yet, otherwise it returns
+    // a promise that resolves as soon as one of the running request has finshed.
     // The semaphore function resolves a send function, which will be used
     // to send the actual bulk request.
     // It also returns a finish function, which returns a promise that is resolved
@@ -813,13 +813,13 @@ export default class Helpers {
             }
             const retry = []
             const { items } = result
+            let indexSlice = 0
             for (let i = 0, len = items.length; i < len; i++) {
               const action = items[i]
               const operation = Object.keys(action)[0]
               // @ts-expect-error
               const responseItem = action[operation as keyof T.BulkResponseItemContainer]
               assert(responseItem !== undefined, 'The responseItem is undefined, please file a bug report')
-              const indexSlice = operation !== 'delete' ? i * 2 : i
 
               if (responseItem.status >= 400) {
                 // 429 is the only status code where we might want to retry
@@ -847,6 +847,7 @@ export default class Helpers {
               } else {
                 stats.successful += 1
               }
+              operation === 'delete' ? indexSlice += 1 : indexSlice += 2
             }
             callback(null, retry)
           })
