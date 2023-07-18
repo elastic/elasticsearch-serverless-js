@@ -45,7 +45,7 @@ export default class Indices {
 
   /**
     * Performs the analysis process on a text and return the tokens breakdown of the text.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-analyze.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-analyze.html | Elasticsearch API documentation}
     */
   async analyze (this: That, params?: T.IndicesAnalyzeRequest | TB.IndicesAnalyzeRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesAnalyzeResponse>
   async analyze (this: That, params?: T.IndicesAnalyzeRequest | TB.IndicesAnalyzeRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesAnalyzeResponse, unknown>>
@@ -91,7 +91,7 @@ export default class Indices {
 
   /**
     * Creates an index with optional settings and mappings.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-create-index.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-create-index.html | Elasticsearch API documentation}
     */
   async create (this: That, params: T.IndicesCreateRequest | TB.IndicesCreateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesCreateResponse>
   async create (this: That, params: T.IndicesCreateRequest | TB.IndicesCreateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesCreateResponse, unknown>>
@@ -129,7 +129,7 @@ export default class Indices {
 
   /**
     * Creates a data stream
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html | Elasticsearch API documentation}
     */
   async createDataStream (this: That, params: T.IndicesCreateDataStreamRequest | TB.IndicesCreateDataStreamRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesCreateDataStreamResponse>
   async createDataStream (this: That, params: T.IndicesCreateDataStreamRequest | TB.IndicesCreateDataStreamRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesCreateDataStreamResponse, unknown>>
@@ -155,7 +155,7 @@ export default class Indices {
 
   /**
     * Provides statistics on operations happening in a data stream.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html | Elasticsearch API documentation}
     */
   async dataStreamsStats (this: That, params?: T.IndicesDataStreamsStatsRequest | TB.IndicesDataStreamsStatsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDataStreamsStatsResponse>
   async dataStreamsStats (this: That, params?: T.IndicesDataStreamsStatsRequest | TB.IndicesDataStreamsStatsRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDataStreamsStatsResponse, unknown>>
@@ -189,7 +189,7 @@ export default class Indices {
 
   /**
     * Deletes an index.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-delete-index.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-delete-index.html | Elasticsearch API documentation}
     */
   async delete (this: That, params: T.IndicesDeleteRequest | TB.IndicesDeleteRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDeleteResponse>
   async delete (this: That, params: T.IndicesDeleteRequest | TB.IndicesDeleteRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDeleteResponse, unknown>>
@@ -215,7 +215,7 @@ export default class Indices {
 
   /**
     * Deletes an alias.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html | Elasticsearch API documentation}
     */
   async deleteAlias (this: That, params: T.IndicesDeleteAliasRequest | TB.IndicesDeleteAliasRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDeleteAliasResponse>
   async deleteAlias (this: That, params: T.IndicesDeleteAliasRequest | TB.IndicesDeleteAliasRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDeleteAliasResponse, unknown>>
@@ -248,7 +248,7 @@ export default class Indices {
 
   /**
     * Deletes the data lifecycle of the selected data streams.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-delete-lifecycle.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-delete-lifecycle.html | Elasticsearch API documentation}
     */
   async deleteDataLifecycle (this: That, params: T.IndicesDeleteDataLifecycleRequest | TB.IndicesDeleteDataLifecycleRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDeleteDataLifecycleResponse>
   async deleteDataLifecycle (this: That, params: T.IndicesDeleteDataLifecycleRequest | TB.IndicesDeleteDataLifecycleRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDeleteDataLifecycleResponse, unknown>>
@@ -274,7 +274,7 @@ export default class Indices {
 
   /**
     * Deletes a data stream.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html | Elasticsearch API documentation}
     */
   async deleteDataStream (this: That, params: T.IndicesDeleteDataStreamRequest | TB.IndicesDeleteDataStreamRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDeleteDataStreamResponse>
   async deleteDataStream (this: That, params: T.IndicesDeleteDataStreamRequest | TB.IndicesDeleteDataStreamRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDeleteDataStreamResponse, unknown>>
@@ -300,7 +300,7 @@ export default class Indices {
 
   /**
     * Deletes an index template.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async deleteIndexTemplate (this: That, params: T.IndicesDeleteIndexTemplateRequest | TB.IndicesDeleteIndexTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDeleteIndexTemplateResponse>
   async deleteIndexTemplate (this: That, params: T.IndicesDeleteIndexTemplateRequest | TB.IndicesDeleteIndexTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDeleteIndexTemplateResponse, unknown>>
@@ -326,7 +326,7 @@ export default class Indices {
 
   /**
     * Deletes an index template.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async deleteTemplate (this: That, params: T.IndicesDeleteTemplateRequest | TB.IndicesDeleteTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDeleteTemplateResponse>
   async deleteTemplate (this: That, params: T.IndicesDeleteTemplateRequest | TB.IndicesDeleteTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDeleteTemplateResponse, unknown>>
@@ -352,7 +352,7 @@ export default class Indices {
 
   /**
     * Analyzes the disk usage of each field of an index or data stream
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-disk-usage.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-disk-usage.html | Elasticsearch API documentation}
     */
   async diskUsage (this: That, params: T.IndicesDiskUsageRequest | TB.IndicesDiskUsageRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDiskUsageResponse>
   async diskUsage (this: That, params: T.IndicesDiskUsageRequest | TB.IndicesDiskUsageRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDiskUsageResponse, unknown>>
@@ -378,7 +378,7 @@ export default class Indices {
 
   /**
     * Returns information about whether a particular index exists.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-exists.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-exists.html | Elasticsearch API documentation}
     */
   async exists (this: That, params: T.IndicesExistsRequest | TB.IndicesExistsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesExistsResponse>
   async exists (this: That, params: T.IndicesExistsRequest | TB.IndicesExistsRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesExistsResponse, unknown>>
@@ -404,7 +404,7 @@ export default class Indices {
 
   /**
     * Returns information about whether a particular alias exists.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html | Elasticsearch API documentation}
     */
   async existsAlias (this: That, params: T.IndicesExistsAliasRequest | TB.IndicesExistsAliasRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesExistsAliasResponse>
   async existsAlias (this: That, params: T.IndicesExistsAliasRequest | TB.IndicesExistsAliasRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesExistsAliasResponse, unknown>>
@@ -437,7 +437,7 @@ export default class Indices {
 
   /**
     * Returns information about whether a particular index template exists.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async existsIndexTemplate (this: That, params: T.IndicesExistsIndexTemplateRequest | TB.IndicesExistsIndexTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesExistsIndexTemplateResponse>
   async existsIndexTemplate (this: That, params: T.IndicesExistsIndexTemplateRequest | TB.IndicesExistsIndexTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesExistsIndexTemplateResponse, unknown>>
@@ -463,7 +463,7 @@ export default class Indices {
 
   /**
     * Returns information about whether a particular index template exists.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async existsTemplate (this: That, params: T.IndicesExistsTemplateRequest | TB.IndicesExistsTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesExistsTemplateResponse>
   async existsTemplate (this: That, params: T.IndicesExistsTemplateRequest | TB.IndicesExistsTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesExistsTemplateResponse, unknown>>
@@ -489,7 +489,7 @@ export default class Indices {
 
   /**
     * Retrieves information about the index's current DLM lifecycle, such as any potential encountered error, time since creation etc.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-explain-lifecycle.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-explain-lifecycle.html | Elasticsearch API documentation}
     */
   async explainDataLifecycle (this: That, params: T.IndicesExplainDataLifecycleRequest | TB.IndicesExplainDataLifecycleRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesExplainDataLifecycleResponse>
   async explainDataLifecycle (this: That, params: T.IndicesExplainDataLifecycleRequest | TB.IndicesExplainDataLifecycleRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesExplainDataLifecycleResponse, unknown>>
@@ -515,7 +515,7 @@ export default class Indices {
 
   /**
     * Returns information about one or more indices.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-get-index.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-get-index.html | Elasticsearch API documentation}
     */
   async get (this: That, params: T.IndicesGetRequest | TB.IndicesGetRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetResponse>
   async get (this: That, params: T.IndicesGetRequest | TB.IndicesGetRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetResponse, unknown>>
@@ -541,7 +541,7 @@ export default class Indices {
 
   /**
     * Returns an alias.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html | Elasticsearch API documentation}
     */
   async getAlias (this: That, params?: T.IndicesGetAliasRequest | TB.IndicesGetAliasRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetAliasResponse>
   async getAlias (this: That, params?: T.IndicesGetAliasRequest | TB.IndicesGetAliasRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetAliasResponse, unknown>>
@@ -581,7 +581,7 @@ export default class Indices {
 
   /**
     * Returns the data lifecycle of the selected data streams.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-get-lifecycle.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-get-lifecycle.html | Elasticsearch API documentation}
     */
   async getDataLifecycle (this: That, params: T.IndicesGetDataLifecycleRequest | TB.IndicesGetDataLifecycleRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetDataLifecycleResponse>
   async getDataLifecycle (this: That, params: T.IndicesGetDataLifecycleRequest | TB.IndicesGetDataLifecycleRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetDataLifecycleResponse, unknown>>
@@ -607,7 +607,7 @@ export default class Indices {
 
   /**
     * Returns data streams.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html | Elasticsearch API documentation}
     */
   async getDataStream (this: That, params?: T.IndicesGetDataStreamRequest | TB.IndicesGetDataStreamRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetDataStreamResponse>
   async getDataStream (this: That, params?: T.IndicesGetDataStreamRequest | TB.IndicesGetDataStreamRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetDataStreamResponse, unknown>>
@@ -641,7 +641,7 @@ export default class Indices {
 
   /**
     * Returns an index template.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async getIndexTemplate (this: That, params?: T.IndicesGetIndexTemplateRequest | TB.IndicesGetIndexTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetIndexTemplateResponse>
   async getIndexTemplate (this: That, params?: T.IndicesGetIndexTemplateRequest | TB.IndicesGetIndexTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetIndexTemplateResponse, unknown>>
@@ -675,7 +675,7 @@ export default class Indices {
 
   /**
     * Returns mappings for one or more indices.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-get-mapping.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-get-mapping.html | Elasticsearch API documentation}
     */
   async getMapping (this: That, params?: T.IndicesGetMappingRequest | TB.IndicesGetMappingRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetMappingResponse>
   async getMapping (this: That, params?: T.IndicesGetMappingRequest | TB.IndicesGetMappingRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetMappingResponse, unknown>>
@@ -709,7 +709,7 @@ export default class Indices {
 
   /**
     * Returns settings for one or more indices.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-get-settings.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-get-settings.html | Elasticsearch API documentation}
     */
   async getSettings (this: That, params?: T.IndicesGetSettingsRequest | TB.IndicesGetSettingsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetSettingsResponse>
   async getSettings (this: That, params?: T.IndicesGetSettingsRequest | TB.IndicesGetSettingsRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetSettingsResponse, unknown>>
@@ -749,7 +749,7 @@ export default class Indices {
 
   /**
     * Returns an index template.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async getTemplate (this: That, params?: T.IndicesGetTemplateRequest | TB.IndicesGetTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesGetTemplateResponse>
   async getTemplate (this: That, params?: T.IndicesGetTemplateRequest | TB.IndicesGetTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesGetTemplateResponse, unknown>>
@@ -783,7 +783,7 @@ export default class Indices {
 
   /**
     * Migrates an alias to a data stream
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html | Elasticsearch API documentation}
     */
   async migrateToDataStream (this: That, params: T.IndicesMigrateToDataStreamRequest | TB.IndicesMigrateToDataStreamRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesMigrateToDataStreamResponse>
   async migrateToDataStream (this: That, params: T.IndicesMigrateToDataStreamRequest | TB.IndicesMigrateToDataStreamRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesMigrateToDataStreamResponse, unknown>>
@@ -809,7 +809,7 @@ export default class Indices {
 
   /**
     * Modifies a data stream
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/data-streams.html | Elasticsearch API documentation}
     */
   async modifyDataStream (this: That, params: T.IndicesModifyDataStreamRequest | TB.IndicesModifyDataStreamRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesModifyDataStreamResponse>
   async modifyDataStream (this: That, params: T.IndicesModifyDataStreamRequest | TB.IndicesModifyDataStreamRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesModifyDataStreamResponse, unknown>>
@@ -847,7 +847,7 @@ export default class Indices {
 
   /**
     * Creates or updates an alias.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html | Elasticsearch API documentation}
     */
   async putAlias (this: That, params: T.IndicesPutAliasRequest | TB.IndicesPutAliasRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesPutAliasResponse>
   async putAlias (this: That, params: T.IndicesPutAliasRequest | TB.IndicesPutAliasRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesPutAliasResponse, unknown>>
@@ -892,7 +892,7 @@ export default class Indices {
 
   /**
     * Updates the data lifecycle of the selected data streams.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-put-lifecycle.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/dlm-put-lifecycle.html | Elasticsearch API documentation}
     */
   async putDataLifecycle (this: That, params: T.IndicesPutDataLifecycleRequest | TB.IndicesPutDataLifecycleRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesPutDataLifecycleResponse>
   async putDataLifecycle (this: That, params: T.IndicesPutDataLifecycleRequest | TB.IndicesPutDataLifecycleRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesPutDataLifecycleResponse, unknown>>
@@ -930,7 +930,7 @@ export default class Indices {
 
   /**
     * Creates or updates an index template.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async putIndexTemplate (this: That, params: T.IndicesPutIndexTemplateRequest | TB.IndicesPutIndexTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesPutIndexTemplateResponse>
   async putIndexTemplate (this: That, params: T.IndicesPutIndexTemplateRequest | TB.IndicesPutIndexTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesPutIndexTemplateResponse, unknown>>
@@ -968,7 +968,7 @@ export default class Indices {
 
   /**
     * Updates the index mappings.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-put-mapping.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-put-mapping.html | Elasticsearch API documentation}
     */
   async putMapping (this: That, params: T.IndicesPutMappingRequest | TB.IndicesPutMappingRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesPutMappingResponse>
   async putMapping (this: That, params: T.IndicesPutMappingRequest | TB.IndicesPutMappingRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesPutMappingResponse, unknown>>
@@ -1006,7 +1006,7 @@ export default class Indices {
 
   /**
     * Updates the index settings.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-update-settings.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-update-settings.html | Elasticsearch API documentation}
     */
   async putSettings (this: That, params: T.IndicesPutSettingsRequest | TB.IndicesPutSettingsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesPutSettingsResponse>
   async putSettings (this: That, params: T.IndicesPutSettingsRequest | TB.IndicesPutSettingsRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesPutSettingsResponse, unknown>>
@@ -1044,7 +1044,7 @@ export default class Indices {
 
   /**
     * Creates or updates an index template.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async putTemplate (this: That, params: T.IndicesPutTemplateRequest | TB.IndicesPutTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesPutTemplateResponse>
   async putTemplate (this: That, params: T.IndicesPutTemplateRequest | TB.IndicesPutTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesPutTemplateResponse, unknown>>
@@ -1082,7 +1082,7 @@ export default class Indices {
 
   /**
     * Returns information about any matching indices, aliases, and data streams
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-resolve-index-api.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-resolve-index-api.html | Elasticsearch API documentation}
     */
   async resolveIndex (this: That, params: T.IndicesResolveIndexRequest | TB.IndicesResolveIndexRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesResolveIndexResponse>
   async resolveIndex (this: That, params: T.IndicesResolveIndexRequest | TB.IndicesResolveIndexRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesResolveIndexResponse, unknown>>
@@ -1107,9 +1107,8 @@ export default class Indices {
   }
 
   /**
-    * Updates an alias to point to a new index when the existing index
-  is considered to be too large or too old.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-rollover-index.html Elasticsearch API docs}
+    * Updates an alias to point to a new index when the existing index is considered to be too large or too old.
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-rollover-index.html | Elasticsearch API documentation}
     */
   async rollover (this: That, params: T.IndicesRolloverRequest | TB.IndicesRolloverRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesRolloverResponse>
   async rollover (this: That, params: T.IndicesRolloverRequest | TB.IndicesRolloverRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesRolloverResponse, unknown>>
@@ -1154,7 +1153,7 @@ export default class Indices {
 
   /**
     * Simulate matching the given index name against the index templates in the system
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async simulateIndexTemplate (this: That, params: T.IndicesSimulateIndexTemplateRequest | TB.IndicesSimulateIndexTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesSimulateIndexTemplateResponse>
   async simulateIndexTemplate (this: That, params: T.IndicesSimulateIndexTemplateRequest | TB.IndicesSimulateIndexTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesSimulateIndexTemplateResponse, unknown>>
@@ -1192,7 +1191,7 @@ export default class Indices {
 
   /**
     * Simulate resolving the given template name or body
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-templates.html | Elasticsearch API documentation}
     */
   async simulateTemplate (this: That, params: T.IndicesSimulateTemplateRequest | TB.IndicesSimulateTemplateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesSimulateTemplateResponse>
   async simulateTemplate (this: That, params: T.IndicesSimulateTemplateRequest | TB.IndicesSimulateTemplateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesSimulateTemplateResponse, unknown>>
@@ -1230,7 +1229,7 @@ export default class Indices {
 
   /**
     * Updates index aliases.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/indices-aliases.html | Elasticsearch API documentation}
     */
   async updateAliases (this: That, params?: T.IndicesUpdateAliasesRequest | TB.IndicesUpdateAliasesRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesUpdateAliasesResponse>
   async updateAliases (this: That, params?: T.IndicesUpdateAliasesRequest | TB.IndicesUpdateAliasesRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesUpdateAliasesResponse, unknown>>
@@ -1269,7 +1268,7 @@ export default class Indices {
 
   /**
     * Allows a user to validate a potentially expensive query without executing it.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/search-validate.html Elasticsearch API docs}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/search-validate.html | Elasticsearch API documentation}
     */
   async validateQuery (this: That, params?: T.IndicesValidateQueryRequest | TB.IndicesValidateQueryRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesValidateQueryResponse>
   async validateQuery (this: That, params?: T.IndicesValidateQueryRequest | TB.IndicesValidateQueryRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesValidateQueryResponse, unknown>>
