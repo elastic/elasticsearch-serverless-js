@@ -4076,7 +4076,7 @@ export type AnalysisAnalyzer = AnalysisCustomAnalyzer | AnalysisFingerprintAnaly
 
 export interface AnalysisAsciiFoldingTokenFilter extends AnalysisTokenFilterBase {
   type: 'asciifolding'
-  preserve_original?: boolean
+  preserve_original?: SpecUtilsStringified<boolean>
 }
 
 export type AnalysisCharFilter = string | AnalysisCharFilterDefinition
@@ -4156,7 +4156,7 @@ export interface AnalysisEdgeNGramTokenFilter extends AnalysisTokenFilterBase {
   max_gram?: integer
   min_gram?: integer
   side?: AnalysisEdgeNGramSide
-  preserve_original?: boolean
+  preserve_original?: SpecUtilsStringified<boolean>
 }
 
 export interface AnalysisEdgeNGramTokenizer extends AnalysisTokenizerBase {
@@ -4395,14 +4395,14 @@ export interface AnalysisMappingCharFilter extends AnalysisCharFilterBase {
 export interface AnalysisMultiplexerTokenFilter extends AnalysisTokenFilterBase {
   type: 'multiplexer'
   filters: string[]
-  preserve_original?: boolean
+  preserve_original?: SpecUtilsStringified<boolean>
 }
 
 export interface AnalysisNGramTokenFilter extends AnalysisTokenFilterBase {
   type: 'ngram'
   max_gram?: integer
   min_gram?: integer
-  preserve_original?: boolean
+  preserve_original?: SpecUtilsStringified<boolean>
 }
 
 export interface AnalysisNGramTokenizer extends AnalysisTokenizerBase {
@@ -4459,7 +4459,7 @@ export interface AnalysisPatternAnalyzer {
 export interface AnalysisPatternCaptureTokenFilter extends AnalysisTokenFilterBase {
   type: 'pattern_capture'
   patterns: string[]
-  preserve_original?: boolean
+  preserve_original?: SpecUtilsStringified<boolean>
 }
 
 export interface AnalysisPatternReplaceCharFilter extends AnalysisCharFilterBase {
@@ -4672,7 +4672,7 @@ export interface AnalysisWordDelimiterGraphTokenFilter extends AnalysisTokenFilt
   generate_number_parts?: boolean
   generate_word_parts?: boolean
   ignore_keywords?: boolean
-  preserve_original?: boolean
+  preserve_original?: SpecUtilsStringified<boolean>
   protected_words?: string[]
   protected_words_path?: string
   split_on_case_change?: boolean
@@ -4689,7 +4689,7 @@ export interface AnalysisWordDelimiterTokenFilter extends AnalysisTokenFilterBas
   catenate_words?: boolean
   generate_number_parts?: boolean
   generate_word_parts?: boolean
-  preserve_original?: boolean
+  preserve_original?: SpecUtilsStringified<boolean>
   protected_words?: string[]
   protected_words_path?: string
   split_on_case_change?: boolean
@@ -5355,7 +5355,7 @@ export interface QueryDslGeoDistanceFeatureQuery extends QueryDslDistanceFeature
 }
 
 export interface QueryDslGeoDistanceQueryKeys extends QueryDslQueryBase {
-  distance?: Distance
+  distance: Distance
   distance_type?: GeoDistanceType
   validation_method?: QueryDslGeoValidationMethod
 }
@@ -8427,10 +8427,10 @@ export interface ClusterPutComponentTemplateRequest extends RequestBase {
   name: Name
   create?: boolean
   master_timeout?: Duration
+  allow_auto_create?: boolean
   template: IndicesIndexState
   version?: VersionNumber
   _meta?: Metadata
-  allow_auto_create?: boolean
 }
 
 export type ClusterPutComponentTemplateResponse = AcknowledgedResponseBase
@@ -8565,14 +8565,14 @@ export interface ClusterStateRequest extends RequestBase {
 export type ClusterStateResponse = any
 
 export interface ClusterStatsCharFilterTypes {
-  char_filter_types: ClusterStatsFieldTypes[]
-  tokenizer_types: ClusterStatsFieldTypes[]
-  filter_types: ClusterStatsFieldTypes[]
   analyzer_types: ClusterStatsFieldTypes[]
-  built_in_char_filters: ClusterStatsFieldTypes[]
-  built_in_tokenizers: ClusterStatsFieldTypes[]
-  built_in_filters: ClusterStatsFieldTypes[]
   built_in_analyzers: ClusterStatsFieldTypes[]
+  built_in_char_filters: ClusterStatsFieldTypes[]
+  built_in_filters: ClusterStatsFieldTypes[]
+  built_in_tokenizers: ClusterStatsFieldTypes[]
+  char_filter_types: ClusterStatsFieldTypes[]
+  filter_types: ClusterStatsFieldTypes[]
+  tokenizer_types: ClusterStatsFieldTypes[]
 }
 
 export interface ClusterStatsClusterFileSystem {
@@ -8582,6 +8582,7 @@ export interface ClusterStatsClusterFileSystem {
 }
 
 export interface ClusterStatsClusterIndices {
+  analysis: ClusterStatsCharFilterTypes
   completion: CompletionStats
   count: long
   docs: DocStats
@@ -8591,7 +8592,6 @@ export interface ClusterStatsClusterIndices {
   shards: ClusterStatsClusterIndicesShards
   store: StoreStats
   mappings: ClusterStatsFieldTypesMappings
-  analysis: ClusterStatsCharFilterTypes
   versions?: ClusterStatsIndicesVersions[]
 }
 
@@ -8643,17 +8643,17 @@ export interface ClusterStatsClusterNetworkTypes {
 export interface ClusterStatsClusterNodeCount {
   coordinating_only: integer
   data: integer
-  ingest: integer
-  master: integer
-  total: integer
-  voting_only: integer
   data_cold: integer
   data_content: integer
-  data_warm: integer
   data_hot: integer
+  data_warm: integer
+  ingest: integer
+  master: integer
   ml: integer
   remote_cluster_client: integer
+  total: integer
   transform: integer
+  voting_only: integer
 }
 
 export interface ClusterStatsClusterNodes {
@@ -8672,16 +8672,16 @@ export interface ClusterStatsClusterNodes {
 
 export interface ClusterStatsClusterOperatingSystem {
   allocated_processors: integer
+  architectures?: ClusterStatsClusterOperatingSystemArchitecture[]
   available_processors: integer
   mem: ClusterStatsOperatingSystemMemoryInfo
   names: ClusterStatsClusterOperatingSystemName[]
   pretty_names: ClusterStatsClusterOperatingSystemPrettyName[]
-  architectures?: ClusterStatsClusterOperatingSystemArchitecture[]
 }
 
 export interface ClusterStatsClusterOperatingSystemArchitecture {
-  count: integer
   arch: string
+  count: integer
 }
 
 export interface ClusterStatsClusterOperatingSystemName {
@@ -8746,8 +8746,8 @@ export interface ClusterStatsIndexingPressure {
 }
 
 export interface ClusterStatsIndexingPressureMemory {
-  limit_in_bytes: long
   current: ClusterStatsIndexingPressureMemorySummary
+  limit_in_bytes: long
   total: ClusterStatsIndexingPressureMemorySummary
 }
 
@@ -8792,20 +8792,20 @@ export interface ClusterStatsRequest extends RequestBase {
 export type ClusterStatsResponse = ClusterStatsStatsResponseBase
 
 export interface ClusterStatsRuntimeFieldTypes {
-  name: Name
+  chars_max: integer
+  chars_total: integer
   count: integer
+  doc_max: integer
+  doc_total: integer
   index_count: integer
-  scriptless_count: integer
-  shadowed_count: integer
   lang: string[]
   lines_max: integer
   lines_total: integer
-  chars_max: integer
-  chars_total: integer
+  name: Name
+  scriptless_count: integer
+  shadowed_count: integer
   source_max: integer
   source_total: integer
-  doc_max: integer
-  doc_total: integer
 }
 
 export interface ClusterStatsStatsResponseBase extends NodesNodesResponseBase {
@@ -9426,17 +9426,17 @@ export interface IndicesDataLifecycleWithRollover {
 }
 
 export interface IndicesDataStream {
-  name: DataStreamName
-  timestamp_field: IndicesDataStreamTimestampField
-  indices: IndicesDataStreamIndex[]
-  generation: integer
-  template: Name
-  hidden: boolean
-  replicated?: boolean
-  status: HealthStatus
-  ilm_policy?: Name
   _meta?: Metadata
   allow_custom_routing?: boolean
+  generation: integer
+  hidden: boolean
+  ilm_policy?: Name
+  indices: IndicesDataStreamIndex[]
+  name: DataStreamName
+  replicated?: boolean
+  status: HealthStatus
+  template: Name
+  timestamp_field: IndicesDataStreamTimestampField
 }
 
 export interface IndicesDataStreamIndex {
@@ -9597,7 +9597,7 @@ export interface IndicesIndexSettingsAnalysis {
 
 export interface IndicesIndexSettingsLifecycle {
   name: Name
-  indexing_complete?: boolean
+  indexing_complete?: SpecUtilsStringified<boolean>
   origination_date?: long
   parse_origination_date?: boolean
   step?: IndicesIndexSettingsLifecycleStep
@@ -10015,9 +10015,9 @@ export type IndicesCreateDataStreamResponse = AcknowledgedResponseBase
 export interface IndicesDataStreamsStatsDataStreamsStatsItem {
   backing_indices: integer
   data_stream: Name
+  maximum_timestamp: EpochTime<UnitMillis>
   store_size?: ByteSize
   store_size_bytes: integer
-  maximum_timestamp: EpochTime<UnitMillis>
 }
 
 export interface IndicesDataStreamsStatsRequest extends RequestBase {
@@ -10029,9 +10029,9 @@ export interface IndicesDataStreamsStatsResponse {
   _shards: ShardStatistics
   backing_indices: integer
   data_stream_count: integer
+  data_streams: IndicesDataStreamsStatsDataStreamsStatsItem[]
   total_store_sizes?: ByteSize
   total_store_size_bytes: integer
-  data_streams: IndicesDataStreamsStatsDataStreamsStatsItem[]
 }
 
 export interface IndicesDeleteRequest extends RequestBase {
@@ -10389,8 +10389,8 @@ export interface IndicesModifyDataStreamAction {
 }
 
 export interface IndicesModifyDataStreamIndexAndDataStreamAction {
-  index: IndexName
   data_stream: DataStreamName
+  index: IndexName
 }
 
 export interface IndicesModifyDataStreamRequest extends RequestBase {
@@ -12326,6 +12326,7 @@ export interface MlDiscoveryNode {
 export type MlExcludeFrequent = 'all' | 'none' | 'by' | 'over'
 
 export interface MlFillMaskInferenceOptions {
+  mask_token?: string
   num_top_classes?: integer
   tokenization?: MlTokenizationConfigContainer
   results_field?: string
@@ -13818,7 +13819,7 @@ export interface MlPutTrainedModelRequest extends RequestBase {
   compressed_definition?: string
   definition?: MlPutTrainedModelDefinition
   description?: string
-  inference_config: MlInferenceConfigCreateContainer
+  inference_config?: MlInferenceConfigCreateContainer
   input?: MlPutTrainedModelInput
   metadata?: any
   model_type?: MlTrainedModelType
