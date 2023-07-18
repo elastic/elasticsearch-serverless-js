@@ -54,4 +54,5 @@ jobs:
 
       - name: License checker
         run: |
-          npm run license-checker
+          # TODO: remove excludePrivatePackages after this goes live
+          npm run license-checker -- --excludePrivatePackages
