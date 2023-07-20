@@ -1,3 +1,4 @@
+---
 name: Unit tests
 on: [push, pull_request]
 
@@ -12,24 +13,24 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install
-      run: |
-        npm install
+      - name: Install
+        run: |
+          npm install
 
-    - name: Lint
-      run: |
-        npm run lint
+      - name: Lint
+        run: |
+          npm run lint
 
-    - name: Unit test
-      run: |
-        npm run test:unit
+      - name: Unit test
+        run: |
+          npm run test:unit
 
   license:
     name: License check
@@ -40,17 +41,18 @@ jobs:
         node-version: [20.x]
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Install
-      run: |
-        npm install
+      - name: Install
+        run: |
+          npm install
 
-    - name: License checker
-      run: |
-        npm run license-checker
+      - name: License checker
+        run: |
+          # TODO: remove excludePrivatePackages after this goes live
+          npm run license-checker -- --excludePrivatePackages
