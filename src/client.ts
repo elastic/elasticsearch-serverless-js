@@ -202,7 +202,7 @@ export default class Client extends API {
     }
 
     if (options.enableMetaHeader) {
-      options.headers['x-elastic-client-meta'] = `es=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
+      options.headers['x-elastic-client-meta'] = `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
     }
 
     this.name = options.name
@@ -265,7 +265,7 @@ export default class Client extends API {
     this.helpers = new Helpers({
       client: this,
       metaHeader: options.enableMetaHeader
-        ? `es=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
+        ? `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
         : null,
       maxRetries: options.maxRetries
     })

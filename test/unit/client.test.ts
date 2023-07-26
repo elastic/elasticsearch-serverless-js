@@ -365,7 +365,7 @@ test('Meta header enabled by default', async t => {
 
   const Connection = connection.buildMockConnection({
     onRequest (opts) {
-      t.match(opts.headers, { 'x-elastic-client-meta': `es=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}` })
+      t.match(opts.headers, { 'x-elastic-client-meta': `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}` })
       return {
         statusCode: 200,
         body: { hello: 'world' }
