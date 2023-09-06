@@ -1,7 +1,7 @@
 {
   "name": "elasticsearch-serverless",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.0+20231031",
   "description": "The official Node.js Elastic client for the Elasticsearch Serverless service.",
   "main": "index.js",
   "types": "index.d.ts",

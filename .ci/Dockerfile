@@ -1,12 +1,13 @@
-ARG NODE_JS_VERSION=18
+ARG NODE_JS_VERSION=20
 FROM node:${NODE_JS_VERSION}
 
-# Create app directory
-WORKDIR /usr/src/app
+# install zip util
+RUN apt-get clean -y && \
+    apt-get update -y && \
+    apt-get install -y zip
 
-RUN apt-get clean -y
-RUN apt-get update -y
-RUN apt-get install -y zip
+# Set user permissions and directory
+WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
