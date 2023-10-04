@@ -34,35 +34,28 @@ npm install @elastic/elasticsearch-serverless
 
 ## Instantiate a client
 
-You can instantiate a client by running the following command:
+Initialize the client using your Serverless project URL and API key, both provided by Elastic:
 
 ```js
 const { Client } = require('@elastic/elasticsearch-serverless')
 const client = new Client({
-  cloud: { id: '<cloud-id>' },
-  auth: { apiKey: 'base64EncodedKey' }
+  node: 'https://', // serverless project URL
+  auth: { apiKey: 'your_api_key' }, // project API key
 })
 ```
 
-You can find the Elasticsearch endpoint on the Cloud deployment management page.
-
-<DocImage url="images/copy-endpoint.gif" alt="Copy the endpoint for Elasticsearch"/>
-
-You can create a new API Key under **Stack Management** > **Security**:
-
-<DocImage url="images/setup-api-key.gif" alt="Create and copy Apy Key"/>
+To get API keys or the URL for a project, see <DocLink id="serverlessElasticsearchGetStarted" />.
 
 ## Using the API
 
-After you instantiate a client with your API key and Elasticsearch endpoint, you 
-can start ingesting documents into the Elasticsearch Service. You can use the 
-Bulk API for this. This API enables you to index, update, and delete several 
-documents in one request.
+After you've initialized the client, you can start ingesting documents.
+You can use the Bulk API for this.
+This API enables you to index, update, and delete several documents in one request.
 
 ### Creating an index and ingesting documents
 
 You can call the `bulk` helper API with a list of documents and a handler for 
-what action to perform on each handler. 
+what action to perform on each document. 
 
 The following is an example of bulk indexing some classic books into the `books` 
 index:
@@ -106,15 +99,14 @@ await client.get({
 
 ### Searching
 
-Now that some data is available, you can search your documents using the 
-**Search API**:
+Now that some data is available, you can search your documents using the **Search API**:
 
 ```js
 const result = await client.search({
   index: 'books',
   query: {
     match: {
-      author: 'Ray Bradbury'
+      author: 'ray bradbury'
     }
   }
 })
