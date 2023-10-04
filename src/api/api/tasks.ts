@@ -37,29 +37,35 @@ import * as T from '../types'
 import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
-/**
-  * Returns basic information about the cluster.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/index.html | Elasticsearch API documentation}
-  */
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.InfoResponse>
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.InfoResponse, unknown>>
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptions): Promise<T.InfoResponse>
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = []
-  const querystring: Record<string, any> = {}
-  const body = undefined
-
-  params = params ?? {}
-  for (const key in params) {
-    if (acceptedPath.includes(key)) {
-      continue
-    } else if (key !== 'body') {
-      // @ts-expect-error
-      querystring[key] = params[key]
-    }
+export default class Tasks {
+  transport: Transport
+  constructor (transport: Transport) {
+    this.transport = transport
   }
 
-  const method = 'GET'
-  const path = '/'
-  return await this.transport.request({ path, method, querystring, body }, options)
+  /**
+    * Returns information about a task.
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/tasks.html | Elasticsearch API documentation}
+    */
+  async get (this: That, params: T.TasksGetRequest | TB.TasksGetRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.TasksGetResponse>
+  async get (this: That, params: T.TasksGetRequest | TB.TasksGetRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.TasksGetResponse, unknown>>
+  async get (this: That, params: T.TasksGetRequest | TB.TasksGetRequest, options?: TransportRequestOptions): Promise<T.TasksGetResponse>
+  async get (this: That, params: T.TasksGetRequest | TB.TasksGetRequest, options?: TransportRequestOptions): Promise<any> {
+    const acceptedPath: string[] = ['task_id']
+    const querystring: Record<string, any> = {}
+    const body = undefined
+
+    for (const key in params) {
+      if (acceptedPath.includes(key)) {
+        continue
+      } else if (key !== 'body') {
+        // @ts-expect-error
+        querystring[key] = params[key]
+      }
+    }
+
+    const method = 'GET'
+    const path = `/_tasks/${encodeURIComponent(params.task_id.toString())}`
+    return await this.transport.request({ path, method, querystring, body }, options)
+  }
 }

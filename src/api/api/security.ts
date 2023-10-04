@@ -45,7 +45,7 @@ export default class Security {
 
   /**
     * Enables authentication as a user and retrieve information about the authenticated user.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/security-api-authenticate.html | Elasticsearch API documentation}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-authenticate.html | Elasticsearch API documentation}
     */
   async authenticate (this: That, params?: T.SecurityAuthenticateRequest | TB.SecurityAuthenticateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityAuthenticateResponse>
   async authenticate (this: That, params?: T.SecurityAuthenticateRequest | TB.SecurityAuthenticateRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityAuthenticateResponse, unknown>>
@@ -71,34 +71,8 @@ export default class Security {
   }
 
   /**
-    * Clear a subset or all entries from the API key cache.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/security-api-clear-api-key-cache.html | Elasticsearch API documentation}
-    */
-  async clearApiKeyCache (this: That, params: T.SecurityClearApiKeyCacheRequest | TB.SecurityClearApiKeyCacheRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityClearApiKeyCacheResponse>
-  async clearApiKeyCache (this: That, params: T.SecurityClearApiKeyCacheRequest | TB.SecurityClearApiKeyCacheRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityClearApiKeyCacheResponse, unknown>>
-  async clearApiKeyCache (this: That, params: T.SecurityClearApiKeyCacheRequest | TB.SecurityClearApiKeyCacheRequest, options?: TransportRequestOptions): Promise<T.SecurityClearApiKeyCacheResponse>
-  async clearApiKeyCache (this: That, params: T.SecurityClearApiKeyCacheRequest | TB.SecurityClearApiKeyCacheRequest, options?: TransportRequestOptions): Promise<any> {
-    const acceptedPath: string[] = ['ids']
-    const querystring: Record<string, any> = {}
-    const body = undefined
-
-    for (const key in params) {
-      if (acceptedPath.includes(key)) {
-        continue
-      } else if (key !== 'body') {
-        // @ts-expect-error
-        querystring[key] = params[key]
-      }
-    }
-
-    const method = 'POST'
-    const path = `/_security/api_key/${encodeURIComponent(params.ids.toString())}/_clear_cache`
-    return await this.transport.request({ path, method, querystring, body }, options)
-  }
-
-  /**
     * Creates an API key for access without requiring basic authentication.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/security-api-create-api-key.html | Elasticsearch API documentation}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-create-api-key.html | Elasticsearch API documentation}
     */
   async createApiKey (this: That, params?: T.SecurityCreateApiKeyRequest | TB.SecurityCreateApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityCreateApiKeyResponse>
   async createApiKey (this: That, params?: T.SecurityCreateApiKeyRequest | TB.SecurityCreateApiKeyRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityCreateApiKeyResponse, unknown>>
@@ -137,7 +111,7 @@ export default class Security {
 
   /**
     * Retrieves information for one or more API keys.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/security-api-get-api-key.html | Elasticsearch API documentation}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-get-api-key.html | Elasticsearch API documentation}
     */
   async getApiKey (this: That, params?: T.SecurityGetApiKeyRequest | TB.SecurityGetApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityGetApiKeyResponse>
   async getApiKey (this: That, params?: T.SecurityGetApiKeyRequest | TB.SecurityGetApiKeyRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityGetApiKeyResponse, unknown>>
@@ -163,8 +137,54 @@ export default class Security {
   }
 
   /**
+    * Determines whether the specified user has a specified list of privileges.
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-has-privileges.html | Elasticsearch API documentation}
+    */
+  async hasPrivileges (this: That, params?: T.SecurityHasPrivilegesRequest | TB.SecurityHasPrivilegesRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityHasPrivilegesResponse>
+  async hasPrivileges (this: That, params?: T.SecurityHasPrivilegesRequest | TB.SecurityHasPrivilegesRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityHasPrivilegesResponse, unknown>>
+  async hasPrivileges (this: That, params?: T.SecurityHasPrivilegesRequest | TB.SecurityHasPrivilegesRequest, options?: TransportRequestOptions): Promise<T.SecurityHasPrivilegesResponse>
+  async hasPrivileges (this: That, params?: T.SecurityHasPrivilegesRequest | TB.SecurityHasPrivilegesRequest, options?: TransportRequestOptions): Promise<any> {
+    const acceptedPath: string[] = ['user']
+    const acceptedBody: string[] = ['application', 'cluster', 'index']
+    const querystring: Record<string, any> = {}
+    // @ts-expect-error
+    const userBody: any = params?.body
+    let body: Record<string, any> | string
+    if (typeof userBody === 'string') {
+      body = userBody
+    } else {
+      body = userBody != null ? { ...userBody } : undefined
+    }
+
+    params = params ?? {}
+    for (const key in params) {
+      if (acceptedBody.includes(key)) {
+        body = body ?? {}
+        // @ts-expect-error
+        body[key] = params[key]
+      } else if (acceptedPath.includes(key)) {
+        continue
+      } else if (key !== 'body') {
+        // @ts-expect-error
+        querystring[key] = params[key]
+      }
+    }
+
+    let method = ''
+    let path = ''
+    if (params.user != null) {
+      method = body != null ? 'POST' : 'GET'
+      path = `/_security/user/${encodeURIComponent(params.user.toString())}/_has_privileges`
+    } else {
+      method = body != null ? 'POST' : 'GET'
+      path = '/_security/user/_has_privileges'
+    }
+    return await this.transport.request({ path, method, querystring, body }, options)
+  }
+
+  /**
     * Invalidates one or more API keys.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/security-api-invalidate-api-key.html | Elasticsearch API documentation}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-invalidate-api-key.html | Elasticsearch API documentation}
     */
   async invalidateApiKey (this: That, params?: T.SecurityInvalidateApiKeyRequest | TB.SecurityInvalidateApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityInvalidateApiKeyResponse>
   async invalidateApiKey (this: That, params?: T.SecurityInvalidateApiKeyRequest | TB.SecurityInvalidateApiKeyRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityInvalidateApiKeyResponse, unknown>>
@@ -203,7 +223,7 @@ export default class Security {
 
   /**
     * Retrieves information for API keys using a subset of query DSL
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/security-api-query-api-key.html | Elasticsearch API documentation}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-query-api-key.html | Elasticsearch API documentation}
     */
   async queryApiKeys (this: That, params?: T.SecurityQueryApiKeysRequest | TB.SecurityQueryApiKeysRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityQueryApiKeysResponse>
   async queryApiKeys (this: That, params?: T.SecurityQueryApiKeysRequest | TB.SecurityQueryApiKeysRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityQueryApiKeysResponse, unknown>>
@@ -242,7 +262,7 @@ export default class Security {
 
   /**
     * Updates attributes of an existing API key.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/main/security-api-update-api-key.html | Elasticsearch API documentation}
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-update-api-key.html | Elasticsearch API documentation}
     */
   async updateApiKey (this: That, params: T.SecurityUpdateApiKeyRequest | TB.SecurityUpdateApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityUpdateApiKeyResponse>
   async updateApiKey (this: That, params: T.SecurityUpdateApiKeyRequest | TB.SecurityUpdateApiKeyRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SecurityUpdateApiKeyResponse, unknown>>
