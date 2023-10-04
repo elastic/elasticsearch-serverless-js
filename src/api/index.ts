@@ -38,8 +38,10 @@ import deleteApi from './api/delete'
 import deleteByQueryApi from './api/delete_by_query'
 import deleteScriptApi from './api/delete_script'
 import EnrichApi from './api/enrich'
+import EqlApi from './api/eql'
 import existsApi from './api/exists'
 import existsSourceApi from './api/exists_source'
+import explainApi from './api/explain'
 import fieldCapsApi from './api/field_caps'
 import getApi from './api/get'
 import getScriptApi from './api/get_script'
@@ -49,6 +51,7 @@ import indexApi from './api/index'
 import IndicesApi from './api/indices'
 import infoApi from './api/info'
 import IngestApi from './api/ingest'
+import LicenseApi from './api/license'
 import LogstashApi from './api/logstash'
 import mgetApi from './api/mget'
 import MlApi from './api/ml'
@@ -58,14 +61,20 @@ import mtermvectorsApi from './api/mtermvectors'
 import openPointInTimeApi from './api/open_point_in_time'
 import pingApi from './api/ping'
 import putScriptApi from './api/put_script'
+import QueryRulesetApi from './api/query_ruleset'
 import rankEvalApi from './api/rank_eval'
+import reindexApi from './api/reindex'
 import renderSearchTemplateApi from './api/render_search_template'
 import scriptsPainlessExecuteApi from './api/scripts_painless_execute'
 import scrollApi from './api/scroll'
 import searchApi from './api/search'
 import SearchApplicationApi from './api/search_application'
+import searchMvtApi from './api/search_mvt'
 import searchTemplateApi from './api/search_template'
 import SecurityApi from './api/security'
+import SqlApi from './api/sql'
+import SynonymsApi from './api/synonyms'
+import TasksApi from './api/tasks'
 import termsEnumApi from './api/terms_enum'
 import termvectorsApi from './api/termvectors'
 import TransformApi from './api/transform'
@@ -86,8 +95,10 @@ export default interface API {
   deleteByQuery: typeof deleteByQueryApi
   deleteScript: typeof deleteScriptApi
   enrich: EnrichApi
+  eql: EqlApi
   exists: typeof existsApi
   existsSource: typeof existsSourceApi
+  explain: typeof explainApi
   fieldCaps: typeof fieldCapsApi
   get: typeof getApi
   getScript: typeof getScriptApi
@@ -97,6 +108,7 @@ export default interface API {
   indices: IndicesApi
   info: typeof infoApi
   ingest: IngestApi
+  license: LicenseApi
   logstash: LogstashApi
   mget: typeof mgetApi
   ml: MlApi
@@ -106,14 +118,20 @@ export default interface API {
   openPointInTime: typeof openPointInTimeApi
   ping: typeof pingApi
   putScript: typeof putScriptApi
+  queryRuleset: QueryRulesetApi
   rankEval: typeof rankEvalApi
+  reindex: typeof reindexApi
   renderSearchTemplate: typeof renderSearchTemplateApi
   scriptsPainlessExecute: typeof scriptsPainlessExecuteApi
   scroll: typeof scrollApi
   search: typeof searchApi
   searchApplication: SearchApplicationApi
+  searchMvt: typeof searchMvtApi
   searchTemplate: typeof searchTemplateApi
   security: SecurityApi
+  sql: SqlApi
+  synonyms: SynonymsApi
+  tasks: TasksApi
   termsEnum: typeof termsEnumApi
   termvectors: typeof termvectorsApi
   transform: TransformApi
@@ -125,13 +143,19 @@ const kAsyncSearch = Symbol('AsyncSearch')
 const kCat = Symbol('Cat')
 const kCluster = Symbol('Cluster')
 const kEnrich = Symbol('Enrich')
+const kEql = Symbol('Eql')
 const kGraph = Symbol('Graph')
 const kIndices = Symbol('Indices')
 const kIngest = Symbol('Ingest')
+const kLicense = Symbol('License')
 const kLogstash = Symbol('Logstash')
 const kMl = Symbol('Ml')
+const kQueryRuleset = Symbol('QueryRuleset')
 const kSearchApplication = Symbol('SearchApplication')
 const kSecurity = Symbol('Security')
+const kSql = Symbol('Sql')
+const kSynonyms = Symbol('Synonyms')
+const kTasks = Symbol('Tasks')
 const kTransform = Symbol('Transform')
 
 export default class API {
@@ -139,26 +163,38 @@ export default class API {
   [kCat]: symbol | null
   [kCluster]: symbol | null
   [kEnrich]: symbol | null
+  [kEql]: symbol | null
   [kGraph]: symbol | null
   [kIndices]: symbol | null
   [kIngest]: symbol | null
+  [kLicense]: symbol | null
   [kLogstash]: symbol | null
   [kMl]: symbol | null
+  [kQueryRuleset]: symbol | null
   [kSearchApplication]: symbol | null
   [kSecurity]: symbol | null
+  [kSql]: symbol | null
+  [kSynonyms]: symbol | null
+  [kTasks]: symbol | null
   [kTransform]: symbol | null
   constructor () {
     this[kAsyncSearch] = null
     this[kCat] = null
     this[kCluster] = null
     this[kEnrich] = null
+    this[kEql] = null
     this[kGraph] = null
     this[kIndices] = null
     this[kIngest] = null
+    this[kLicense] = null
     this[kLogstash] = null
     this[kMl] = null
+    this[kQueryRuleset] = null
     this[kSearchApplication] = null
     this[kSecurity] = null
+    this[kSql] = null
+    this[kSynonyms] = null
+    this[kTasks] = null
     this[kTransform] = null
   }
 }
@@ -173,6 +209,7 @@ API.prototype.deleteByQuery = deleteByQueryApi
 API.prototype.deleteScript = deleteScriptApi
 API.prototype.exists = existsApi
 API.prototype.existsSource = existsSourceApi
+API.prototype.explain = explainApi
 API.prototype.fieldCaps = fieldCapsApi
 API.prototype.get = getApi
 API.prototype.getScript = getScriptApi
@@ -187,10 +224,12 @@ API.prototype.openPointInTime = openPointInTimeApi
 API.prototype.ping = pingApi
 API.prototype.putScript = putScriptApi
 API.prototype.rankEval = rankEvalApi
+API.prototype.reindex = reindexApi
 API.prototype.renderSearchTemplate = renderSearchTemplateApi
 API.prototype.scriptsPainlessExecute = scriptsPainlessExecuteApi
 API.prototype.scroll = scrollApi
 API.prototype.search = searchApi
+API.prototype.searchMvt = searchMvtApi
 API.prototype.searchTemplate = searchTemplateApi
 API.prototype.termsEnum = termsEnumApi
 API.prototype.termvectors = termvectorsApi
@@ -210,6 +249,9 @@ Object.defineProperties(API.prototype, {
   enrich: {
     get () { return this[kEnrich] === null ? (this[kEnrich] = new EnrichApi(this.transport)) : this[kEnrich] }
   },
+  eql: {
+    get () { return this[kEql] === null ? (this[kEql] = new EqlApi(this.transport)) : this[kEql] }
+  },
   graph: {
     get () { return this[kGraph] === null ? (this[kGraph] = new GraphApi(this.transport)) : this[kGraph] }
   },
@@ -219,17 +261,32 @@ Object.defineProperties(API.prototype, {
   ingest: {
     get () { return this[kIngest] === null ? (this[kIngest] = new IngestApi(this.transport)) : this[kIngest] }
   },
+  license: {
+    get () { return this[kLicense] === null ? (this[kLicense] = new LicenseApi(this.transport)) : this[kLicense] }
+  },
   logstash: {
     get () { return this[kLogstash] === null ? (this[kLogstash] = new LogstashApi(this.transport)) : this[kLogstash] }
   },
   ml: {
     get () { return this[kMl] === null ? (this[kMl] = new MlApi(this.transport)) : this[kMl] }
   },
+  queryRuleset: {
+    get () { return this[kQueryRuleset] === null ? (this[kQueryRuleset] = new QueryRulesetApi(this.transport)) : this[kQueryRuleset] }
+  },
   searchApplication: {
     get () { return this[kSearchApplication] === null ? (this[kSearchApplication] = new SearchApplicationApi(this.transport)) : this[kSearchApplication] }
   },
   security: {
     get () { return this[kSecurity] === null ? (this[kSecurity] = new SecurityApi(this.transport)) : this[kSecurity] }
+  },
+  sql: {
+    get () { return this[kSql] === null ? (this[kSql] = new SqlApi(this.transport)) : this[kSql] }
+  },
+  synonyms: {
+    get () { return this[kSynonyms] === null ? (this[kSynonyms] = new SynonymsApi(this.transport)) : this[kSynonyms] }
+  },
+  tasks: {
+    get () { return this[kTasks] === null ? (this[kTasks] = new TasksApi(this.transport)) : this[kTasks] }
   },
   transform: {
     get () { return this[kTransform] === null ? (this[kTransform] = new TransformApi(this.transport)) : this[kTransform] }

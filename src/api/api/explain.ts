@@ -38,14 +38,14 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Returns number of documents matching a query.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/search-count.html | Elasticsearch API documentation}
+  * Returns information about why a specific matches (or doesn't match) a query.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/search-explain.html | Elasticsearch API documentation}
   */
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CountResponse>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.CountResponse, unknown>>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<T.CountResponse>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = ['index']
+export default async function ExplainApi<TDocument = unknown> (this: That, params: T.ExplainRequest | TB.ExplainRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ExplainResponse<TDocument>>
+export default async function ExplainApi<TDocument = unknown> (this: That, params: T.ExplainRequest | TB.ExplainRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ExplainResponse<TDocument>, unknown>>
+export default async function ExplainApi<TDocument = unknown> (this: That, params: T.ExplainRequest | TB.ExplainRequest, options?: TransportRequestOptions): Promise<T.ExplainResponse<TDocument>>
+export default async function ExplainApi<TDocument = unknown> (this: That, params: T.ExplainRequest | TB.ExplainRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = ['id', 'index']
   const acceptedBody: string[] = ['query']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
@@ -57,7 +57,6 @@ export default async function CountApi (this: That, params?: T.CountRequest | TB
     body = userBody != null ? { ...userBody } : undefined
   }
 
-  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
       body = body ?? {}
@@ -71,14 +70,7 @@ export default async function CountApi (this: That, params?: T.CountRequest | TB
     }
   }
 
-  let method = ''
-  let path = ''
-  if (params.index != null) {
-    method = body != null ? 'POST' : 'GET'
-    path = `/${encodeURIComponent(params.index.toString())}/_count`
-  } else {
-    method = body != null ? 'POST' : 'GET'
-    path = '/_count'
-  }
+  const method = body != null ? 'POST' : 'GET'
+  const path = `/${encodeURIComponent(params.index.toString())}/_explain/${encodeURIComponent(params.id.toString())}`
   return await this.transport.request({ path, method, querystring, body }, options)
 }

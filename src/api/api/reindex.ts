@@ -38,15 +38,15 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Returns number of documents matching a query.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/search-count.html | Elasticsearch API documentation}
+  * Allows to copy documents from one index to another, optionally filtering the source documents by a query, changing the destination index settings, or fetching the documents from a remote cluster.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-reindex.html | Elasticsearch API documentation}
   */
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CountResponse>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.CountResponse, unknown>>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<T.CountResponse>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = ['index']
-  const acceptedBody: string[] = ['query']
+export default async function ReindexApi (this: That, params: T.ReindexRequest | TB.ReindexRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ReindexResponse>
+export default async function ReindexApi (this: That, params: T.ReindexRequest | TB.ReindexRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.ReindexResponse, unknown>>
+export default async function ReindexApi (this: That, params: T.ReindexRequest | TB.ReindexRequest, options?: TransportRequestOptions): Promise<T.ReindexResponse>
+export default async function ReindexApi (this: That, params: T.ReindexRequest | TB.ReindexRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = []
+  const acceptedBody: string[] = ['conflicts', 'dest', 'max_docs', 'script', 'size', 'source']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
   const userBody: any = params?.body
@@ -57,7 +57,6 @@ export default async function CountApi (this: That, params?: T.CountRequest | TB
     body = userBody != null ? { ...userBody } : undefined
   }
 
-  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
       body = body ?? {}
@@ -71,14 +70,7 @@ export default async function CountApi (this: That, params?: T.CountRequest | TB
     }
   }
 
-  let method = ''
-  let path = ''
-  if (params.index != null) {
-    method = body != null ? 'POST' : 'GET'
-    path = `/${encodeURIComponent(params.index.toString())}/_count`
-  } else {
-    method = body != null ? 'POST' : 'GET'
-    path = '/_count'
-  }
+  const method = 'POST'
+  const path = '/_reindex'
   return await this.transport.request({ path, method, querystring, body }, options)
 }

@@ -37,29 +37,36 @@ import * as T from '../types'
 import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
-/**
-  * Returns basic information about the cluster.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/index.html | Elasticsearch API documentation}
-  */
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.InfoResponse>
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.InfoResponse, unknown>>
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptions): Promise<T.InfoResponse>
-export default async function InfoApi (this: That, params?: T.InfoRequest | TB.InfoRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = []
-  const querystring: Record<string, any> = {}
-  const body = undefined
-
-  params = params ?? {}
-  for (const key in params) {
-    if (acceptedPath.includes(key)) {
-      continue
-    } else if (key !== 'body') {
-      // @ts-expect-error
-      querystring[key] = params[key]
-    }
+export default class License {
+  transport: Transport
+  constructor (transport: Transport) {
+    this.transport = transport
   }
 
-  const method = 'GET'
-  const path = '/'
-  return await this.transport.request({ path, method, querystring, body }, options)
+  /**
+    * Retrieves licensing information for the cluster
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/get-license.html | Elasticsearch API documentation}
+    */
+  async get (this: That, params?: T.LicenseGetRequest | TB.LicenseGetRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.LicenseGetResponse>
+  async get (this: That, params?: T.LicenseGetRequest | TB.LicenseGetRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.LicenseGetResponse, unknown>>
+  async get (this: That, params?: T.LicenseGetRequest | TB.LicenseGetRequest, options?: TransportRequestOptions): Promise<T.LicenseGetResponse>
+  async get (this: That, params?: T.LicenseGetRequest | TB.LicenseGetRequest, options?: TransportRequestOptions): Promise<any> {
+    const acceptedPath: string[] = []
+    const querystring: Record<string, any> = {}
+    const body = undefined
+
+    params = params ?? {}
+    for (const key in params) {
+      if (acceptedPath.includes(key)) {
+        continue
+      } else if (key !== 'body') {
+        // @ts-expect-error
+        querystring[key] = params[key]
+      }
+    }
+
+    const method = 'GET'
+    const path = '/_license'
+    return await this.transport.request({ path, method, querystring, body }, options)
+  }
 }

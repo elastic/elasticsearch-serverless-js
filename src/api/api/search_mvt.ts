@@ -38,15 +38,15 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Returns number of documents matching a query.
-  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/search-count.html | Elasticsearch API documentation}
+  * Searches a vector tile for geospatial values. Returns results as a binary Mapbox vector tile.
+  * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/search-vector-tile-api.html | Elasticsearch API documentation}
   */
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CountResponse>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.CountResponse, unknown>>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<T.CountResponse>
-export default async function CountApi (this: That, params?: T.CountRequest | TB.CountRequest, options?: TransportRequestOptions): Promise<any> {
-  const acceptedPath: string[] = ['index']
-  const acceptedBody: string[] = ['query']
+export default async function SearchMvtApi (this: That, params: T.SearchMvtRequest | TB.SearchMvtRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SearchMvtResponse>
+export default async function SearchMvtApi (this: That, params: T.SearchMvtRequest | TB.SearchMvtRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.SearchMvtResponse, unknown>>
+export default async function SearchMvtApi (this: That, params: T.SearchMvtRequest | TB.SearchMvtRequest, options?: TransportRequestOptions): Promise<T.SearchMvtResponse>
+export default async function SearchMvtApi (this: That, params: T.SearchMvtRequest | TB.SearchMvtRequest, options?: TransportRequestOptions): Promise<any> {
+  const acceptedPath: string[] = ['index', 'field', 'zoom', 'x', 'y']
+  const acceptedBody: string[] = ['aggs', 'buffer', 'exact_bounds', 'extent', 'fields', 'grid_agg', 'grid_precision', 'grid_type', 'query', 'runtime_mappings', 'size', 'sort', 'track_total_hits', 'with_labels']
   const querystring: Record<string, any> = {}
   // @ts-expect-error
   const userBody: any = params?.body
@@ -57,7 +57,6 @@ export default async function CountApi (this: That, params?: T.CountRequest | TB
     body = userBody != null ? { ...userBody } : undefined
   }
 
-  params = params ?? {}
   for (const key in params) {
     if (acceptedBody.includes(key)) {
       body = body ?? {}
@@ -71,14 +70,7 @@ export default async function CountApi (this: That, params?: T.CountRequest | TB
     }
   }
 
-  let method = ''
-  let path = ''
-  if (params.index != null) {
-    method = body != null ? 'POST' : 'GET'
-    path = `/${encodeURIComponent(params.index.toString())}/_count`
-  } else {
-    method = body != null ? 'POST' : 'GET'
-    path = '/_count'
-  }
+  const method = body != null ? 'POST' : 'GET'
+  const path = `/${encodeURIComponent(params.index.toString())}/_mvt/${encodeURIComponent(params.field.toString())}/${encodeURIComponent(params.zoom.toString())}/${encodeURIComponent(params.x.toString())}/${encodeURIComponent(params.y.toString())}`
   return await this.transport.request({ path, method, querystring, body }, options)
 }
