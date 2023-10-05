@@ -56,6 +56,7 @@ if (clientVersion.includes('-')) {
   // clean prerelease
   clientVersion = clientVersion.slice(0, clientVersion.indexOf('-')) + 'p'
 }
+const clientVersionNoMeta = clientVersion.split('+')[0]
 let transportVersion: string = require('@elastic/transport/package.json').version // eslint-disable-line
 /* istanbul ignore next */
 if (transportVersion.includes('-')) {
@@ -202,7 +203,7 @@ export default class Client extends API {
     }
 
     if (options.enableMetaHeader) {
-      options.headers['x-elastic-client-meta'] = `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
+      options.headers['x-elastic-client-meta'] = `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
     }
 
     this.name = options.name
@@ -265,7 +266,7 @@ export default class Client extends API {
     this.helpers = new Helpers({
       client: this,
       metaHeader: options.enableMetaHeader
-        ? `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
+        ? `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion}`
         : null,
       maxRetries: options.maxRetries
     })

@@ -30,6 +30,7 @@ let clientVersion: string = require('../../../package.json').version // eslint-d
 if (clientVersion.includes('-')) {
   clientVersion = clientVersion.slice(0, clientVersion.indexOf('-')) + 'p'
 }
+const clientVersionNoMeta = clientVersion.split('+')[0]
 let transportVersion: string = require('@elastic/transport/package.json').version // eslint-disable-line
 if (transportVersion.includes('-')) {
   transportVersion = transportVersion.slice(0, transportVersion.indexOf('-')) + 'p'
@@ -56,7 +57,7 @@ test('bulk index', t => {
           t.equal(params.path, '/_bulk')
           t.match(params.headers, {
             'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8',
-            'x-elastic-client-meta': `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
+            'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
           })
           // @ts-expect-error
           const [action, payload] = params.body.split('\n')
@@ -103,7 +104,7 @@ test('bulk index', t => {
           t.equal(params.path, '/_bulk')
           t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
           t.notMatch(params.headers, {
-            'x-elastic-client-meta': `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
+            'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
           })
           // @ts-expect-error
           const [action, payload] = params.body.split('\n')
@@ -1320,7 +1321,7 @@ test('Flush interval', t => {
         t.equal(params.path, '/_bulk')
         t.match(params.headers, {
           'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8',
-          'x-elastic-client-meta': `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
+          'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
         })
         // @ts-expect-error
         const [action, payload] = params.body.split('\n')
