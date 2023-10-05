@@ -13,6 +13,9 @@
     "clean-build": "rimraf ./lib && mkdir lib",
     "prepublishOnly": "npm run build",
     "test": "npm run build && npm run lint && tap test/unit/{*,**/*}.test.ts && npm run license-checker",
+    "test:coverage-100": "npm run build && tap test/unit/{*,**/*}.test.ts --coverage --100",
+    "test:coverage-report": "npm run build && tap test/unit/{*,**/*}.test.ts --coverage && nyc report --reporter=text-lcov > coverage.lcov",
+    "test:coverage-ui": "npm run build && tap test/unit/{*,**/*}.test.ts --coverage --coverage-report=html",
     "test:unit": "npm run build && tap test/unit/{*,**/*}.test.ts"
   },
   "keywords": [
