@@ -1,6 +1,5 @@
 {
   "name": "elasticsearch-serverless",
-  "private": true,
   "version": "0.1.0+20231031",
   "description": "The official Node.js Elastic client for the Elasticsearch Serverless service.",
   "main": "index.js",
@@ -12,7 +11,8 @@
     "prebuild": "npm run clean-build && npm run lint",
     "build": "tsc",
     "clean-build": "rimraf ./lib && mkdir lib",
-    "test": "npm run build && npm run lint && tap test/unit/{*,**/*}.test.ts",
+    "prepublishOnly": "npm run build",
+    "test": "npm run build && npm run lint && tap test/unit/{*,**/*}.test.ts && npm run license-checker",
     "test:unit": "npm run build && tap test/unit/{*,**/*}.test.ts"
   },
   "keywords": [
