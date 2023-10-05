@@ -27,10 +27,9 @@ npm install @elastic/elasticsearch-serverless
 ```javascript
 const { Client } = require('@elastic/elasticsearch-serverless')
 const client = new Client({
-  cloud: { id: '<cloud-id>' },
-  auth: { apiKey: 'base64EncodedKey' }
+  node: 'https://', // serverless project URL
+  auth: { apiKey: 'your_api_key' }, // project API key
 })
-
 ```
 
 ### Using the API
