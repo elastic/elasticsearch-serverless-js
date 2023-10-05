@@ -25,6 +25,7 @@ let clientVersion: string = require('../../../package.json').version // eslint-d
 if (clientVersion.includes('-')) {
   clientVersion = clientVersion.slice(0, clientVersion.indexOf('-')) + 'p'
 }
+let clientVersionNoMeta = clientVersion.split('+')[0]
 let transportVersion: string = require('@elastic/transport/package.json').version // eslint-disable-line
 if (transportVersion.includes('-')) {
   transportVersion = transportVersion.slice(0, transportVersion.indexOf('-')) + 'p'
@@ -36,7 +37,7 @@ test('Scroll search', async t => {
   const MockConnection = connection.buildMockConnection({
     onRequest (params) {
       t.match(params.headers, {
-        'x-elastic-client-meta': `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=s`
+        'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=s`
       })
 
       count += 1
@@ -92,7 +93,7 @@ test('Clear a scroll search', async t => {
   const MockConnection = connection.buildMockConnection({
     onRequest (params) {
       t.notMatch(params.headers, {
-        'x-elastic-client-meta': `esv=${clientVersion},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=s`
+        'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=s`
       })
       if (params.method === 'DELETE') {
         // @ts-expect-error
