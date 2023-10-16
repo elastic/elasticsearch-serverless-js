@@ -152,8 +152,7 @@ if [[ -z "${BUILDKITE+x}" ]]; then
     --name make-elasticsearch-js \
     --rm \
     $product \
-    /bin/bash -c "cd /usr/src && \
-      mkdir -p /usr/src/elastic-client-generator-js/output && \
+    /bin/bash -c "mkdir -p /usr/src/elastic-client-generator-js/output && \
       cd /usr/src/app && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
 else
