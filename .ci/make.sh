@@ -142,19 +142,35 @@ docker build \
 
 echo -e "\033[34;1mINFO: running $product container\033[0m"
 
-docker run \
-  --volume "$repo:/usr/src/app" \
-  --volume /usr/src/app/node_modules \
-  -u "$(id -u):$(id -g)" \
-  --env "WORKFLOW=$WORKFLOW" \
-  --name make-elasticsearch-js \
-  --rm \
-  $product \
-  /bin/bash -c "cd /usr/src && \
-    git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git && \
-    mkdir -p /usr/src/elastic-client-generator-js/output && \
-    cd /usr/src/app && \
-    node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
+# check BUILDKITE env var to enable support for both CI or running locally
+if [[ -z "${BUILDKITE+x}" ]]; then
+  docker run \
+    --volume "$repo:/usr/src/app" \
+    --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
+    -u "$(id -u):$(id -g)" \
+    --env "WORKFLOW=$WORKFLOW" \
+    --name make-elasticsearch-js \
+    --rm \
+    $product \
+    /bin/bash -c "cd /usr/src && \
+      mkdir -p /usr/src/elastic-client-generator-js/output && \
+      cd /usr/src/app && \
+      node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
+else
+  docker run \
+    --volume "$repo:/usr/src/app" \
+    --volume /usr/src/app/node_modules \
+    -u "$(id -u):$(id -g)" \
+    --env "WORKFLOW=$WORKFLOW" \
+    --name make-elasticsearch-js \
+    --rm \
+    $product \
+    /bin/bash -c "cd /usr/src && \
+      git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git && \
+      mkdir -p /usr/src/elastic-client-generator-js/output && \
+      cd /usr/src/app && \
+      node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
+fi
 
 # ------------------------------------------------------- #
 # Post Command tasks & checks
