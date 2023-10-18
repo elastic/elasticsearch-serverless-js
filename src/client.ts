@@ -35,7 +35,6 @@ import {
   UndiciAgentOptions,
   agentFn,
   nodeFilterFn,
-  nodeSelectorFn,
   generateRequestIdFn,
   BasicAuth,
   ApiKeyAuth,
@@ -92,7 +91,6 @@ export interface ClientOptions {
   tls?: TlsConnectionOptions
   agent?: HttpAgentOptions | UndiciAgentOptions | agentFn | false
   nodeFilter?: nodeFilterFn
-  nodeSelector?: nodeSelectorFn
   headers?: Record<string, any>
   opaqueIdPrefix?: string
   generateRequestId?: generateRequestIdFn
@@ -240,7 +238,6 @@ export default class Client extends API {
       compression: options.compression,
       headers: options.headers,
       nodeFilter: options.nodeFilter,
-      nodeSelector: options.nodeSelector,
       generateRequestId: options.generateRequestId,
       name: options.name,
       opaqueIdPrefix: options.opaqueIdPrefix,
