@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-#
-# Script to run Elasticsearch container and Elasticsearch client integration tests on Buildkite
-#
-# Version 0.1
-#
-script_path=$(dirname "$(realpath -s "$0")")
-source "$script_path/functions/imports.sh"
 
 set -euo pipefail
 
-echo "--- :elasticsearch: Starting Elasticsearch"
-DETACH=true bash "$script_path/run-elasticsearch.sh"
+script_path=$(dirname "$(realpath -s "$0")")
 
-echo "+++ :javascript: Run Client"
+# start up a serverless project
+source "$script_path/create-serverless.sh"
+
+# ensure serverless project is deleted when job ends
+trap cleanup EXIT
+
+# spin up serverless instance
+start_serverless
+
+# run integration tests
 bash "$script_path/run-client.sh"

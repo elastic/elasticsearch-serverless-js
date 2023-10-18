@@ -63,3 +63,6 @@ test/bundlers/**/bundle.js
 test/bundlers/parcel-test/.parcel-cache
 
 lib
+yaml-rest-tests
+cloud.json
+junit-output

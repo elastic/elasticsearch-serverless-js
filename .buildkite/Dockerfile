@@ -1,7 +1,7 @@
 ARG NODE_VERSION=${NODE_VERSION:-18}
 FROM node:$NODE_VERSION
 
-# Install required tools
+# Install zip util
 RUN apt-get clean -y && \
     apt-get -qy update && \
     apt-get -y install zip && \
@@ -10,5 +10,7 @@ RUN apt-get clean -y && \
 
 WORKDIR /usr/src/app
 
-COPY . .
+COPY package*.json .
 RUN npm install --production=false
+
+COPY . .
