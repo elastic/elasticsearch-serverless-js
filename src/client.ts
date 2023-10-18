@@ -24,7 +24,6 @@ import os from 'os'
 import {
   Transport,
   UndiciConnection,
-  WeightedConnectionPool,
   CloudConnectionPool,
   Serializer,
   Diagnostic,
@@ -162,7 +161,7 @@ export default class Client extends API {
       Connection: UndiciConnection,
       Transport: SniffingTransport,
       Serializer,
-      ConnectionPool: (opts.cloud != null) ? CloudConnectionPool : WeightedConnectionPool,
+      ConnectionPool: CloudConnectionPool,
       maxRetries: 3,
       requestTimeout: 30000,
       pingTimeout: 3000,
@@ -232,7 +231,13 @@ export default class Client extends API {
         diagnostic: this.diagnostic,
         caFingerprint: options.caFingerprint
       })
-      this.connectionPool.addConnection(options.node ?? options.nodes)
+
+      // serverless only supports one node. keeping array support, to simplify
+      // for people migrating from the stack client, but only using the first
+      // node in the list.
+      let node = options.node ?? options.nodes
+      if (Array.isArray(node)) node = node[0]
+      this.connectionPool.addConnection(node)
     }
 
     this.transport = new options.Transport({
@@ -276,7 +281,7 @@ export default class Client extends API {
     // Merge the new options with the initial ones
     // @ts-expect-error kChild symbol is for internal use only
     const options: ClientOptions = Object.assign({}, this[kInitialOptions], opts)
-    // Pass to the child client the parent instances that cannot be overriden
+    // Pass to the child client the parent instances that cannot be overridden
     // @ts-expect-error kInitialOptions symbol is for internal use only
     options[kChild] = {
       connectionPool: this.connectionPool,
