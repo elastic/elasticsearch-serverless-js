@@ -34,7 +34,6 @@ import {
   HttpAgentOptions,
   UndiciAgentOptions,
   agentFn,
-  nodeFilterFn,
   generateRequestIdFn,
   BasicAuth,
   ApiKeyAuth,
@@ -90,7 +89,6 @@ export interface ClientOptions {
   compression?: boolean
   tls?: TlsConnectionOptions
   agent?: HttpAgentOptions | UndiciAgentOptions | agentFn | false
-  nodeFilter?: nodeFilterFn
   headers?: Record<string, any>
   opaqueIdPrefix?: string
   generateRequestId?: generateRequestIdFn
@@ -166,7 +164,6 @@ export default class Client extends API {
       headers: {
         'user-agent': `elasticsearch-js/${clientVersion} Node.js ${nodeVersion}; Transport ${transportVersion}; (${os.platform()} ${os.release()} ${os.arch()})`
       },
-      nodeFilter: null,
       generateRequestId: null,
       name: 'elasticsearch-js',
       auth: null,
@@ -237,7 +234,6 @@ export default class Client extends API {
       requestTimeout: options.requestTimeout,
       compression: options.compression,
       headers: options.headers,
-      nodeFilter: options.nodeFilter,
       generateRequestId: options.generateRequestId,
       name: options.name,
       opaqueIdPrefix: options.opaqueIdPrefix,
