@@ -43,7 +43,6 @@ import {
   Context
 } from '@elastic/transport/lib/types'
 import BaseConnection, { prepareHeaders } from '@elastic/transport/lib/connection/BaseConnection'
-import SniffingTransport from './sniffingTransport'
 import Helpers from './helpers'
 import API from './api'
 
@@ -88,10 +87,6 @@ export interface ClientOptions {
   maxRetries?: number
   requestTimeout?: number
   pingTimeout?: number
-  sniffInterval?: number | boolean
-  sniffOnStart?: boolean
-  sniffEndpoint?: string
-  sniffOnConnectionFault?: boolean
   resurrectStrategy?: 'ping' | 'optimistic' | 'none'
   compression?: boolean
   tls?: TlsConnectionOptions
@@ -119,7 +114,7 @@ export default class Client extends API {
   diagnostic: Diagnostic
   name: string | symbol
   connectionPool: BaseConnectionPool
-  transport: SniffingTransport
+  transport: Transport
   serializer: Serializer
   helpers: Helpers
   constructor (opts: ClientOptions) {
@@ -159,16 +154,12 @@ export default class Client extends API {
 
     const options: Required<ClientOptions> = Object.assign({}, {
       Connection: UndiciConnection,
-      Transport: SniffingTransport,
+      Transport,
       Serializer,
       ConnectionPool: CloudConnectionPool,
       maxRetries: 3,
       requestTimeout: 30000,
       pingTimeout: 3000,
-      sniffInterval: false,
-      sniffOnStart: false,
-      sniffEndpoint: '_nodes/_all/http',
-      sniffOnConnectionFault: false,
       resurrectStrategy: 'ping',
       compression: false,
       tls: null,
@@ -246,10 +237,6 @@ export default class Client extends API {
       serializer: this.serializer,
       maxRetries: options.maxRetries,
       requestTimeout: options.requestTimeout,
-      sniffInterval: options.sniffInterval,
-      sniffOnStart: options.sniffOnStart,
-      sniffOnConnectionFault: options.sniffOnConnectionFault,
-      sniffEndpoint: options.sniffEndpoint,
       compression: options.compression,
       headers: options.headers,
       nodeFilter: options.nodeFilter,

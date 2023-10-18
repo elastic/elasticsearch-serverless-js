@@ -40,15 +40,6 @@ interface Cluster {
   spawn(id: string): Promise<void>
 }
 
-interface SniffNode {
-  http: {
-    publish_address: string
-  },
-  roles: string[]
-}
-
-type SniffResult = Record<string, SniffNode>
-
 const debug = Debug('elasticsearch-test')
 let id = 0
 export default async function buildCluster (options: BuildClusterOptions): Promise<Cluster> {
@@ -77,23 +68,7 @@ export default async function buildCluster (options: BuildClusterOptions): Promi
 
   function handler (req: http.IncomingMessage, res: http.ServerResponse): void {
     res.setHeader('content-type', 'application/json')
-    if (req.url === '/_nodes/_all/http') {
-      const sniffResult: SniffResult = Object.keys(cluster.nodes).reduce((acc: SniffResult, val: string) => {
-        const node = cluster.nodes[val]
-        acc[val] = {
-          http: {
-            publish_address: options.hostPublishAddress
-              ? `localhost/${node.url}`
-              : node.url
-          },
-          roles: ['master', 'data', 'ingest']
-        }
-        return acc
-      }, {})
-      res.end(JSON.stringify(sniffResult))
-    } else {
-      res.end(JSON.stringify({ hello: 'world' }))
-    }
+    res.end(JSON.stringify({ hello: 'world' }))
   }
 
   async function shutdown (): Promise<void> {
