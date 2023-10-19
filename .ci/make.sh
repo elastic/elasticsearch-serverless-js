@@ -37,7 +37,7 @@ product="elastic/elasticsearch-js"
 output_folder=".ci/output"
 codegen_folder=".ci/output"
 OUTPUT_DIR="$repo/${output_folder}"
-NODE_JS_VERSION=18
+NODE_VERSION=20
 WORKFLOW=${WORKFLOW-staging}
 mkdir -p "$OUTPUT_DIR"
 
@@ -131,9 +131,9 @@ esac
 echo -e "\033[34;1mINFO: building $product container\033[0m"
 
 docker build \
-  --file .ci/Dockerfile \
+  --file .buildkite/Dockerfile \
   --tag "$product" \
-  --build-arg NODE_JS_VERSION="$NODE_JS_VERSION" \
+  --build-arg NODE_VERSION="$NODE_VERSION" \
   .
 
 # ------------------------------------------------------- #

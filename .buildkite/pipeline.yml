@@ -1,3 +1,32 @@
+---
 steps:
-  - label: ":elasticsearch: :javascript: Elasticsearch Serverless Node.js"
-    command: "echo 'Hello, world!'"
+  - key: integration
+    label: ":elasticsearch: :javascript: Elasticsearch Serverless Node.js integration tests"
+    agents:
+      provider: "gcp"
+    matrix:
+      setup:
+        nodejs:
+          - "16"
+          - "18"
+          - "20"
+    env:
+      NODE_VERSION: "{{ matrix.nodejs }}"
+      EC_PROJECT_PREFIX: "elasticsearch-serverless-js-node{{ matrix.nodejs }}"
+      CLOUD_CREDENTIALS_PATH: "secret/ci/elastic-elasticsearch-serverless-js/cloud-access"
+      GITHUB_TOKEN_PATH: "secret/ci/elastic-elasticsearch-serverless-js/github-token"
+    command: "./.buildkite/run-tests.sh"
+    artifact_paths: "./junit-output/junit-*.xml"
+  - wait: ~
+    continue_on_failure: true
+  - key: junit
+    label: ":junit: Test results"
+    agents:
+      provider: "gcp"
+      image: family/core-ubuntu-2204
+    plugins:
+      - junit-annotate#v2.4.1:
+          artifacts: "junit-output/junit-*.xml"
+          job-uuid-file-pattern: "junit-(.*).xml"
+          fail-build-on-error: true
+          failure-format: file
