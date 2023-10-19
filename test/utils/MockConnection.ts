@@ -72,43 +72,6 @@ export class MockConnectionError extends BaseConnection {
   }
 }
 
-export class MockConnectionSniff extends BaseConnection {
-  async request (params: ConnectionRequestParams, options: ConnectionRequestOptions): Promise<ConnectionRequestResponse>
-  async request (params: ConnectionRequestParams, options: ConnectionRequestOptionsAsStream): Promise<ConnectionRequestResponseAsStream>
-  async request (params: ConnectionRequestParams, options: any): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const sniffResult = {
-        nodes: {
-          'node-1': {
-            http: {
-              publish_address: 'localhost:9200'
-            }
-          },
-          'node-2': {
-            http: {
-              publish_address: 'localhost:9201'
-            }
-          }
-        }
-      }
-      const body = JSON.stringify(sniffResult)
-      const statusCode = setStatusCode(params.path)
-      const headers = {
-        'content-type': 'application/json;utf=8',
-        date: new Date().toISOString(),
-        connection: 'keep-alive',
-        'content-length': '191',
-        'x-elastic-product': 'Elasticsearch'
-      }
-      if (params.headers?.timeout != null) {
-        process.nextTick(reject, new TimeoutError('Request timed out'))
-      } else {
-        process.nextTick(resolve, { body, statusCode, headers })
-      }
-    })
-  }
-}
-
 interface onRequestMock {
   onRequest(opts: ConnectionRequestParams): { body: any, statusCode?: number, headers?: http.IncomingHttpHeaders }
 }

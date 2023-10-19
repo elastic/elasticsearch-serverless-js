@@ -69,7 +69,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false,
       })
       const result = await client.helpers.bulk<Document>({
         datasource: dataset.slice(),
@@ -117,7 +118,8 @@ test('bulk index', t => {
       const client = new Client({
         node: 'http://localhost:9200',
         Connection: MockConnection,
-        enableMetaHeader: false
+        enableMetaHeader: false,
+        compression: false,
       })
       const result = await client.helpers.bulk({
         datasource: dataset.slice(),
@@ -157,7 +159,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false,
       })
       const result = await client.helpers.bulk({
         datasource: dataset.slice(),
@@ -200,7 +203,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false,
       })
       let id = 0
       const result = await client.helpers.bulk({
@@ -265,7 +269,10 @@ test('bulk index', t => {
       }
 
       const [{ port }, server] = await buildServer(handler)
-      const client = new Client({ node: `http://localhost:${port}` })
+      const client = new Client({
+        node: `http://localhost:${port}`,
+        compression: false,
+      })
       const result = await client.helpers.bulk({
         datasource: dataset.slice(),
         flushBytes: 1,
@@ -384,7 +391,10 @@ test('bulk index', t => {
       }
 
       const [{ port }, server] = await buildServer(handler)
-      const client = new Client({ node: `http://localhost:${port}` })
+      const client = new Client({
+        node: `http://localhost:${port}`,
+        compression: false,
+      })
       const result = await client.helpers.bulk({
         datasource: dataset.slice(),
         flushBytes: 1,
@@ -525,7 +535,10 @@ test('bulk index', t => {
       }
 
       const [{ port }, server] = await buildServer(handler)
-      const client = new Client({ node: `http://localhost:${port}` })
+      const client = new Client({
+        node: `http://localhost:${port}`,
+        compression: false,
+      })
       const b = client.helpers.bulk({
         datasource: dataset.slice(),
         flushBytes: 1,
@@ -604,7 +617,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false,
       })
       const stream = createReadStream(join(__dirname, '..', '..', 'fixtures', 'small-dataset.ndjson'), 'utf8')
 
@@ -657,7 +671,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false,
       })
 
       async function * generator () {
@@ -714,7 +729,8 @@ test('bulk create', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
     let id = 0
     const result = await client.helpers.bulk({
@@ -764,7 +780,8 @@ test('bulk update', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
     let id = 0
     const result = await client.helpers.bulk({
@@ -813,7 +830,8 @@ test('bulk update', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
     let id = 0
     const result = await client.helpers.bulk({
@@ -860,7 +878,8 @@ test('bulk update', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
     let id = 0
     const result = await client.helpers.bulk({
@@ -912,7 +931,8 @@ test('bulk delete', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
     let id = 0
     const result = await client.helpers.bulk({
@@ -977,7 +997,10 @@ test('bulk delete', t => {
     }
 
     const [{ port }, server] = await buildServer(handler)
-    const client = new Client({ node: `http://localhost:${port}` })
+    const client = new Client({
+      node: `http://localhost:${port}`,
+      compression: false,
+    })
     let id = 0
 
     const result = await client.helpers.bulk({
@@ -1219,7 +1242,8 @@ test('Flush interval', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
 
     const result = await client.helpers.bulk({
@@ -1272,7 +1296,8 @@ test('Flush interval', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
 
     const b = client.helpers.bulk({
@@ -1333,7 +1358,8 @@ test('Flush interval', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false,
     })
     const b = client.helpers.bulk({
       datasource: dataset.slice(),

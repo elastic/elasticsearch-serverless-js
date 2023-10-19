@@ -35,11 +35,9 @@ const {
 } = require('@elastic/transport')
 
 const { default: Client } = require('./lib/client')
-const { default: SniffingTransport } = require('./lib/sniffingTransport')
 
 module.exports = {
   Client,
-  SniffingTransport,
   Diagnostic,
   Transport,
   WeightedConnectionPool,

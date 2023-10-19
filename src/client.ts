@@ -24,7 +24,6 @@ import os from 'os'
 import {
   Transport,
   UndiciConnection,
-  WeightedConnectionPool,
   CloudConnectionPool,
   Serializer,
   Diagnostic,
@@ -35,8 +34,6 @@ import {
   HttpAgentOptions,
   UndiciAgentOptions,
   agentFn,
-  nodeFilterFn,
-  nodeSelectorFn,
   generateRequestIdFn,
   BasicAuth,
   ApiKeyAuth,
@@ -44,7 +41,6 @@ import {
   Context
 } from '@elastic/transport/lib/types'
 import BaseConnection, { prepareHeaders } from '@elastic/transport/lib/connection/BaseConnection'
-import SniffingTransport from './sniffingTransport'
 import Helpers from './helpers'
 import API from './api'
 
@@ -89,16 +85,10 @@ export interface ClientOptions {
   maxRetries?: number
   requestTimeout?: number
   pingTimeout?: number
-  sniffInterval?: number | boolean
-  sniffOnStart?: boolean
-  sniffEndpoint?: string
-  sniffOnConnectionFault?: boolean
   resurrectStrategy?: 'ping' | 'optimistic' | 'none'
   compression?: boolean
   tls?: TlsConnectionOptions
   agent?: HttpAgentOptions | UndiciAgentOptions | agentFn | false
-  nodeFilter?: nodeFilterFn
-  nodeSelector?: nodeSelectorFn
   headers?: Record<string, any>
   opaqueIdPrefix?: string
   generateRequestId?: generateRequestIdFn
@@ -120,7 +110,7 @@ export default class Client extends API {
   diagnostic: Diagnostic
   name: string | symbol
   connectionPool: BaseConnectionPool
-  transport: SniffingTransport
+  transport: Transport
   serializer: Serializer
   helpers: Helpers
   constructor (opts: ClientOptions) {
@@ -160,25 +150,20 @@ export default class Client extends API {
 
     const options: Required<ClientOptions> = Object.assign({}, {
       Connection: UndiciConnection,
-      Transport: SniffingTransport,
+      Transport,
       Serializer,
-      ConnectionPool: (opts.cloud != null) ? CloudConnectionPool : WeightedConnectionPool,
+      ConnectionPool: CloudConnectionPool,
       maxRetries: 3,
       requestTimeout: 30000,
       pingTimeout: 3000,
-      sniffInterval: false,
-      sniffOnStart: false,
-      sniffEndpoint: '_nodes/_all/http',
-      sniffOnConnectionFault: false,
       resurrectStrategy: 'ping',
-      compression: false,
+      compression: true,
       tls: null,
       caFingerprint: null,
       agent: null,
       headers: {
         'user-agent': `elasticsearch-js/${clientVersion} Node.js ${nodeVersion}; Transport ${transportVersion}; (${os.platform()} ${os.release()} ${os.arch()})`
       },
-      nodeFilter: null,
       generateRequestId: null,
       name: 'elasticsearch-js',
       auth: null,
@@ -232,7 +217,13 @@ export default class Client extends API {
         diagnostic: this.diagnostic,
         caFingerprint: options.caFingerprint
       })
-      this.connectionPool.addConnection(options.node ?? options.nodes)
+
+      // serverless only supports one node. keeping array support, to simplify
+      // for people migrating from the stack client, but only using the first
+      // node in the list.
+      let node = options.node ?? options.nodes
+      if (Array.isArray(node)) node = node[0]
+      this.connectionPool.addConnection(node)
     }
 
     this.transport = new options.Transport({
@@ -241,14 +232,8 @@ export default class Client extends API {
       serializer: this.serializer,
       maxRetries: options.maxRetries,
       requestTimeout: options.requestTimeout,
-      sniffInterval: options.sniffInterval,
-      sniffOnStart: options.sniffOnStart,
-      sniffOnConnectionFault: options.sniffOnConnectionFault,
-      sniffEndpoint: options.sniffEndpoint,
       compression: options.compression,
       headers: options.headers,
-      nodeFilter: options.nodeFilter,
-      nodeSelector: options.nodeSelector,
       generateRequestId: options.generateRequestId,
       name: options.name,
       opaqueIdPrefix: options.opaqueIdPrefix,
@@ -276,7 +261,7 @@ export default class Client extends API {
     // Merge the new options with the initial ones
     // @ts-expect-error kChild symbol is for internal use only
     const options: ClientOptions = Object.assign({}, this[kInitialOptions], opts)
-    // Pass to the child client the parent instances that cannot be overriden
+    // Pass to the child client the parent instances that cannot be overridden
     // @ts-expect-error kInitialOptions symbol is for internal use only
     options[kChild] = {
       connectionPool: this.connectionPool,

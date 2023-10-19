@@ -22,7 +22,7 @@ import { URL } from 'url'
 import { connection } from '../utils'
 import { Client, errors } from '../..'
 import * as symbols from '@elastic/transport/lib/symbols'
-import { BaseConnectionPool, CloudConnectionPool, WeightedConnectionPool } from '@elastic/transport'
+import { BaseConnectionPool, CloudConnectionPool } from '@elastic/transport'
 
 let clientVersion: string = require('../../package.json').version // eslint-disable-line
 if (clientVersion.includes('-')) {
@@ -36,15 +36,15 @@ const nodeVersion = process.versions.node
 
 test('Create a client instance, single node as string', t => {
   const client = new Client({ node: 'http://localhost:9200' })
-  t.ok(client.connectionPool instanceof WeightedConnectionPool)
+  t.ok(client.connectionPool instanceof CloudConnectionPool)
   t.equal(client.connectionPool.size, 1)
   t.end()
 })
 
-test('Create a client instance, multi node as strings', t => {
+test('Create a client instance, multi node as strings, serverless only uses one', t => {
   const client = new Client({ nodes: ['http://localhost:9200', 'http://localhost:9201'] })
-  t.ok(client.connectionPool instanceof WeightedConnectionPool)
-  t.equal(client.connectionPool.size, 2)
+  t.ok(client.connectionPool instanceof CloudConnectionPool)
+  t.equal(client.connectionPool.size, 1)
   t.end()
 })
 
@@ -58,7 +58,7 @@ test('Create a client instance, single node as object', t => {
   t.end()
 })
 
-test('Create a client instance, multi node as object', t => {
+test('Create a client instance, multi node as object, serverless only uses one', t => {
   const client = new Client({
     nodes: [{
       url: new URL('http://localhost:9200')
@@ -66,7 +66,7 @@ test('Create a client instance, multi node as object', t => {
       url: new URL('http://localhost:9201')
     }]
   })
-  t.equal(client.connectionPool.size, 2)
+  t.equal(client.connectionPool.size, 1)
   t.end()
 })
 
