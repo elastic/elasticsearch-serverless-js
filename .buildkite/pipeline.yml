@@ -19,7 +19,8 @@ steps:
     artifact_paths: "./junit-output/junit-*.xml"
   - wait: ~
     continue_on_failure: true
-  - label: ":junit: Test results"
+  - key: junit
+    label: ":junit: Test results"
     agents:
       provider: "gcp"
       image: family/core-ubuntu-2204
