@@ -157,7 +157,7 @@ export default class Client extends API {
       requestTimeout: 30000,
       pingTimeout: 3000,
       resurrectStrategy: 'ping',
-      compression: false,
+      compression: true,
       tls: null,
       caFingerprint: null,
       agent: null,

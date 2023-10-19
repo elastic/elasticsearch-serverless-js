@@ -73,7 +73,8 @@ test('Scroll search', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection: MockConnection
+    Connection: MockConnection,
+    compression: false,
   })
 
   const scrollSearch = client.helpers.scrollSearch({
@@ -119,7 +120,8 @@ test('Clear a scroll search', async t => {
   const client = new Client({
     node: 'http://localhost:9200',
     Connection: MockConnection,
-    enableMetaHeader: false
+    enableMetaHeader: false,
+    compression: false,
   })
 
   const scrollSearch = client.helpers.scrollSearch({
@@ -268,7 +270,8 @@ test('Scroll search (retry throws later)', async t => {
   const client = new Client({
     node: 'http://localhost:9200',
     Connection: MockConnection,
-    maxRetries
+    maxRetries,
+    compression: false,
   })
 
   const scrollSearch = client.helpers.scrollSearch({
@@ -321,7 +324,8 @@ test('Scroll search documents', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection: MockConnection
+    Connection: MockConnection,
+    compression: false,
   })
 
   const scrollSearch = client.helpers.scrollDocuments({
@@ -412,7 +416,8 @@ test('Fix querystring for scroll search', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection: MockConnection
+    Connection: MockConnection,
+    compression: false,
   })
 
   const scrollSearch = client.helpers.scrollSearch({

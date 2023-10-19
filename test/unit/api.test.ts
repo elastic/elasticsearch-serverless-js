@@ -38,7 +38,8 @@ test('Api without body key and top level body', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection
+    Connection,
+    compression: false,
   })
 
   const response = await client.search({
@@ -66,7 +67,8 @@ test('Api with body key and top level body', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection
+    Connection,
+    compression: false,
   })
 
   const response = await client.search({
@@ -96,7 +98,8 @@ test('Api without body key and keyed body', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection
+    Connection,
+    compression: false,
   })
 
   const response = await client.create({
@@ -124,7 +127,8 @@ test('Api with body key and keyed body', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection
+    Connection,
+    compression: false,
   })
 
   const response = await client.create({
@@ -152,7 +156,8 @@ test('Using the body key should not mutate the body', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection
+    Connection,
+    compression: false,
   })
 
   const body = { query: { match_all: {} } }
@@ -181,7 +186,8 @@ test('Using the body key with a string value', async t => {
 
   const client = new Client({
     node: 'http://localhost:9200',
-    Connection
+    Connection,
+    compression: false,
   })
 
   try {
