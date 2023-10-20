@@ -35,8 +35,9 @@ spec:
           access_level: READ_ONLY
       cancel_intermediate_builds: true
       cancel_intermediate_builds_branch_filter: '!main'
-      build_branches: false
-      build_tags: false
+      provider_settings:
+        build_branches: false
+        build_tags: false
       env:
         ELASTIC_PR_COMMENTS_ENABLED: 'true'
       schedules:
