@@ -824,12 +824,15 @@ function isNDJson (api) {
   * Hack around the fact that serverless doesn't allow deleting indices using wildcards
   */
 async function deleteIndices(client) {
-  const indices = await client.cat.indices()
-  if (indices.length > 0) {
-    const indexNames = indices.map(index => index.name)
+  const indicesRaw = await client.cat.indices()
+  const indexNames = indicesRaw
+    .trim()
+    .split('\n')
+    .map(row => row.split(' ')[2])
+    .filter(name => !name.startsWith('.'))
+  if (indexNames.length > 0) {
     await client.indices.delete({
       index: indexNames.join(','),
-      expand_wildcards: 'open,closed,hidden',
     }, { ignore: [404] })
   }
 }
