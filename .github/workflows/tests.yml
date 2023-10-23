@@ -1,6 +1,18 @@
 ---
 name: Unit tests
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore: &ignore
+      - '**/*.md'
+      - '**/*.asciidoc'
+      - '**/*.txt'
+      - 'docs/**'
+      - '.ci/**'
+      - '.buildkite/**'
+      - 'scripts/**'
+      - 'catalog-info.yaml'
+  pull_request:
+    paths-ignore: *ignore
 
 jobs:
   test:

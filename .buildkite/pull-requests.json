@@ -2,12 +2,13 @@
   "jobs": [
     {
       "enabled": true,
-      "pipeline_slug": "elasticsearch-js-integration-tests",
+      "pipeline_slug": "elasticsearch-serverless-js-integration-tests",
       "allowed_repo_permissions": ["admin", "write"],
       "build_on_commit": true,
       "skip_ci_on_only_changed": [
         "\\.md$",
         "\\.asciidoc$",
+        "\\.txt$",
         "^docs\\/",
         "^\\.ci\\/",
         "^scripts\\/",
