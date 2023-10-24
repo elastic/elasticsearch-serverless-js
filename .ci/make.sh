@@ -142,8 +142,8 @@ docker build \
 
 echo -e "\033[34;1mINFO: running $product container\033[0m"
 
-# check BUILDKITE env var to enable support for both CI or running locally
-if [[ -z "${BUILDKITE+x}" ]]; then
+# check CI env vars to enable support for both CI or running locally
+if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
   docker run \
     --volume "$repo:/usr/src/app" \
     --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
