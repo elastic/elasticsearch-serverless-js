@@ -159,7 +159,6 @@ else
   docker run \
     --volume "$repo:/usr/src/app" \
     --volume /usr/src/app/node_modules \
-    -u "$(id -u):$(id -g)" \
     --env "WORKFLOW=$WORKFLOW" \
     --name make-elasticsearch-js \
     --rm \
