@@ -51,7 +51,7 @@ const getAllFiles = dir => {
       const name = join(dir, file)
       if (statSync(name).isDirectory()) {
         return [...files, ...getAllFiles(name)]
-      } else if (!name.endsWith('.yaml') && !name.endsWith('.yml')) {
+      } else if (!name.includes(`${sep}tests${sep}`) && (!name.endsWith('.yaml') || !name.endsWith('.yml'))) {
         return files
       } else {
         return [...files, name]
@@ -91,7 +91,7 @@ async function start ({ client }) {
   }
   const folders = getAllFiles(yamlFolder)
     .reduce((arr, file) => {
-      const path = file.slice(file.indexOf('/tests'), file.lastIndexOf('/'))
+      const path = file.slice(file.lastIndexOf(`${sep}tests`), file.lastIndexOf(sep))
       let inserted = false
       for (let i = 0; i < arr.length; i++) {
         if (arr[i][0].includes(path)) {
@@ -107,7 +107,7 @@ async function start ({ client }) {
   const totalTime = now()
   for (const folder of folders) {
     // pretty name
-    const apiName = folder[0].split(`${sep}tests${sep}`)[1]
+    const apiName = folder[0].split(`${sep}tests${sep}`)[1].split(sep)[0]
 
     log('Testing ' + apiName)
     const apiTime = now()

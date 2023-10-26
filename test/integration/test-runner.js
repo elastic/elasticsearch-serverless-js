@@ -420,10 +420,10 @@ function build (opts = {}) {
         const key = Object.keys(action.match)[0]
         match(
           // in some cases, the yaml refers to the body with an empty string
-          key === '$body' || key === ''
+          key.split('.')[0] === '$body' || key === ''
             ? response
             : delve(response, fillStashedValues(key)),
-          key === '$body'
+          key.split('.')[0] === '$body'
             ? action.match[key]
             : fillStashedValues(action.match)[key],
           action.match
@@ -544,6 +544,8 @@ function match (val1, val2, action) {
     // 'm' adds the support for multiline regex
     assert.match(val1, new RegExp(regStr, 'm'), `should match pattern provided: ${val2}, but got: ${val1}`)
   // everything else
+  } else if (typeof val1 === 'string' && typeof val2 === 'string') {
+    assert.include(val1, val2, `should match pattern provided: ${val2}, but got: ${val1}`)
   } else {
     assert.equal(val1, val2, `should be equal: ${val1} - ${val2}, action: ${JSON.stringify(action)}`)
   }
@@ -640,6 +642,10 @@ function length (val, len) {
  */
 function parseDo (action) {
   action = JSON.parse(JSON.stringify(action))
+
+  if (typeof action === 'string') action = {[action]: {}}
+  if (Array.isArray(action)) action = action[0]
+
   return Object.keys(action).reduce((acc, val) => {
     switch (val) {
       case 'catch':
