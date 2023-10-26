@@ -20,7 +20,9 @@ echo "--- :javascript: Running tests"
 GITHUB_TOKEN=$(vault read -field=token "$GITHUB_TOKEN_PATH")
 export GITHUB_TOKEN
 
+mkdir -p "$repo/junit-output"
 docker run \
+       -u "$(id -u):$(id -g)" \
        -e "ELASTICSEARCH_URL" \
        -e "ES_API_SECRET_KEY" \
        -e "GITHUB_TOKEN" \
