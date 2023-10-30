@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ------------------------------------------------------- #
 #
-# Build entry script for elasticsearch-js
+# Build entry script for elasticsearch-serverless-js
 #
 # Must be called: ./.ci/make.sh <target> <params>
 #
@@ -33,7 +33,7 @@ VERSION=$2
 STACK_VERSION=$VERSION
 set -euo pipefail
 
-product="elastic/elasticsearch-js"
+product="elastic/elasticsearch-serverless-js"
 output_folder=".ci/output"
 codegen_folder=".ci/output"
 OUTPUT_DIR="$repo/${output_folder}"
@@ -148,7 +148,7 @@ if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
     --volume "$repo:/usr/src/app" \
     --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
     --env "WORKFLOW=$WORKFLOW" \
-    --name make-elasticsearch-js \
+    --name make-elasticsearch-serverless-js \
     --rm \
     $product \
     /bin/bash -c "mkdir -p /usr/src/elastic-client-generator-js/output && \
@@ -159,7 +159,7 @@ else
     --volume "$repo:/usr/src/app" \
     --volume /usr/src/app/node_modules \
     --env "WORKFLOW=$WORKFLOW" \
-    --name make-elasticsearch-js \
+    --name make-elasticsearch-serverless-js \
     --rm \
     $product \
     /bin/bash -c "cd /usr/src && \

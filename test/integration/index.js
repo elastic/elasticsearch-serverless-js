@@ -29,6 +29,7 @@ const { join, sep } = require('path')
 const yaml = require('js-yaml')
 const minimist = require('minimist')
 const ms = require('ms')
+const globby = require('globby')
 const { Client } = require('../../index')
 const build = require('./test-runner')
 const createJunitReporter = require('./reporter')
@@ -45,18 +46,13 @@ const options = minimist(process.argv.slice(2), {
   string: ['suite', 'test'],
 })
 
-const getAllFiles = dir => {
-  return readdirSync(dir)
-    .reduce((files, file) => {
-      const name = join(dir, file)
-      if (statSync(name).isDirectory()) {
-        return [...files, ...getAllFiles(name)]
-      } else if (!name.endsWith('.yaml') && !name.endsWith('.yml')) {
-        return files
-      } else {
-        return [...files, name]
-      }
-    }, [])
+const getAllFiles = async dir => {
+  const files = await globby(dir, {
+    expandDirectories: {
+      extensions: ['yml', 'yaml']
+    }
+  })
+  return files.sort()
 }
 
 function runner (opts = {}) {
@@ -89,112 +85,88 @@ async function start ({ client }) {
     pass: 0,
     assertions: 0
   }
-  const folders = getAllFiles(yamlFolder)
-    .reduce((arr, file) => {
-      const path = file.slice(file.indexOf('/tests'), file.lastIndexOf('/'))
-      let inserted = false
-      for (let i = 0; i < arr.length; i++) {
-        if (arr[i][0].includes(path)) {
-          inserted = true
-          arr[i].push(file)
-          break
-        }
-      }
-      if (!inserted) arr.push([file])
-      return arr
-    }, [])
+  const files = await getAllFiles(yamlFolder)
 
   const totalTime = now()
-  for (const folder of folders) {
+  for (const file of files) {
     // pretty name
-    const apiName = folder[0].split(`${sep}tests${sep}`)[1]
+    const apiName = file.split(`${sep}tests${sep}`)[1]
 
     log('Testing ' + apiName)
-    const apiTime = now()
+    const testRunner = build({ client })
+    const fileTime = now()
+    const data = readFileSync(file, 'utf8')
 
-    for (const file of folder) {
-      const testRunner = build({ client })
-      const fileTime = now()
-      const data = readFileSync(file, 'utf8')
+    // get the test yaml (as object), some file has multiple yaml documents inside,
+    // every document is separated by '---', so we split on the separator
+    // and then we remove the empty strings, finally we parse them
+    const tests = data
+      .split('\n---\n')
+      .map(s => s.trim())
+      // empty strings
+      .filter(Boolean)
+      .map(parse)
+      // null values
+      .filter(Boolean)
 
-      // get the test yaml (as object), some file has multiple yaml documents inside,
-      // every document is separated by '---', so we split on the separator
-      // and then we remove the empty strings, finally we parse them
-      const tests = data
-        .split('\n---\n')
-        .map(s => s.trim())
-        // empty strings
-        .filter(Boolean)
-        .map(parse)
-        // null values
-        .filter(Boolean)
+    // get setup and teardown if present
+    let setupTest = null
+    let teardownTest = null
+    for (const test of tests) {
+      if (test.setup) setupTest = test.setup
+      if (test.teardown) teardownTest = test.teardown
+    }
 
-      // get setup and teardown if present
-      let setupTest = null
-      let teardownTest = null
-      for (const test of tests) {
-        if (test.setup) setupTest = test.setup
-        if (test.teardown) teardownTest = test.teardown
-      }
+    const cleanPath = file.slice(file.lastIndexOf(apiName))
 
-      const cleanPath = file.slice(file.lastIndexOf(apiName))
+    // skip if --suite CLI arg doesn't match
+    if (options.suite && !cleanPath.endsWith(options.suite)) continue
 
-      // skip if --suite CLI arg doesn't match
-      if (options.suite && !cleanPath.endsWith(options.suite)) continue
+    const junitTestSuite = junitTestSuites.testsuite(apiName.slice(1) + ' - ' + cleanPath)
 
-      log('    ' + cleanPath)
-      const junitTestSuite = junitTestSuites.testsuite(apiName.slice(1) + ' - ' + cleanPath)
+    for (const test of tests) {
+      const testTime = now()
+      const name = Object.keys(test)[0]
 
-      for (const test of tests) {
-        const testTime = now()
-        const name = Object.keys(test)[0]
+      // skip setups, teardowns and anything that doesn't match --test flag when present
+      if (name === 'setup' || name === 'teardown') continue
+      if (options.test && !name.endsWith(options.test)) continue
 
-        // skip setups, teardowns and anything that doesn't match --test flag when present
-        if (name === 'setup' || name === 'teardown') continue
-        if (options.test && !name.endsWith(options.test)) continue
+      const junitTestCase = junitTestSuite.testcase(name, `node_${process.version}/${cleanPath}`)
 
-        const junitTestCase = junitTestSuite.testcase(name, `node_${process.version}/${cleanPath}`)
-
-        stats.total += 1
-        log('        - ' + name)
-        try {
-          await testRunner.run(setupTest, test[name], teardownTest, stats, junitTestCase)
-          stats.pass += 1
-        } catch (err) {
-          junitTestCase.failure(err)
-          junitTestCase.end()
-          junitTestSuite.end()
-          junitTestSuites.end()
-          generateJunitXmlReport(junit, 'serverless')
-          console.error(err)
-
-          if (options.bail) {
-            process.exit(1)
-          } else {
-            continue
-          }
-        }
-        const totalTestTime = now() - testTime
+      stats.total += 1
+      log('  - ' + name)
+      try {
+        await testRunner.run(setupTest, test[name], teardownTest, stats, junitTestCase)
+        stats.pass += 1
+      } catch (err) {
+        junitTestCase.failure(err)
         junitTestCase.end()
-        if (totalTestTime > MAX_TEST_TIME) {
-          log('          took too long: ' + ms(totalTestTime))
+        junitTestSuite.end()
+        junitTestSuites.end()
+        generateJunitXmlReport(junit, 'serverless')
+        console.error(err)
+
+        if (options.bail) {
+          process.exit(1)
         } else {
-          log('          took: ' + ms(totalTestTime))
+          continue
         }
       }
-      junitTestSuite.end()
-      const totalFileTime = now() - fileTime
-      if (totalFileTime > MAX_FILE_TIME) {
-        log(`    ${cleanPath} took too long: ` + ms(totalFileTime))
+      const totalTestTime = now() - testTime
+      junitTestCase.end()
+      if (totalTestTime > MAX_TEST_TIME) {
+        log('    took too long: ' + ms(totalTestTime))
       } else {
-        log(`    ${cleanPath} took: ` + ms(totalFileTime))
+        log('    took: ' + ms(totalTestTime))
       }
     }
-    const totalApiTime = now() - apiTime
-    if (totalApiTime > MAX_API_TIME) {
-      log(`${apiName} took too long: ` + ms(totalApiTime))
+    junitTestSuite.end()
+    const totalFileTime = now() - fileTime
+    if (totalFileTime > MAX_FILE_TIME) {
+      log(`  ${cleanPath} took too long: ` + ms(totalFileTime))
     } else {
-      log(`${apiName} took: ` + ms(totalApiTime))
+      log(`  ${cleanPath} took: ` + ms(totalFileTime))
     }
   }
   junitTestSuites.end()
@@ -204,6 +176,7 @@ async function start ({ client }) {
   - Total: ${stats.total}
   - Skip: ${stats.skip}
   - Pass: ${stats.pass}
+  - Fail: ${stats.total - stats.pass}
   - Assertions: ${stats.assertions}
   `)
 }
