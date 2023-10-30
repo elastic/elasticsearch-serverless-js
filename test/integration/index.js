@@ -93,6 +93,7 @@ async function start ({ client }) {
     const apiName = file.split(`${sep}tests${sep}`)[1]
 
     log('Testing ' + apiName)
+    const testRunner = build({ client })
     const fileTime = now()
     const data = readFileSync(file, 'utf8')
 
