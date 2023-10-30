@@ -1,7 +1,7 @@
 ---
 steps:
   - key: integration
-    label: ":elasticsearch: :javascript: Elasticsearch Serverless Node.js integration tests"
+    label: ":elasticsearch: :javascript: Elasticsearch Serverless Node.js v{{ matrix.nodejs }} integration tests"
     agents:
       provider: "gcp"
     matrix:
