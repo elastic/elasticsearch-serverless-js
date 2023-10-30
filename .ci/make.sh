@@ -147,7 +147,6 @@ if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
   docker run \
     --volume "$repo:/usr/src/app" \
     --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
-    -u "$(id -u):$(id -g)" \
     --env "WORKFLOW=$WORKFLOW" \
     --name make-elasticsearch-js \
     --rm \
@@ -159,7 +158,6 @@ else
   docker run \
     --volume "$repo:/usr/src/app" \
     --volume /usr/src/app/node_modules \
-    -u "$(id -u):$(id -g)" \
     --env "WORKFLOW=$WORKFLOW" \
     --name make-elasticsearch-js \
     --rm \

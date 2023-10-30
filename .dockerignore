@@ -3,3 +3,4 @@ npm-debug.log
 .git
 .nyc_output
 lib
+junit-output
