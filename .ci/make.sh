@@ -37,7 +37,7 @@ product="elastic/elasticsearch-serverless-js"
 output_folder=".ci/output"
 codegen_folder=".ci/output"
 OUTPUT_DIR="$repo/${output_folder}"
-NODE_VERSION=20
+NODE_VERSION=18
 WORKFLOW=${WORKFLOW-staging}
 mkdir -p "$OUTPUT_DIR"
 
@@ -134,6 +134,8 @@ docker build \
   --file .buildkite/Dockerfile \
   --tag "$product" \
   --build-arg NODE_VERSION="$NODE_VERSION" \
+  --build-arg BUILDER_USER="$(id -u)" \
+  --build-arg BUILDER_GROUP="$(id -g)" \
   .
 
 # ------------------------------------------------------- #
@@ -143,8 +145,10 @@ docker build \
 echo -e "\033[34;1mINFO: running $product container\033[0m"
 
 # check CI env vars to enable support for both CI or running locally
-if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
+if [[ -z "${BUILDKITE+x}" ]] && [[ -z "${CI+x}" ]] && [[ -z "${GITHUB_ACTIONS+x}" ]]; then
+  echo -e "\033[34;1mINFO: Running in local mode"
   docker run \
+    -u "$(id -u):$(id -g)" \
     --volume "$repo:/usr/src/app" \
     --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
     --volume /usr/src/app/node_modules \
@@ -155,7 +159,9 @@ if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
     /bin/bash -c "mkdir -p /usr/src/elastic-client-generator-js/output && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
 else
+  echo -e "\033[34;1mINFO: Running in CI mode"
   docker run \
+    -u "$(id -u):$(id -g)" \
     --volume "$repo:/usr/src/app" \
     --volume /usr/src/app/node_modules \
     --env "WORKFLOW=$WORKFLOW" \
