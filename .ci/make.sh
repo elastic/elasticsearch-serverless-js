@@ -166,6 +166,7 @@ else
       git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git && \
       mkdir -p /usr/src/elastic-client-generator-js/output && \
       cd /usr/src/app && \
+      npm ls -a && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
 fi
 
