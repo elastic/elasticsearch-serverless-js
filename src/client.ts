@@ -241,12 +241,7 @@ export default class Client extends API {
       context: options.context,
       productCheck: 'Elasticsearch',
       maxResponseSize: options.maxResponseSize,
-      maxCompressedResponseSize: options.maxCompressedResponseSize,
-      vendoredHeaders: {
-        jsonContentType: 'application/vnd.elasticsearch+json; compatible-with=8',
-        ndjsonContentType: 'application/vnd.elasticsearch+x-ndjson; compatible-with=8',
-        accept: 'application/vnd.elasticsearch+json; compatible-with=8,text/plain'
-      }
+      maxCompressedResponseSize: options.maxCompressedResponseSize
     })
 
     this.helpers = new Helpers({
