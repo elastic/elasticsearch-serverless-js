@@ -147,12 +147,12 @@ if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
   docker run \
     --volume "$repo:/usr/src/app" \
     --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
+    --volume /usr/src/app/node_modules \
     --env "WORKFLOW=$WORKFLOW" \
     --name make-elasticsearch-serverless-js \
     --rm \
     $product \
     /bin/bash -c "mkdir -p /usr/src/elastic-client-generator-js/output && \
-      cd /usr/src/app && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
 else
   docker run \
@@ -162,11 +162,9 @@ else
     --name make-elasticsearch-serverless-js \
     --rm \
     $product \
-    /bin/bash -c "cd /usr/src && \
-      git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git && \
+    /bin/bash -c "
+      git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git /usr/src/elastic-client-generator-js && \
       mkdir -p /usr/src/elastic-client-generator-js/output && \
-      cd /usr/src/app && \
-      npm ls -a && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
 fi
 
