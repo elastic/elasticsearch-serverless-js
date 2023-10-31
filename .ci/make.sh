@@ -164,8 +164,7 @@ else
     --rm \
     $product \
     /bin/bash -c "
-      echo 'WORKFLOW:$WORKFLOW' && \
-      git clone https://github.com/elastic/elastic-client-generator-js /usr/src/elastic-client-generator-js && \
+      git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git /usr/src/elastic-client-generator-js && \
       mkdir -p /usr/src/elastic-client-generator-js/output && \
       ls -la /usr/src/elastic-client-generator-js && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
