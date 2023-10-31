@@ -146,6 +146,7 @@ echo -e "\033[34;1mINFO: running $product container\033[0m"
 if [[ -z "${BUILDKITE+x}" ]] && [[ -z "${CI+x}" ]] && [[ -z "${GITHUB_ACTIONS+x}" ]]; then
   echo -e "\033[34;1mINFO: Running in local mode"
   docker run \
+    -u "$(id -u):$(id -g)" \
     --volume "$repo:/usr/src/app" \
     --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
     --volume /usr/src/app/node_modules \
@@ -158,6 +159,7 @@ if [[ -z "${BUILDKITE+x}" ]] && [[ -z "${CI+x}" ]] && [[ -z "${GITHUB_ACTIONS+x}
 else
   echo -e "\033[34;1mINFO: Running in CI mode"
   docker run \
+    -u "$(id -u):$(id -g)" \
     --volume "$repo:/usr/src/app" \
     --volume /usr/src/app/node_modules \
     --env "WORKFLOW=$WORKFLOW" \
