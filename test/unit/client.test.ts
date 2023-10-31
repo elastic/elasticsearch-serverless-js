@@ -404,6 +404,27 @@ test('Meta header disabled', async t => {
   await client.transport.request({ method: 'GET', path: '/' })
 })
 
+test('elastic-api-version header exists on all requests', async t => {
+  t.plan(1)
+
+  const Connection = connection.buildMockConnection({
+    onRequest (opts) {
+      t.equal(opts.headers?.['elastic-api-version'], '2023-10-31')
+      return {
+        statusCode: 200,
+        body: { hello: 'world' }
+      }
+    }
+  })
+
+  const client = new Client({
+    node: 'http://localhost:9200',
+    Connection,
+  })
+
+  await client.transport.request({ method: 'GET', path: '/' })
+})
+
 test('caFingerprint', t => {
   const client = new Client({
     node: 'https://localhost:9200',
