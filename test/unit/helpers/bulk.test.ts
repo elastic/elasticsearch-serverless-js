@@ -56,7 +56,7 @@ test('bulk index', t => {
         onRequest (params) {
           t.equal(params.path, '/_bulk')
           t.match(params.headers, {
-            'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8',
+            'content-type': 'application/x-ndjson',
             'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
           })
           // @ts-expect-error
@@ -103,7 +103,7 @@ test('bulk index', t => {
       const MockConnection = connection.buildMockConnection({
         onRequest (params) {
           t.equal(params.path, '/_bulk')
-          t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+          t.match(params.headers, { 'content-type': 'application/x-ndjson' })
           t.notMatch(params.headers, {
             'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
           })
@@ -150,7 +150,7 @@ test('bulk index', t => {
       const MockConnection = connection.buildMockConnection({
         onRequest (params) {
           t.equal(params.path, '/_bulk')
-          t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+          t.match(params.headers, { 'content-type': 'application/x-ndjson' })
           // @ts-expect-error
           t.equal(params.body.split('\n').filter(Boolean).length, 6)
           return { body: { errors: false, items: new Array(3).fill({}) } }
@@ -192,7 +192,7 @@ test('bulk index', t => {
       const MockConnection = connection.buildMockConnection({
         onRequest (params) {
           t.equal(params.path, '/_bulk')
-          t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+          t.match(params.headers, { 'content-type': 'application/x-ndjson' })
           // @ts-expect-error
           const [action, payload] = params.body.split('\n')
           t.same(JSON.parse(action), { index: { _index: 'test', _id: count } })
@@ -238,7 +238,7 @@ test('bulk index', t => {
     t.test('Should perform a bulk request (retry)', async t => {
       async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
         t.equal(req.url, '/_bulk')
-        t.match(req.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(req.headers, { 'content-type': 'application/x-ndjson' })
 
         let body = ''
         req.setEncoding('utf8')
@@ -359,7 +359,7 @@ test('bulk index', t => {
     t.test('Should perform a bulk request (failure)', async t => {
       async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
         t.equal(req.url, '/_bulk')
-        t.match(req.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(req.headers, { 'content-type': 'application/x-ndjson' })
 
         let body = ''
         req.setEncoding('utf8')
@@ -503,7 +503,7 @@ test('bulk index', t => {
     t.test('Should abort a bulk request', async t => {
       async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
         t.equal(req.url, '/_bulk')
-        t.match(req.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(req.headers, { 'content-type': 'application/x-ndjson' })
 
         let body = ''
         req.setEncoding('utf8')
@@ -606,7 +606,7 @@ test('bulk index', t => {
       const MockConnection = connection.buildMockConnection({
         onRequest (params) {
           t.equal(params.path, '/_bulk')
-          t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+          t.match(params.headers, { 'content-type': 'application/x-ndjson' })
           // @ts-expect-error
           const [action, payload] = params.body.split('\n')
           t.same(JSON.parse(action), { index: { _index: 'test', _id: count } })
@@ -660,7 +660,7 @@ test('bulk index', t => {
       const MockConnection = connection.buildMockConnection({
         onRequest (params) {
           t.equal(params.path, '/_bulk')
-          t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+          t.match(params.headers, { 'content-type': 'application/x-ndjson' })
           // @ts-expect-error
           const [action, payload] = params.body.split('\n')
           t.same(JSON.parse(action), { index: { _index: 'test' } })
@@ -718,7 +718,7 @@ test('bulk create', t => {
     const MockConnection = connection.buildMockConnection({
       onRequest (params) {
         t.equal(params.path, '/_bulk')
-        t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
         // @ts-expect-error
         const [action, payload] = params.body.split('\n')
         t.same(JSON.parse(action), { create: { _index: 'test', _id: count } })
@@ -769,7 +769,7 @@ test('bulk update', t => {
     const MockConnection = connection.buildMockConnection({
       onRequest (params) {
         t.equal(params.path, '/_bulk')
-        t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
         // @ts-expect-error
         const [action, payload] = params.body.split('\n')
         t.same(JSON.parse(action), { update: { _index: 'test', _id: count } })
@@ -819,7 +819,7 @@ test('bulk update', t => {
     const MockConnection = connection.buildMockConnection({
       onRequest (params) {
         t.equal(params.path, '/_bulk')
-        t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
         // @ts-expect-error
         const [action, payload] = params.body.split('\n')
         t.same(JSON.parse(action), { update: { _index: 'test', _id: count } })
@@ -867,7 +867,7 @@ test('bulk update', t => {
     const MockConnection = connection.buildMockConnection({
       onRequest (params) {
         t.equal(params.path, '/_bulk')
-        t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
         // @ts-expect-error
         const [action, payload] = params.body.split('\n')
         t.same(JSON.parse(action), { update: { _index: 'test', _id: count } })
@@ -922,7 +922,7 @@ test('bulk delete', t => {
     const MockConnection = connection.buildMockConnection({
       onRequest (params) {
         t.equal(params.path, '/_bulk')
-        t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
         // @ts-expect-error
         t.same(JSON.parse(params.body), { delete: { _index: 'test', _id: count++ } })
         return { body: { errors: false, items: [{}] } }
@@ -966,7 +966,7 @@ test('bulk delete', t => {
   t.test('Should perform a bulk request (failure)', async t => {
     async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
       t.equal(req.url, '/_bulk')
-      t.match(req.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+      t.match(req.headers, { 'content-type': 'application/x-ndjson' })
 
       let body = ''
       req.setEncoding('utf8')
@@ -1115,7 +1115,7 @@ test('transport options', t => {
 
         if (params.path === '/_bulk') {
           t.match(params.headers, {
-            'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8',
+            'content-type': 'application/x-ndjson',
             foo: 'bar'
           })
           return { body: { errors: false, items: [{}] } }
@@ -1231,7 +1231,7 @@ test('Flush interval', t => {
     const MockConnection = connection.buildMockConnection({
       onRequest (params) {
         t.equal(params.path, '/_bulk')
-        t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
         // @ts-expect-error
         const [action, payload] = params.body.split('\n')
         t.same(JSON.parse(action), { index: { _index: 'test' } })
@@ -1285,7 +1285,7 @@ test('Flush interval', t => {
       onRequest (params) {
         t.ok(count < 2)
         t.equal(params.path, '/_bulk')
-        t.match(params.headers, { 'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8' })
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
         // @ts-expect-error
         const [action, payload] = params.body.split('\n')
         t.same(JSON.parse(action), { index: { _index: 'test' } })
@@ -1345,7 +1345,7 @@ test('Flush interval', t => {
       onRequest (params) {
         t.equal(params.path, '/_bulk')
         t.match(params.headers, {
-          'content-type': 'application/vnd.elasticsearch+x-ndjson; compatible-with=8',
+          'content-type': 'application/x-ndjson',
           'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
         })
         // @ts-expect-error

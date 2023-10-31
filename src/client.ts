@@ -52,7 +52,7 @@ if (clientVersion.includes('-')) {
   // clean prerelease
   clientVersion = clientVersion.slice(0, clientVersion.indexOf('-')) + 'p'
 }
-const clientVersionNoMeta = clientVersion.split('+')[0]
+const [clientVersionNoMeta, apiVersion] = clientVersion.split('+')
 let transportVersion: string = require('@elastic/transport/package.json').version // eslint-disable-line
 /* istanbul ignore next */
 if (transportVersion.includes('-')) {
@@ -162,7 +162,8 @@ export default class Client extends API {
       caFingerprint: null,
       agent: null,
       headers: {
-        'user-agent': `elasticsearch-js/${clientVersion} Node.js ${nodeVersion}; Transport ${transportVersion}; (${os.platform()} ${os.release()} ${os.arch()})`
+        'user-agent': `elasticsearch-js/${clientVersion} Node.js ${nodeVersion}; Transport ${transportVersion}; (${os.platform()} ${os.release()} ${os.arch()})`,
+        'elastic-api-version': `${apiVersion.slice(0, 4)}-${apiVersion.slice(4, 6)}-${apiVersion.slice(6, 8)}`
       },
       generateRequestId: null,
       name: 'elasticsearch-js',
@@ -240,12 +241,7 @@ export default class Client extends API {
       context: options.context,
       productCheck: 'Elasticsearch',
       maxResponseSize: options.maxResponseSize,
-      maxCompressedResponseSize: options.maxCompressedResponseSize,
-      vendoredHeaders: {
-        jsonContentType: 'application/vnd.elasticsearch+json; compatible-with=8',
-        ndjsonContentType: 'application/vnd.elasticsearch+x-ndjson; compatible-with=8',
-        accept: 'application/vnd.elasticsearch+json; compatible-with=8,text/plain'
-      }
+      maxCompressedResponseSize: options.maxCompressedResponseSize
     })
 
     this.helpers = new Helpers({
