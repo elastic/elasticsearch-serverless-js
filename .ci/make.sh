@@ -143,7 +143,8 @@ docker build \
 echo -e "\033[34;1mINFO: running $product container\033[0m"
 
 # check CI env vars to enable support for both CI or running locally
-if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
+if [[ -z "${BUILDKITE+x}" ]] && [[ -z "${CI+x}" ]] && [[ -z "${GITHUB_ACTIONS+x}" ]]; then
+  echo -e "\033[34;1mINFO: Running in local mode"
   docker run \
     --volume "$repo:/usr/src/app" \
     --volume "$(realpath $repo/../elastic-client-generator-js):/usr/src/elastic-client-generator-js" \
@@ -155,8 +156,8 @@ if [[ -z "${BUILDKITE+x}" ]] || [[ -z "${CI+x}" ]]; then
     /bin/bash -c "mkdir -p /usr/src/elastic-client-generator-js/output && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
 else
+  echo -e "\033[34;1mINFO: Running in CI mode"
   docker run \
-    --tty \
     --volume "$repo:/usr/src/app" \
     --volume /usr/src/app/node_modules \
     --env "WORKFLOW=$WORKFLOW" \
@@ -166,7 +167,6 @@ else
     /bin/bash -c "
       git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git /usr/src/elastic-client-generator-js && \
       mkdir -p /usr/src/elastic-client-generator-js/output && \
-      ls -la /usr/src/elastic-client-generator-js && \
       node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
 fi
 
