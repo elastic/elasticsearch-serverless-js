@@ -13,15 +13,18 @@ RUN apt-get clean -y && \
 RUN groupadd -f --system -g ${BUILDER_GROUP} elastic \
     && (id -u ${BUILDER_USER} &>/dev/null || useradd --system --shell /bin/bash -u ${BUILDER_USER} -g ${BUILDER_GROUP} -m elastic 1>/dev/null 2>/dev/null) \
     && mkdir -p /usr/src/app \
-    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} "/usr/src/"
+    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} /usr/src/ \
+    && mkdir -p /.npm \
+    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} /.npm
+
 WORKDIR /usr/src/app
 
+# run remainder of commands as non-root user
+USER ${BUILDER_USER}:${BUILDER_GROUP}
+
 # install dependencies
-COPY --chown=${BUILDER_USER}:${BUILDER_GROUP} package.json .
+COPY package.json .
 RUN npm install --production=false
 
 # copy project files
-COPY --chown=${BUILDER_USER}:${BUILDER_GROUP} . .
-
-# run as non-root user
-USER ${BUILDER_USER}:${BUILDER_GROUP}
+COPY . .
