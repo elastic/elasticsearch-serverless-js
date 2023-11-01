@@ -37,7 +37,7 @@ product="elastic/elasticsearch-serverless-js"
 output_folder=".ci/output"
 codegen_folder=".ci/output"
 OUTPUT_DIR="$repo/${output_folder}"
-NODE_VERSION=20
+NODE_VERSION=18
 WORKFLOW=${WORKFLOW-staging}
 mkdir -p "$OUTPUT_DIR"
 

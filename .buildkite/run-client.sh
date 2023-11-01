@@ -6,7 +6,7 @@ script_path=$(dirname "$(realpath -s "$0")")
 set -euo pipefail
 repo=$(pwd)
 
-export NODE_VERSION=${NODE_VERSION:-16}
+export NODE_VERSION=${NODE_VERSION:-18}
 
 echo "--- :docker: Building Docker image"
 docker build \
