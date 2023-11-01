@@ -9,15 +9,19 @@ RUN apt-get clean -y && \
     apt-get update -y && \
     apt-get install -y zip
 
-# Set up all files as owned by current user rather than root
+# Set up all files as owned by non-root user
 RUN groupadd -f --system -g ${BUILDER_GROUP} elastic \
     && (id -u ${BUILDER_USER} &>/dev/null || useradd --system --shell /bin/bash -u ${BUILDER_USER} -g ${BUILDER_GROUP} -m elastic 1>/dev/null 2>/dev/null) \
     && mkdir -p /usr/src/app \
-    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} /usr/src/
+    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} "/usr/src/"
 WORKDIR /usr/src/app
-USER ${BUILDER_USER}:${BUILDER_GROUP}
 
+# install dependencies
 COPY --chown=${BUILDER_USER}:${BUILDER_GROUP} package.json .
-RUN npm install
+RUN npm install && chown -R ${BUILDER_USER}:${BUILDER_GROUP} "/.npm"
 
+# copy project files
 COPY --chown=${BUILDER_USER}:${BUILDER_GROUP} . .
+
+# run as non-root user
+USER ${BUILDER_USER}:${BUILDER_GROUP}
