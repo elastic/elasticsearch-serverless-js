@@ -11,11 +11,13 @@ RUN apt-get clean -y && \
 
 # Set up all files as owned by non-root user
 RUN groupadd -f --system -g ${BUILDER_GROUP} elastic \
-    && (id -u ${BUILDER_USER} &>/dev/null || useradd --system --shell /bin/bash -u ${BUILDER_USER} -g ${BUILDER_GROUP} -m elastic 1>/dev/null 2>/dev/null) \
+    && (id -u ${BUILDER_USER} 2>&1 /dev/null || useradd --system --shell /bin/bash -u ${BUILDER_USER} -g ${BUILDER_GROUP} -m elastic 1>/dev/null 2>/dev/null) \
     && mkdir -p /usr/src/app \
     && chown -R ${BUILDER_USER}:${BUILDER_GROUP} /usr/src/ \
     && mkdir -p /.npm \
-    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} /.npm
+    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} /.npm \
+    && mkdir -p /.cache \
+    && chown -R ${BUILDER_USER}:${BUILDER_GROUP} /.cache
 
 WORKDIR /usr/src/app
 
