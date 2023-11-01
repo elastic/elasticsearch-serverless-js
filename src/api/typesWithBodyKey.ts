@@ -1191,7 +1191,6 @@ export interface SearchRequest extends RequestBase {
   /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
   body?: {
     aggregations?: Record<string, AggregationsAggregationContainer>
-    /** @alias aggregations */
     aggs?: Record<string, AggregationsAggregationContainer>
     collapse?: SearchFieldCollapse
     explain?: boolean
@@ -2071,6 +2070,9 @@ export interface ClusterStatistics {
   skipped: integer
   successful: integer
   total: integer
+  running: integer
+  partial: integer
+  failed: integer
   details?: Record<ClusterAlias, ClusterDetails>
 }
 
@@ -2344,6 +2346,8 @@ export interface LatLonGeoLocation {
 export type Level = 'cluster' | 'indices' | 'shards'
 
 export type LifecycleOperationMode = 'RUNNING' | 'STOPPING' | 'STOPPED'
+
+export type ManagedBy = 'Index Lifecycle Management' | 'Data stream lifecycle' | 'Unmanaged'
 
 export type MapboxVectorTiles = ArrayBuffer
 
@@ -4988,7 +4992,7 @@ export interface MappingFieldNamesField {
   enabled: boolean
 }
 
-export type MappingFieldType = 'none' | 'geo_point' | 'geo_shape' | 'ip' | 'binary' | 'keyword' | 'text' | 'search_as_you_type' | 'date' | 'date_nanos' | 'boolean' | 'completion' | 'nested' | 'object' | 'murmur3' | 'token_count' | 'percolator' | 'integer' | 'long' | 'short' | 'byte' | 'float' | 'half_float' | 'scaled_float' | 'double' | 'integer_range' | 'float_range' | 'long_range' | 'double_range' | 'date_range' | 'ip_range' | 'alias' | 'join' | 'rank_feature' | 'rank_features' | 'flattened' | 'shape' | 'histogram' | 'constant_keyword' | 'aggregate_metric_double' | 'dense_vector' | 'match_only_text'
+export type MappingFieldType = 'none' | 'geo_point' | 'geo_shape' | 'ip' | 'binary' | 'keyword' | 'text' | 'search_as_you_type' | 'date' | 'date_nanos' | 'boolean' | 'completion' | 'nested' | 'object' | 'murmur3' | 'token_count' | 'percolator' | 'integer' | 'long' | 'short' | 'byte' | 'float' | 'half_float' | 'scaled_float' | 'double' | 'integer_range' | 'float_range' | 'long_range' | 'double_range' | 'date_range' | 'ip_range' | 'alias' | 'join' | 'rank_feature' | 'rank_features' | 'flattened' | 'shape' | 'histogram' | 'constant_keyword' | 'aggregate_metric_double' | 'dense_vector' | 'sparse_vector' | 'match_only_text'
 
 export interface MappingFlattenedProperty extends MappingPropertyBase {
   boost?: double
@@ -6162,7 +6166,6 @@ export interface AsyncSearchSubmitRequest extends RequestBase {
   /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
   body?: {
     aggregations?: Record<string, AggregationsAggregationContainer>
-    /** @alias aggregations */
     aggs?: Record<string, AggregationsAggregationContainer>
     collapse?: SearchFieldCollapse
     explain?: boolean
@@ -9267,7 +9270,6 @@ export interface FleetSearchRequest extends RequestBase {
   /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
   body?: {
     aggregations?: Record<string, AggregationsAggregationContainer>
-    /** @alias aggregations */
     aggs?: Record<string, AggregationsAggregationContainer>
     collapse?: SearchFieldCollapse
     explain?: boolean
@@ -9604,6 +9606,8 @@ export interface IndicesDataStream {
   generation: integer
   hidden: boolean
   ilm_policy?: Name
+  next_generation_managed_by: ManagedBy
+  prefer_ilm: boolean
   indices: IndicesDataStreamIndex[]
   name: DataStreamName
   replicated?: boolean
@@ -9615,6 +9619,9 @@ export interface IndicesDataStream {
 export interface IndicesDataStreamIndex {
   index_name: IndexName
   index_uuid: Uuid
+  ilm_policy?: Name
+  managed_by: ManagedBy
+  prefer_ilm: boolean
 }
 
 export interface IndicesDataStreamLifecycle {
@@ -11936,7 +11943,7 @@ export interface LogstashDeletePipelineRequest extends RequestBase {
 export type LogstashDeletePipelineResponse = boolean
 
 export interface LogstashGetPipelineRequest extends RequestBase {
-  id: Ids
+  id?: Ids
 }
 
 export type LogstashGetPipelineResponse = Record<Id, LogstashPipeline>
@@ -14015,7 +14022,6 @@ export interface MlPutDatafeedRequest extends RequestBase {
     delayed_data_check_config?: MlDelayedDataCheckConfig
     frequency?: Duration
     indices?: Indices
-    /** @alias indices */
     indexes?: Indices
     indices_options?: IndicesOptions
     job_id?: Id
@@ -14375,7 +14381,6 @@ export interface MlUpdateDatafeedRequest extends RequestBase {
     delayed_data_check_config?: MlDelayedDataCheckConfig
     frequency?: Duration
     indices?: string[]
-    /** @alias indices */
     indexes?: string[]
     indices_options?: IndicesOptions
     job_id?: Id
@@ -15670,7 +15675,6 @@ export interface RollupRollupSearchRequest extends RequestBase {
   /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
   body?: {
     aggregations?: Record<string, AggregationsAggregationContainer>
-    /** @alias aggregations */
     aggs?: Record<string, AggregationsAggregationContainer>
     query?: QueryDslQueryContainer
     size?: integer
