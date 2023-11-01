@@ -16,12 +16,12 @@ RUN groupadd -f --system -g ${BUILDER_GROUP} elastic \
     && chown -R ${BUILDER_USER}:${BUILDER_GROUP} "/usr/src/"
 WORKDIR /usr/src/app
 
+# run as non-root user
+USER ${BUILDER_USER}:${BUILDER_GROUP}
+
 # install dependencies
 COPY --chown=${BUILDER_USER}:${BUILDER_GROUP} package.json .
-RUN npm install && chown -R ${BUILDER_USER}:${BUILDER_GROUP} "/.npm"
+RUN npm install --production=false
 
 # copy project files
 COPY --chown=${BUILDER_USER}:${BUILDER_GROUP} . .
-
-# run as non-root user
-USER ${BUILDER_USER}:${BUILDER_GROUP}
