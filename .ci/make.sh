@@ -134,6 +134,8 @@ docker build \
   --file .buildkite/Dockerfile \
   --tag "$product" \
   --build-arg NODE_VERSION="$NODE_VERSION" \
+  --build-arg BUILDER_USER="$(id -u)" \
+  --build-arg BUILDER_GROUP="$(id -g)" \
   .
 
 # ------------------------------------------------------- #
