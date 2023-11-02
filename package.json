@@ -4,6 +4,7 @@
   "description": "The official Node.js Elastic client for the Elasticsearch Serverless service.",
   "main": "index.js",
   "types": "index.d.ts",
+  "type": "commonjs",
   "scripts": {
     "lint": "ts-standard src",
     "lint:fix": "ts-standard --fix src",
