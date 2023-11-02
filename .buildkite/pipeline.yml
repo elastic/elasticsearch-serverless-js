@@ -7,7 +7,6 @@ steps:
     matrix:
       setup:
         nodejs:
-          - "16"
           - "18"
           - "20"
     env:

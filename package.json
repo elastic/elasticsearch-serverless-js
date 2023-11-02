@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/elastic/elasticsearch-serverless-js",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "devDependencies": {
     "@sinonjs/fake-timers": "github:sinonjs/fake-timers#0bfffc1",
