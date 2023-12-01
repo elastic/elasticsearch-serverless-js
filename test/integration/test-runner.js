@@ -24,15 +24,12 @@
 const chai = require('chai')
 const semver = require('semver')
 const helper = require('./helper')
-const { join } = require('path')
-const { locations } = require('../../scripts/download-artifacts')
-const packageJson = require('../../package.json')
 
 chai.config.showDiff = true
 chai.config.truncateThreshold = 0
 const { assert } = chai
 
-const { delve, to, sleep, updateParams } = helper
+const { delve, to, updateParams } = helper
 
 const supportedFeatures = [
   'gtelte',

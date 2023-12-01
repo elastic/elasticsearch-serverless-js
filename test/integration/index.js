@@ -24,7 +24,7 @@ process.on('unhandledRejection', function (err) {
   process.exit(1)
 })
 
-const { writeFileSync, readFileSync, readdirSync, statSync, mkdirSync } = require('fs')
+const { writeFileSync, readFileSync, mkdirSync } = require('fs')
 const { join, sep } = require('path')
 const yaml = require('js-yaml')
 const minimist = require('minimist')
