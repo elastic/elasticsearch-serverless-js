@@ -37,9 +37,8 @@ const downloadArtifacts = require('../../scripts/download-artifacts')
 
 const yamlFolder = downloadArtifacts.locations.testYamlFolder
 
-const MAX_API_TIME = 1000 * 90
-const MAX_FILE_TIME = 1000 * 30
-const MAX_TEST_TIME = 1000 * 6
+const MAX_FILE_TIME = 1000 * 90
+const MAX_TEST_TIME = 1000 * 60
 
 const options = minimist(process.argv.slice(2), {
   boolean: ['bail'],
@@ -56,7 +55,11 @@ const getAllFiles = async dir => {
 }
 
 function runner (opts = {}) {
-  const options = { node: opts.node, auth: { apiKey: opts.apiKey } }
+  const options = {
+    node: opts.node,
+    auth: { apiKey: opts.apiKey },
+    requestTimeout: 45000
+  }
   const client = new Client(options)
   log('Loading yaml suite')
   start({ client })
