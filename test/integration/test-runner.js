@@ -23,7 +23,10 @@
 
 const chai = require('chai')
 const semver = require('semver')
+const { join } = require('path')
+const fs = require('fs')
 const helper = require('./helper')
+const { locations } = require('../../scripts/download-artifacts')
 
 chai.config.showDiff = true
 chai.config.truncateThreshold = 0
@@ -805,7 +808,10 @@ function shouldSkip (esVersion, action) {
 }
 
 function isNDJson (api) {
-  return false
+  const specPath = join(locations.specFolder, 'rest-api-spec', 'api', `${api}.json`)
+  const spec = JSON.parse(fs.readFileSync(specPath, 'utf8'))
+  const { content_type } = spec[Object.keys(spec)[0]].headers
+  return Boolean(content_type && content_type.includes('application/x-ndjson'))
 }
 
 /**
