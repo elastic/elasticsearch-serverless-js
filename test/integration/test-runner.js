@@ -377,6 +377,7 @@ function build (opts = {}) {
    * @returns {Promise}
    */
   async function exec (name, actions, stats, junit) {
+    // tap.comment(name)
     for (const action of actions) {
       if (action.skip) {
         if (shouldSkip(esVersion, action.skip)) {
@@ -411,7 +412,8 @@ function build (opts = {}) {
           key.split('.')[0] === '$body'
             ? action.match[key]
             : fillStashedValues(action.match)[key],
-          action.match
+          action.match,
+          response
         )
       }
 
@@ -420,7 +422,8 @@ function build (opts = {}) {
         const key = Object.keys(action.lt)[0]
         lt(
           delve(response, fillStashedValues(key)),
-          fillStashedValues(action.lt)[key]
+          fillStashedValues(action.lt)[key],
+          response
         )
       }
 
@@ -429,7 +432,8 @@ function build (opts = {}) {
         const key = Object.keys(action.gt)[0]
         gt(
           delve(response, fillStashedValues(key)),
-          fillStashedValues(action.gt)[key]
+          fillStashedValues(action.gt)[key],
+          response
         )
       }
 
@@ -438,7 +442,8 @@ function build (opts = {}) {
         const key = Object.keys(action.lte)[0]
         lte(
           delve(response, fillStashedValues(key)),
-          fillStashedValues(action.lte)[key]
+          fillStashedValues(action.lte)[key],
+          response
         )
       }
 
@@ -447,7 +452,8 @@ function build (opts = {}) {
         const key = Object.keys(action.gte)[0]
         gte(
           delve(response, fillStashedValues(key)),
-          fillStashedValues(action.gte)[key]
+          fillStashedValues(action.gte)[key],
+          response
         )
       }
 
@@ -460,7 +466,8 @@ function build (opts = {}) {
             : delve(response, fillStashedValues(key)),
           key === '$body'
             ? action.length[key]
-            : fillStashedValues(action.length)[key]
+            : fillStashedValues(action.length)[key],
+          response
         )
       }
 
@@ -469,7 +476,8 @@ function build (opts = {}) {
         const isTrue = fillStashedValues(action.is_true)
         is_true(
           delve(response, isTrue),
-          isTrue
+          isTrue,
+          response
         )
       }
 
@@ -478,7 +486,8 @@ function build (opts = {}) {
         const isFalse = fillStashedValues(action.is_false)
         is_false(
           delve(response, isFalse),
-          isFalse
+          isFalse,
+          response
         )
       }
     }
@@ -491,48 +500,67 @@ function build (opts = {}) {
  * Asserts that the given value is truthy
  * @param {any} the value to check
  * @param {string} an optional message
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
  */
-function is_true (val, msg) {
-  assert.ok(val, `expect truthy value: ${msg} - value: ${JSON.stringify(val)}`)
+function is_true (val, msg, response) {
+  try {
+    assert.ok((typeof val === 'string' && val.toLowerCase() === 'true') || val, `expect truthy value: ${msg} - value: ${JSON.stringify(val)}`)
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
+  }
 }
 
 /**
  * Asserts that the given value is falsey
  * @param {any} the value to check
  * @param {string} an optional message
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
  */
-function is_false (val, msg) {
-  assert.ok(!val, `expect falsey value: ${msg} - value: ${JSON.stringify(val)}`)
+function is_false (val, msg, response) {
+  try {
+    assert.ok((typeof val === 'string' && val.toLowerCase() === 'false') || !val, `expect falsey value: ${msg} - value: ${JSON.stringify(val)}`)
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
+  }
 }
 
 /**
  * Asserts that two values are the same
  * @param {any} the first value
  * @param {any} the second value
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
  */
-function match (val1, val2, action) {
-  // both values are objects
-  if (typeof val1 === 'object' && typeof val2 === 'object') {
-    assert.deepEqual(val1, val2, typeof action === 'object' ? JSON.stringify(action) : action)
-  // the first value is the body as string and the second a pattern string
-  } else if (
-    typeof val1 === 'string' && typeof val2 === 'string' &&
-    val2.startsWith('/') && (val2.endsWith('/\n') || val2.endsWith('/'))
-  ) {
-    const regStr = val2
-      .replace(/(^|[^\\])#.*/g, '$1')
-      .replace(/(^|[^\\])\s+/g, '$1')
-      .slice(1, -1)
-    // 'm' adds the support for multiline regex
-    assert.match(val1, new RegExp(regStr, 'm'), `should match pattern provided: ${val2}, but got: ${val1}`)
-  // everything else
-  } else if (typeof val1 === 'string' && typeof val2 === 'string') {
-    assert.include(val1, val2, `should match pattern provided: ${val2}, but got: ${val1}`)
-  } else {
-    assert.equal(val1, val2, `should be equal: ${val1} - ${val2}, action: ${JSON.stringify(action)}`)
+function match (val1, val2, action, response) {
+  try {
+    // both values are objects
+    if (typeof val1 === 'object' && typeof val2 === 'object') {
+      assert.deepEqual(val1, val2, typeof action === 'object' ? JSON.stringify(action) : action)
+    // the first value is the body as string and the second a pattern string
+    } else if (
+      typeof val1 === 'string' && typeof val2 === 'string' &&
+      val2.startsWith('/') && (val2.endsWith('/\n') || val2.endsWith('/'))
+    ) {
+      const regStr = val2
+        .replace(/(^|[^\\])#.*/g, '$1')
+        .replace(/(^|[^\\])\s+/g, '$1')
+        .slice(1, -1)
+      // 'm' adds the support for multiline regex
+      assert.match(val1, new RegExp(regStr, 'm'), `should match pattern provided: ${val2}, but got: ${val1}: ${JSON.stringify(action)}`)
+    } else if (typeof val1 === 'string' && typeof val2 === 'string') {
+      // string comparison
+      assert.include(val1, val2, `should include pattern provided: ${val2}, but got: ${val1}: ${JSON.stringify(action)}`)
+    } else {
+      // everything else
+      assert.equal(val1, val2, `should be equal: ${val1} - ${val2}, action: ${JSON.stringify(action)}`)
+    }
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
   }
 }
 
@@ -541,11 +569,17 @@ function match (val1, val2, action) {
  * It also verifies that the two values are numbers
  * @param {any} the first value
  * @param {any} the second value
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
  */
-function lt (val1, val2) {
-  ;[val1, val2] = getNumbers(val1, val2)
-  assert.ok(val1 < val2)
+function lt (val1, val2, response) {
+  try {
+    ;[val1, val2] = getNumbers(val1, val2)
+    assert.ok(val1 < val2)
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
+  }
 }
 
 /**
@@ -553,11 +587,17 @@ function lt (val1, val2) {
  * It also verifies that the two values are numbers
  * @param {any} the first value
  * @param {any} the second value
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
  */
-function gt (val1, val2) {
-  ;[val1, val2] = getNumbers(val1, val2)
-  assert.ok(val1 > val2)
+function gt (val1, val2, response) {
+  try {
+    ;[val1, val2] = getNumbers(val1, val2)
+    assert.ok(val1 > val2)
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
+  }
 }
 
 /**
@@ -565,11 +605,17 @@ function gt (val1, val2) {
  * It also verifies that the two values are numbers
  * @param {any} the first value
  * @param {any} the second value
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
  */
-function lte (val1, val2) {
-  ;[val1, val2] = getNumbers(val1, val2)
-  assert.ok(val1 <= val2)
+function lte (val1, val2, response) {
+  try {
+    ;[val1, val2] = getNumbers(val1, val2)
+    assert.ok(val1 <= val2)
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
+  }
 }
 
 /**
@@ -577,26 +623,38 @@ function lte (val1, val2) {
  * It also verifies that the two values are numbers
  * @param {any} the first value
  * @param {any} the second value
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
 */
-function gte (val1, val2) {
-  ;[val1, val2] = getNumbers(val1, val2)
-  assert.ok(val1 >= val2)
+function gte (val1, val2, response) {
+  try {
+    ;[val1, val2] = getNumbers(val1, val2)
+    assert.ok(val1 >= val2)
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
+  }
 }
 
 /**
  * Asserts that the given value has the specified length
  * @param {string|object|array} the object to check
  * @param {number} the expected length
+ * @param {any} debugging metadata to attach to any assertion errors
  * @returns {TestRunner}
  */
-function length (val, len) {
-  if (typeof val === 'string' || Array.isArray(val)) {
-    assert.equal(val.length, len)
-  } else if (typeof val === 'object' && val !== null) {
-    assert.equal(Object.keys(val).length, len)
-  } else {
-    assert.fail(`length: the given value is invalid: ${val}`)
+function length (val, len, response) {
+  try {
+    if (typeof val === 'string' || Array.isArray(val)) {
+      assert.equal(val.length, len)
+    } else if (typeof val === 'object' && val !== null) {
+      assert.equal(Object.keys(val).length, len)
+    } else {
+      assert.fail(`length: the given value is invalid: ${val}`)
+    }
+  } catch (err) {
+    err.response = JSON.stringify(response)
+    throw err
   }
 }
 

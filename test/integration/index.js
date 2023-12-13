@@ -135,7 +135,7 @@ async function start ({ client }) {
       if (name === 'setup' || name === 'teardown') continue
       if (options.test && !name.endsWith(options.test)) continue
 
-      const junitTestCase = junitTestSuite.testcase(name, `node_${process.version}/${cleanPath}`)
+      const junitTestCase = junitTestSuite.testcase(name, `node_${process.version}: ${cleanPath}`)
 
       stats.total += 1
       log('  - ' + name)
@@ -148,6 +148,7 @@ async function start ({ client }) {
         junitTestSuite.end()
         junitTestSuites.end()
         generateJunitXmlReport(junit, 'serverless')
+        err.meta = JSON.stringify(err.meta ?? {}, null, 2)
         console.error(err)
 
         if (options.bail) {
