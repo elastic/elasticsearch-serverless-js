@@ -40,6 +40,7 @@ import {
   BearerAuth,
   Context
 } from '@elastic/transport/lib/types'
+import { RedactionOptions } from '@elastic/transport/lib/Transport'
 import BaseConnection, { prepareHeaders } from '@elastic/transport/lib/connection/BaseConnection'
 import Helpers from './helpers'
 import API from './api'
@@ -104,6 +105,7 @@ export interface ClientOptions {
   caFingerprint?: string
   maxResponseSize?: number
   maxCompressedResponseSize?: number
+  redaction?: RedactionOptions
 }
 
 export default class Client extends API {
@@ -173,7 +175,11 @@ export default class Client extends API {
       proxy: null,
       enableMetaHeader: true,
       maxResponseSize: null,
-      maxCompressedResponseSize: null
+      maxCompressedResponseSize: null,
+      redaction: {
+        type: 'replace',
+        additionalKeys: []
+      }
     }, opts)
 
     if (options.caFingerprint != null && isHttpConnection(opts.node ?? opts.nodes)) {
@@ -241,7 +247,8 @@ export default class Client extends API {
       context: options.context,
       productCheck: 'Elasticsearch',
       maxResponseSize: options.maxResponseSize,
-      maxCompressedResponseSize: options.maxCompressedResponseSize
+      maxCompressedResponseSize: options.maxCompressedResponseSize,
+      redaction: options.redaction
     })
 
     this.helpers = new Helpers({
