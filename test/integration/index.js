@@ -215,7 +215,7 @@ async function start ({ client }) {
   - Total: ${stats.total}
   - Skip: ${stats.skip}
   - Pass: ${stats.pass}
-  - Fail: ${stats.total - stats.pass}
+  - Fail: ${stats.total - (stats.pass + stats.skip)}
   - Assertions: ${stats.assertions}
   `)
 }
