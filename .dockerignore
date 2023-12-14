@@ -2,3 +2,7 @@ node_modules
 npm-debug.log
 .git
 .nyc_output
+lib
+yaml-rest-tests
+junit-output
+rest-api-spec

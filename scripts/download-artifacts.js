@@ -33,6 +33,8 @@ const unzip = promisify(crossZip.unzip)
 const testYamlFolder = join(__dirname, '..', 'yaml-rest-tests')
 const zipFile = join(__dirname, '..', 'serverless-clients-tests.zip')
 
+const specFolder = join(__dirname, '..', 'rest-api-spec')
+
 async function downloadArtifacts () {
   const log = ora('Checking out spec and test').start()
 
@@ -49,7 +51,7 @@ async function downloadArtifacts () {
     process.exit(1)
   }
 
-  const response = await fetch('https://api.github.com/repos/elastic/serverless-clients-tests/zipball/main', {
+  let response = await fetch('https://api.github.com/repos/elastic/serverless-clients-tests/zipball/main', {
     headers: {
       Authorization: `Bearer ${GITHUB_TOKEN}`,
       Accept: "application/vnd.github+json",
@@ -69,6 +71,36 @@ async function downloadArtifacts () {
 
   log.text = 'Cleanup'
   await rimraf(zipFile)
+
+  log.text = 'Fetching Elasticsearch spec info'
+  await rimraf(specFolder)
+  await mkdir(specFolder, { recursive: true })
+
+  response = await fetch('https://artifacts-api.elastic.co/v1/versions')
+  let data = await response.json()
+  const latest = data.versions[data.versions.length - 1]
+  response = await fetch(`https://artifacts-api.elastic.co/v1/versions/${latest}`)
+  data = await response.json()
+  const latestBuild = data.version.builds
+    .filter(build => build.projects.elasticsearch !== null)
+    .sort((a, b) => new Date(b.start_time) - new Date(a.start_time))[0]
+
+  const buildZip = Object.keys(latestBuild.projects.elasticsearch.packages)
+    .find(key => key.startsWith('rest-resources-zip-') && key.endsWith('.zip'))
+  const zipUrl = latestBuild.projects.elasticsearch.packages[buildZip].url
+
+  log.test = 'Fetching Elasticsearch spec zip'
+  response = await fetch(zipUrl)
+
+  log.text = 'Downloading spec zip'
+  const specZipFile = join(specFolder, 'rest-api-spec.zip')
+  await pipeline(response.body, createWriteStream(specZipFile))
+
+  log.text = 'Unzipping spec'
+  await unzip(specZipFile, specFolder)
+
+  log.text = 'Cleanup'
+  await rimraf(specZipFile)
 
   log.succeed('Done')
 }
@@ -90,4 +122,4 @@ if (require.main === module) {
 }
 
 module.exports = downloadArtifacts
-module.exports.locations = { testYamlFolder, zipFile }
+module.exports.locations = { testYamlFolder, zipFile, specFolder }
