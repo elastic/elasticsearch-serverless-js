@@ -49,6 +49,7 @@ import getSourceApi from './api/get_source'
 import GraphApi from './api/graph'
 import indexApi from './api/index'
 import IndicesApi from './api/indices'
+import InferenceApi from './api/inference'
 import infoApi from './api/info'
 import IngestApi from './api/ingest'
 import LicenseApi from './api/license'
@@ -106,6 +107,7 @@ export default interface API {
   graph: GraphApi
   index: typeof indexApi
   indices: IndicesApi
+  inference: InferenceApi
   info: typeof infoApi
   ingest: IngestApi
   license: LicenseApi
@@ -146,6 +148,7 @@ const kEnrich = Symbol('Enrich')
 const kEql = Symbol('Eql')
 const kGraph = Symbol('Graph')
 const kIndices = Symbol('Indices')
+const kInference = Symbol('Inference')
 const kIngest = Symbol('Ingest')
 const kLicense = Symbol('License')
 const kLogstash = Symbol('Logstash')
@@ -166,6 +169,7 @@ export default class API {
   [kEql]: symbol | null
   [kGraph]: symbol | null
   [kIndices]: symbol | null
+  [kInference]: symbol | null
   [kIngest]: symbol | null
   [kLicense]: symbol | null
   [kLogstash]: symbol | null
@@ -185,6 +189,7 @@ export default class API {
     this[kEql] = null
     this[kGraph] = null
     this[kIndices] = null
+    this[kInference] = null
     this[kIngest] = null
     this[kLicense] = null
     this[kLogstash] = null
@@ -257,6 +262,9 @@ Object.defineProperties(API.prototype, {
   },
   indices: {
     get () { return this[kIndices] === null ? (this[kIndices] = new IndicesApi(this.transport)) : this[kIndices] }
+  },
+  inference: {
+    get () { return this[kInference] === null ? (this[kInference] = new InferenceApi(this.transport)) : this[kInference] }
   },
   ingest: {
     get () { return this[kIngest] === null ? (this[kIngest] = new IngestApi(this.transport)) : this[kIngest] }
