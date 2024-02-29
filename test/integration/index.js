@@ -42,7 +42,7 @@ const MAX_TEST_TIME = 1000 * 60
 
 const options = minimist(process.argv.slice(2), {
   boolean: ['bail'],
-  string: ['suite', 'test'],
+  string: ['suite', 'test', 'local'],
 })
 
 const skips = {
@@ -54,7 +54,10 @@ const skips = {
   'transform/10_basic.yml': ['*'],
   // TODO: scripts_painless_execute expects {"result":"0.1"}, gets {"result":"0"}
   // body sent as Buffer, unsure if related
-  'script/10_basic.yml': ['*']
+  'script/10_basic.yml': ['*'],
+  // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
+  // remove if/when https://github.com/elastic/serverless-clients-tests/issues/37 is resolved
+  'machine_learning/data_frame_evaluate.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
@@ -105,7 +108,7 @@ function runner (opts = {}) {
 
 async function start ({ client }) {
   log(`Downloading YAML test artifacts...`)
-  await downloadArtifacts()
+  await downloadArtifacts(options.local)
 
   log(`Testing serverless API...`)
   const junit = createJunitReporter()
