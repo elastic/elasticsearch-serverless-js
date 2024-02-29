@@ -54,7 +54,10 @@ const skips = {
   'transform/10_basic.yml': ['*'],
   // TODO: scripts_painless_execute expects {"result":"0.1"}, gets {"result":"0"}
   // body sent as Buffer, unsure if related
-  'script/10_basic.yml': ['*']
+  'script/10_basic.yml': ['*'],
+  // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
+  // remove if/when https://github.com/elastic/serverless-clients-tests/issues/37 is resolved
+  'machine_learning/start_stop_datafeed.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
