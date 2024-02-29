@@ -57,7 +57,7 @@ const skips = {
   'script/10_basic.yml': ['*'],
   // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
   // remove if/when https://github.com/elastic/serverless-clients-tests/issues/37 is resolved
-  'machine_learning/start_stop_datafeed.yml': ['*'],
+  'machine_learning/data_frame_evaluate.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
