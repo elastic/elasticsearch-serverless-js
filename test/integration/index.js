@@ -42,7 +42,7 @@ const MAX_TEST_TIME = 1000 * 60
 
 const options = minimist(process.argv.slice(2), {
   boolean: ['bail'],
-  string: ['suite', 'test'],
+  string: ['suite', 'test', 'local'],
 })
 
 const skips = {
@@ -105,7 +105,7 @@ function runner (opts = {}) {
 
 async function start ({ client }) {
   log(`Downloading YAML test artifacts...`)
-  await downloadArtifacts()
+  await downloadArtifacts(options.local)
 
   log(`Testing serverless API...`)
   const junit = createJunitReporter()

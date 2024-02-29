@@ -26,7 +26,7 @@ const fetch = require('node-fetch')
 const crossZip = require('cross-zip')
 const ora = require('ora')
 
-const { mkdir } = promises
+const { mkdir, cp } = promises
 const pipeline = promisify(stream.pipeline)
 const unzip = promisify(crossZip.unzip)
 
@@ -35,7 +35,7 @@ const zipFile = join(__dirname, '..', 'serverless-clients-tests.zip')
 
 const specFolder = join(__dirname, '..', 'rest-api-spec')
 
-async function downloadArtifacts () {
+async function downloadArtifacts (localTests) {
   const log = ora('Checking out spec and test').start()
 
   const { GITHUB_TOKEN } = process.env
@@ -46,31 +46,36 @@ async function downloadArtifacts () {
 
   log.text = 'Fetching test YAML files'
 
-  if (!GITHUB_TOKEN) {
-    log.fail("Missing required environment variable 'GITHUB_TOKEN'")
-    process.exit(1)
-  }
-
-  let response = await fetch('https://api.github.com/repos/elastic/serverless-clients-tests/zipball/main', {
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: "application/vnd.github+json",
+  if (localTests) {
+    log.text = `Copying local tests from ${localTests}`
+    await cp(localTests, testYamlFolder, { recursive: true })
+  } else {
+    if (!GITHUB_TOKEN) {
+      log.fail("Missing required environment variable 'GITHUB_TOKEN'")
+      process.exit(1)
     }
-  })
 
-  if (!response.ok) {
-    log.fail(`unexpected response ${response.statusText}`)
-    process.exit(1)
+    let response = await fetch('https://api.github.com/repos/elastic/serverless-clients-tests/zipball/main', {
+      headers: {
+        Authorization: `Bearer ${GITHUB_TOKEN}`,
+        Accept: "application/vnd.github+json",
+      }
+    })
+
+    if (!response.ok) {
+      log.fail(`unexpected response ${response.statusText}`)
+      process.exit(1)
+    }
+
+    log.text = 'Downloading tests zipball'
+    await pipeline(response.body, createWriteStream(zipFile))
+
+    log.text = 'Unzipping tests'
+    await unzip(zipFile, testYamlFolder)
+
+    log.text = 'Cleanup'
+    await rimraf(zipFile)
   }
-
-  log.text = 'Downloading tests zipball'
-  await pipeline(response.body, createWriteStream(zipFile))
-
-  log.text = 'Unzipping tests'
-  await unzip(zipFile, testYamlFolder)
-
-  log.text = 'Cleanup'
-  await rimraf(zipFile)
 
   log.text = 'Fetching Elasticsearch spec info'
   await rimraf(specFolder)
