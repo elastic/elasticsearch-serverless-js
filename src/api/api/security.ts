@@ -269,7 +269,7 @@ export default class Security {
   async updateApiKey (this: That, params: T.SecurityUpdateApiKeyRequest | TB.SecurityUpdateApiKeyRequest, options?: TransportRequestOptions): Promise<T.SecurityUpdateApiKeyResponse>
   async updateApiKey (this: That, params: T.SecurityUpdateApiKeyRequest | TB.SecurityUpdateApiKeyRequest, options?: TransportRequestOptions): Promise<any> {
     const acceptedPath: string[] = ['id']
-    const acceptedBody: string[] = ['role_descriptors', 'metadata']
+    const acceptedBody: string[] = ['role_descriptors', 'metadata', 'expiration']
     const querystring: Record<string, any> = {}
     // @ts-expect-error
     const userBody: any = params?.body
