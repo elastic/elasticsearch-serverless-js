@@ -56,7 +56,7 @@ const skips = {
   // body sent as Buffer, unsure if related
   'script/10_basic.yml': ['*'],
   // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
-  // remove if/when https://github.com/elastic/serverless-clients-tests/issues/37 is resolved
+  // remove if/when https://github.com/elastic/elasticsearch-clients-tests/issues/37 is resolved
   'machine_learning/data_frame_evaluate.yml': ['*'],
 }
 

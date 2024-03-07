@@ -31,7 +31,7 @@ const pipeline = promisify(stream.pipeline)
 const unzip = promisify(crossZip.unzip)
 
 const testYamlFolder = join(__dirname, '..', 'yaml-rest-tests')
-const zipFile = join(__dirname, '..', 'serverless-clients-tests.zip')
+const zipFile = join(__dirname, '..', 'elasticsearch-clients-tests.zip')
 
 const specFolder = join(__dirname, '..', 'rest-api-spec')
 
@@ -55,7 +55,7 @@ async function downloadArtifacts (localTests) {
       process.exit(1)
     }
 
-    let response = await fetch('https://api.github.com/repos/elastic/serverless-clients-tests/zipball/main', {
+    let response = await fetch('https://api.github.com/repos/elastic/elasticsearch-clients-tests/zipball/main', {
       headers: {
         Authorization: `Bearer ${GITHUB_TOKEN}`,
         Accept: "application/vnd.github+json",
