@@ -5147,6 +5147,7 @@ export interface MappingNumberPropertyBase extends MappingDocValuesPropertyBase 
 
 export interface MappingObjectProperty extends MappingCorePropertyBase {
   enabled?: boolean
+  subobjects?: boolean
   type?: 'object'
 }
 
@@ -5321,6 +5322,7 @@ export interface MappingTypeMapping {
   _source?: MappingSourceField
   runtime?: Record<string, MappingRuntimeField>
   enabled?: boolean
+  subobjects?: boolean
 }
 
 export interface MappingUnsignedLongNumberProperty extends MappingNumberPropertyBase {
@@ -9826,7 +9828,7 @@ export interface IndicesIndexSettingsKeys {
   settings?: IndicesIndexSettings
   time_series?: IndicesIndexSettingsTimeSeries
   queries?: IndicesQueries
-  similarity?: IndicesSettingsSimilarity
+  similarity?: Record<string, IndicesSettingsSimilarity>
   mapping?: IndicesMappingLimitSettings
   'indexing.slowlog'?: IndicesIndexingSlowlogSettings
   indexing_pressure?: IndicesIndexingPressure
@@ -10002,55 +10004,52 @@ export interface IndicesSettingsSearch {
   slowlog?: IndicesSlowlogSettings
 }
 
-export interface IndicesSettingsSimilarity {
-  bm25?: IndicesSettingsSimilarityBm25
-  dfi?: IndicesSettingsSimilarityDfi
-  dfr?: IndicesSettingsSimilarityDfr
-  ib?: IndicesSettingsSimilarityIb
-  lmd?: IndicesSettingsSimilarityLmd
-  lmj?: IndicesSettingsSimilarityLmj
-  scripted_tfidf?: IndicesSettingsSimilarityScriptedTfidf
-}
+export type IndicesSettingsSimilarity = IndicesSettingsSimilarityBm25 | IndicesSettingsSimilarityBoolean | IndicesSettingsSimilarityDfi | IndicesSettingsSimilarityDfr | IndicesSettingsSimilarityIb | IndicesSettingsSimilarityLmd | IndicesSettingsSimilarityLmj | IndicesSettingsSimilarityScripted
 
 export interface IndicesSettingsSimilarityBm25 {
-  b: double
-  discount_overlaps: boolean
-  k1: double
   type: 'BM25'
+  b?: double
+  discount_overlaps?: boolean
+  k1?: double
+}
+
+export interface IndicesSettingsSimilarityBoolean {
+  type: 'boolean'
 }
 
 export interface IndicesSettingsSimilarityDfi {
-  independence_measure: DFIIndependenceMeasure
   type: 'DFI'
+  independence_measure: DFIIndependenceMeasure
 }
 
 export interface IndicesSettingsSimilarityDfr {
+  type: 'DFR'
   after_effect: DFRAfterEffect
   basic_model: DFRBasicModel
   normalization: Normalization
-  type: 'DFR'
 }
 
 export interface IndicesSettingsSimilarityIb {
+  type: 'IB'
   distribution: IBDistribution
   lambda: IBLambda
   normalization: Normalization
-  type: 'IB'
 }
 
 export interface IndicesSettingsSimilarityLmd {
-  mu: integer
   type: 'LMDirichlet'
+  mu?: double
 }
 
 export interface IndicesSettingsSimilarityLmj {
-  lambda: double
   type: 'LMJelinekMercer'
+  lambda?: double
 }
 
-export interface IndicesSettingsSimilarityScriptedTfidf {
-  script: Script
+export interface IndicesSettingsSimilarityScripted {
   type: 'scripted'
+  script: Script
+  weight_script?: Script
 }
 
 export interface IndicesSlowlogSettings {
@@ -13327,8 +13326,8 @@ export interface MlTrainedModelLocationIndex {
 }
 
 export interface MlTrainedModelPrefixStrings {
-  ingest: string
-  search: string
+  ingest?: string
+  search?: string
 }
 
 export interface MlTrainedModelSizeStats {
@@ -16815,10 +16814,51 @@ export interface SecurityPutUserResponse {
   created: boolean
 }
 
+export type SecurityQueryApiKeysAPIKeyAggregate = AggregationsCardinalityAggregate | AggregationsValueCountAggregate | AggregationsStringTermsAggregate | AggregationsLongTermsAggregate | AggregationsDoubleTermsAggregate | AggregationsUnmappedTermsAggregate | AggregationsMultiTermsAggregate | AggregationsMissingAggregate | AggregationsFilterAggregate | AggregationsFiltersAggregate | AggregationsRangeAggregate | AggregationsDateRangeAggregate | AggregationsCompositeAggregate
+
+export interface SecurityQueryApiKeysAPIKeyAggregationContainer {
+  aggregations?: Record<string, SecurityQueryApiKeysAPIKeyAggregationContainer>
+  aggs?: Record<string, SecurityQueryApiKeysAPIKeyAggregationContainer>
+  meta?: Metadata
+  cardinality?: AggregationsCardinalityAggregation
+  composite?: AggregationsCompositeAggregation
+  date_range?: AggregationsDateRangeAggregation
+  filter?: SecurityQueryApiKeysAPIKeyQueryContainer
+  filters?: SecurityQueryApiKeysAPIKeyFiltersAggregation
+  missing?: AggregationsMissingAggregation
+  range?: AggregationsRangeAggregation
+  terms?: AggregationsTermsAggregation
+  value_count?: AggregationsValueCountAggregation
+}
+
+export interface SecurityQueryApiKeysAPIKeyFiltersAggregation extends AggregationsBucketAggregationBase {
+  filters?: AggregationsBuckets<SecurityQueryApiKeysAPIKeyQueryContainer>
+  other_bucket?: boolean
+  other_bucket_key?: string
+  keyed?: boolean
+}
+
+export interface SecurityQueryApiKeysAPIKeyQueryContainer {
+  bool?: QueryDslBoolQuery
+  exists?: QueryDslExistsQuery
+  ids?: QueryDslIdsQuery
+  match?: Partial<Record<Field, QueryDslMatchQuery | string | float | boolean>>
+  match_all?: QueryDslMatchAllQuery
+  prefix?: Partial<Record<Field, QueryDslPrefixQuery | string>>
+  range?: Partial<Record<Field, QueryDslRangeQuery>>
+  simple_query_string?: QueryDslSimpleQueryStringQuery
+  term?: Partial<Record<Field, QueryDslTermQuery | FieldValue>>
+  terms?: QueryDslTermsQuery
+  wildcard?: Partial<Record<Field, QueryDslWildcardQuery | string>>
+}
+
 export interface SecurityQueryApiKeysRequest extends RequestBase {
   /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
   body?: {
-    query?: QueryDslQueryContainer
+    aggregations?: Record<string, SecurityQueryApiKeysAPIKeyAggregationContainer>
+    /** @alias aggregations */
+    aggs?: Record<string, SecurityQueryApiKeysAPIKeyAggregationContainer>
+    query?: SecurityQueryApiKeysAPIKeyQueryContainer
     from?: integer
     sort?: Sort
     size?: integer
@@ -16830,6 +16870,7 @@ export interface SecurityQueryApiKeysResponse {
   total: integer
   count: integer
   api_keys: SecurityApiKey[]
+  aggregations?: Record<AggregateName, SecurityQueryApiKeysAPIKeyAggregate>
 }
 
 export interface SecuritySamlAuthenticateRequest extends RequestBase {
