@@ -3,7 +3,7 @@
 #
 # Build entry script for elasticsearch-serverless-js
 #
-# Must be called: ./.ci/make.sh <target> <params>
+# Must be called: ./.buildkite/make.sh <target> <params>
 #
 # Version: 1.1.0
 #
@@ -34,8 +34,8 @@ STACK_VERSION=$VERSION
 set -euo pipefail
 
 product="elastic/elasticsearch-serverless-js"
-output_folder=".ci/output"
-codegen_folder=".ci/output"
+output_folder=".buildkite/output"
+codegen_folder=".buildkite/output"
 OUTPUT_DIR="$repo/${output_folder}"
 NODE_VERSION=18
 WORKFLOW=${WORKFLOW-staging}
@@ -157,7 +157,7 @@ if [[ -z "${BUILDKITE+x}" ]] && [[ -z "${CI+x}" ]] && [[ -z "${GITHUB_ACTIONS+x}
     --rm \
     $product \
     /bin/bash -c "mkdir -p /usr/src/elastic-client-generator-js/output && \
-      node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
+      node .buildkite/make.mjs --task $TASK ${TASK_ARGS[*]}"
 else
   echo -e "\033[34;1mINFO: Running in CI mode"
   docker run \
@@ -171,7 +171,7 @@ else
     /bin/bash -c "
       git clone https://$CLIENTS_GITHUB_TOKEN@github.com/elastic/elastic-client-generator-js.git /usr/src/elastic-client-generator-js && \
       mkdir -p /usr/src/elastic-client-generator-js/output && \
-      node .ci/make.mjs --task $TASK ${TASK_ARGS[*]}"
+      node .buildkite/make.mjs --task $TASK ${TASK_ARGS[*]}"
 fi
 
 # ------------------------------------------------------- #
@@ -179,7 +179,7 @@ fi
 # ------------------------------------------------------- #
 
 if [[ "$CMD" == "assemble" ]]; then
-	if compgen -G ".ci/output/*" > /dev/null; then
+	if compgen -G ".buildkite/output/*" > /dev/null; then
 		echo -e "\033[32;1mTARGET: successfully assembled client v$VERSION\033[0m"
 	else
 		echo -e "\033[31;1mTARGET: assemble failed, empty workspace!\033[0m"
