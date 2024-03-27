@@ -932,7 +932,6 @@ test('bulk update', t => {
         onDrop (doc) {
           t.fail('This should never be called')
         },
-        refreshOnCompletion: true
       }, {
         headers: {
           foo: 'bar'
