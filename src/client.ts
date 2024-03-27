@@ -230,7 +230,30 @@ export default class Client extends API {
       // node in the list.
       let node = options.node ?? options.nodes
       if (Array.isArray(node)) node = node[0]
-      this.connectionPool.addConnection(node)
+
+      // ensure default connection values are inherited when creating new connections
+      // see https://github.com/elastic/elasticsearch-js/issues/1791
+      type ConnectionDefaults = Record<string, any>
+
+      const { tls, headers, auth, requestTimeout: timeout, agent, proxy, caFingerprint } = options
+      let defaults: ConnectionDefaults = { tls, headers, auth, timeout, agent, proxy, caFingerprint }
+
+      // strip undefined values from defaults
+      defaults = Object.keys(defaults).reduce((acc: ConnectionDefaults, key) => {
+        const val = defaults[key]
+        if (val !== undefined) acc[key] = val
+        return acc
+      }, {})
+
+      let newOpts
+      if (typeof node === 'string') {
+        newOpts = {
+          url: new URL(node)
+        }
+      } else {
+        newOpts = node
+      }
+      this.connectionPool.addConnection({ ...defaults, ...newOpts })
     }
 
     this.transport = new options.Transport({
