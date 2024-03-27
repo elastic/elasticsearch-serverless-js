@@ -914,6 +914,37 @@ test('bulk update', t => {
     })
   })
 
+  t.test('Should not allow asStream request option', async t => {
+    t.plan(2)
+
+    const client = new Client({
+      node: 'http://localhost:9200',
+    })
+
+    try {
+      await client.helpers.bulk({
+        datasource: dataset.slice(),
+        flushBytes: 1,
+        concurrency: 1,
+        onDocument (doc) {
+          return { index: { _index: 'test' } }
+        },
+        onDrop (doc) {
+          t.fail('This should never be called')
+        },
+        refreshOnCompletion: true
+      }, {
+        headers: {
+          foo: 'bar'
+        },
+        asStream: true,
+      })
+    } catch (err: any) {
+      t.ok(err instanceof AssertionError)
+      t.equal(err.message, 'bulk helper: the asStream request option is not supported')
+    }
+  })
+
   t.end()
 })
 

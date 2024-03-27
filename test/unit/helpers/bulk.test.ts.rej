@@ -1,0 +1,9 @@
+diff a/test/unit/helpers/bulk.test.ts b/test/unit/helpers/bulk.test.ts	(rejected hunks)
+@@ -18,6 +18,7 @@
+  */
+ 
+ import FakeTimers from '@sinonjs/fake-timers'
++import { AssertionError } from 'assert'
+ import { createReadStream } from 'fs'
+ import * as http from 'http'
+ import { join } from 'path'
