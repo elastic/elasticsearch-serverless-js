@@ -23,9 +23,11 @@ import { createReadStream } from 'fs'
 import * as http from 'http'
 import { join } from 'path'
 import split from 'split2'
+import { Readable } from 'stream'
 import { test } from 'tap'
 import { Client, errors } from '../../../'
 import { buildServer, connection } from '../../utils'
+const { sleep } = require('../../integration/helper')
 
 let clientVersion: string = require('../../../package.json').version // eslint-disable-line
 if (clientVersion.includes('-')) {
@@ -174,6 +176,98 @@ test('bulk index', t => {
         },
         onDrop (doc) {
           t.fail('This should never be called')
+        }
+      })
+
+      t.type(result.time, 'number')
+      t.type(result.bytes, 'number')
+      t.match(result, {
+        total: 3,
+        successful: 3,
+        retry: 0,
+        failed: 0,
+        aborted: false
+      })
+    })
+
+    t.test('refreshOnCompletion', async t => {
+      let count = 0
+      const MockConnection = connection.buildMockConnection({
+        onRequest (params) {
+          if (params.method === 'GET') {
+            t.equal(params.path, '/_all/_refresh')
+            return { body: { acknowledged: true } }
+          } else {
+            t.equal(params.path, '/_bulk')
+            t.match(params.headers, { 'content-type': 'application/x-ndjson' })
+            // @ts-expect-error
+            const [action, payload] = params.body.split('\n')
+            t.same(JSON.parse(action), { index: { _index: 'test' } })
+            t.same(JSON.parse(payload), dataset[count++])
+            return { body: { errors: false, items: [{}] } }
+          }
+        }
+      })
+
+      const client = new Client({
+        node: 'http://localhost:9200',
+        Connection: MockConnection,
+        compression: false
+      })
+      const result = await client.helpers.bulk({
+        datasource: dataset.slice(),
+        flushBytes: 1,
+        concurrency: 1,
+        onDocument (_doc) {
+          return {
+            index: { _index: 'test' }
+          }
+        }
+      })
+
+      t.type(result.time, 'number')
+      t.type(result.bytes, 'number')
+      t.match(result, {
+        total: 3,
+        successful: 3,
+        retry: 0,
+        failed: 0,
+        aborted: false
+      })
+    })
+
+    t.test('refreshOnCompletion custom index', async t => {
+      let count = 0
+      const MockConnection = connection.buildMockConnection({
+        onRequest (params) {
+          if (params.method === 'GET') {
+            t.equal(params.path, '/test/_refresh')
+            return { body: { acknowledged: true } }
+          } else {
+            t.equal(params.path, '/_bulk')
+            t.match(params.headers, { 'content-type': 'application/x-ndjson' })
+            // @ts-expect-error
+            const [action, payload] = params.body.split('\n')
+            t.same(JSON.parse(action), { index: { _index: 'test' } })
+            t.same(JSON.parse(payload), dataset[count++])
+            return { body: { errors: false, items: [{}] } }
+          }
+        }
+      })
+
+      const client = new Client({
+        node: 'http://localhost:9200',
+        Connection: MockConnection,
+        compression: false
+      })
+      const result = await client.helpers.bulk({
+        datasource: dataset.slice(),
+        flushBytes: 1,
+        concurrency: 1,
+        onDocument (_doc) {
+          return {
+            index: { _index: 'test' }
+          }
         }
       })
 
@@ -832,6 +926,60 @@ test('bulk index', t => {
     t.end()
   })
 
+  t.test('Should use payload returned by `onDocument`', async t => {
+    let count = 0
+    const updatedAt = '1970-01-01T12:00:00.000Z'
+    const MockConnection = connection.buildMockConnection({
+      onRequest (params) {
+        t.equal(params.path, '/_bulk')
+        t.match(params.headers, {
+          'content-type': 'application/x-ndjson',
+          'x-elastic-client-meta': `esv=${clientVersionNoMeta},js=${nodeVersion},t=${transportVersion},hc=${nodeVersion},h=bp`
+        })
+        // @ts-expect-error
+        const [action, payload] = params.body.split('\n')
+        t.same(JSON.parse(action), { index: { _index: 'test' } })
+        t.same(JSON.parse(payload), { ...dataset[count++], updatedAt })
+        return { body: { errors: false, items: [{}] } }
+      }
+    })
+
+    const client = new Client({
+      node: 'http://localhost:9200',
+      Connection: MockConnection,
+      compression: false
+    })
+    const result = await client.helpers.bulk<Document>({
+      datasource: dataset.slice(),
+      flushBytes: 1,
+      concurrency: 1,
+      onDocument (doc) {
+        t.type(doc.user, 'string') // testing that doc is type of Document
+        return [
+          { 
+            index: { 
+              _index: 'test' 
+            } 
+          }, 
+          { ...doc, updatedAt }
+        ]
+      },
+      onDrop (_doc) {
+        t.fail('This should never be called')
+      }
+    })
+
+    t.type(result.time, 'number')
+    t.type(result.bytes, 'number')
+    t.match(result, {
+      total: 3,
+      successful: 3,
+      retry: 0,
+      failed: 0,
+      aborted: false
+    })
+  })
+
   t.end()
 })
 
@@ -883,6 +1031,59 @@ test('bulk create', t => {
       aborted: false
     })
   })
+
+  t.test('Should use payload returned by `onDocument`', async t => {
+    let count = 0
+    const updatedAt = '1970-01-01T12:00:00.000Z'
+    const MockConnection = connection.buildMockConnection({
+      onRequest (params) {
+        t.equal(params.path, '/_bulk')
+        t.match(params.headers, { 'content-type': 'application/x-ndjson' })
+        // @ts-expect-error
+        const [action, payload] = params.body.split('\n')
+        t.same(JSON.parse(action), { create: { _index: 'test', _id: count } })
+        t.same(JSON.parse(payload), { ...dataset[count++], updatedAt })
+        return { body: { errors: false, items: [{}] } }
+      }
+    })
+
+    const client = new Client({
+      node: 'http://localhost:9200',
+      Connection: MockConnection,
+      compression: false
+    })
+    let id = 0
+    const result = await client.helpers.bulk({
+      datasource: dataset.slice(),
+      flushBytes: 1,
+      concurrency: 1,
+      onDocument (doc) {
+        return [
+          {
+            create: {
+              _index: 'test',
+              _id: String(id++)
+            }
+          }, 
+          { ...doc, updatedAt }
+        ]
+      },
+      onDrop (_doc) {
+        t.fail('This should never be called')
+      }
+    })
+
+    t.type(result.time, 'number')
+    t.type(result.bytes, 'number')
+    t.match(result, {
+      total: 3,
+      successful: 3,
+      retry: 0,
+      failed: 0,
+      aborted: false
+    })
+  })
+
   t.end()
 })
 
@@ -1600,6 +1801,162 @@ test('Flush interval', t => {
       failed: 0,
       aborted: false
     })
+  })
+
+  test(`flush timeout does not lock process when flushInterval is less than server timeout`, async t => {
+    const flushInterval = 500
+
+    async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
+      setTimeout(() => {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(JSON.stringify({ errors: false, items: [{}] }))
+      }, 1000)
+    }
+
+    const [{ port }, server] = await buildServer(handler)
+    const client = new Client({
+      node: `http://localhost:${port}`,
+      compression: false
+    })
+
+    async function * generator () {
+      const data = dataset.slice()
+      for (const doc of data) {
+        await sleep(flushInterval)
+        yield doc
+      }
+    }
+
+    const result = await client.helpers.bulk({
+      datasource: Readable.from(generator()),
+      flushBytes: 1,
+      flushInterval: flushInterval,
+      concurrency: 1,
+      onDocument (_) {
+        return {
+          index: { _index: 'test' }
+        }
+      },
+      onDrop (_) {
+        t.fail('This should never be called')
+      }
+    })
+
+    t.type(result.time, 'number')
+    t.type(result.bytes, 'number')
+    t.match(result, {
+      total: 3,
+      successful: 3,
+      retry: 0,
+      failed: 0,
+      aborted: false
+    })
+
+    server.stop()
+  })
+
+  test(`flush timeout does not lock process when flushInterval is greater than server timeout`, async t => {
+    const flushInterval = 500
+
+    async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
+      setTimeout(() => {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(JSON.stringify({ errors: false, items: [{}] }))
+      }, 250)
+    }
+
+    const [{ port }, server] = await buildServer(handler)
+    const client = new Client({
+      node: `http://localhost:${port}`,
+      compression: false
+    })
+
+    async function * generator () {
+      const data = dataset.slice()
+      for (const doc of data) {
+        await sleep(flushInterval)
+        yield doc
+      }
+    }
+
+    const result = await client.helpers.bulk({
+      datasource: Readable.from(generator()),
+      flushBytes: 1,
+      flushInterval: flushInterval,
+      concurrency: 1,
+      onDocument (_) {
+        return {
+          index: { _index: 'test' }
+        }
+      },
+      onDrop (_) {
+        t.fail('This should never be called')
+      }
+    })
+
+    t.type(result.time, 'number')
+    t.type(result.bytes, 'number')
+    t.match(result, {
+      total: 3,
+      successful: 3,
+      retry: 0,
+      failed: 0,
+      aborted: false
+    })
+
+    server.stop()
+  })
+
+  test(`flush timeout does not lock process when flushInterval is equal to server timeout`, async t => {
+    const flushInterval = 500
+
+    async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
+      setTimeout(() => {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(JSON.stringify({ errors: false, items: [{}] }))
+      }, flushInterval)
+    }
+
+    const [{ port }, server] = await buildServer(handler)
+    const client = new Client({
+      node: `http://localhost:${port}`,
+      compression: false
+    })
+
+    async function * generator () {
+      const data = dataset.slice()
+      for (const doc of data) {
+        await sleep(flushInterval)
+        yield doc
+      }
+    }
+
+    const result = await client.helpers.bulk({
+      datasource: Readable.from(generator()),
+      flushBytes: 1,
+      flushInterval: flushInterval,
+      concurrency: 1,
+      onDocument (_) {
+        return {
+          index: { _index: 'test' }
+        }
+      },
+      onDrop (_) {
+        t.fail('This should never be called')
+      }
+    })
+
+    t.type(result.time, 'number')
+    t.type(result.bytes, 'number')
+    t.match(result, {
+      total: 3,
+      successful: 3,
+      retry: 0,
+      failed: 0,
+      aborted: false
+    })
+
+    server.stop()
   })
 
   t.end()
