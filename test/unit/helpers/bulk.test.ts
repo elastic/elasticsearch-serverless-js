@@ -431,7 +431,7 @@ test('bulk index', t => {
 
     t.test('Server error', async t => {
       const MockConnection = connection.buildMockConnection({
-        onRequest (params) {
+        onRequest (_params) {
           return {
             statusCode: 500,
             body: { somothing: 'went wrong' }
@@ -447,12 +447,12 @@ test('bulk index', t => {
         datasource: dataset.slice(),
         flushBytes: 1,
         concurrency: 1,
-        onDocument (doc) {
+        onDocument (_doc) {
           return {
             index: { _index: 'test' }
           }
         },
-        onDrop (doc) {
+        onDrop (_doc) {
           t.fail('This should never be called')
         }
       })
@@ -467,7 +467,7 @@ test('bulk index', t => {
 
     t.test('Server error (high flush size, to trigger the finish error)', async t => {
       const MockConnection = connection.buildMockConnection({
-        onRequest (params) {
+        onRequest (_params) {
           return {
             statusCode: 500,
             body: { somothing: 'went wrong' }
@@ -483,12 +483,12 @@ test('bulk index', t => {
         datasource: dataset.slice(),
         flushBytes: 5000000,
         concurrency: 1,
-        onDocument (doc) {
+        onDocument (_doc) {
           return {
             index: { _index: 'test' }
           }
         },
-        onDrop (doc) {
+        onDrop (_doc) {
           t.fail('This should never be called')
         }
       })
@@ -545,12 +545,12 @@ test('bulk index', t => {
         flushBytes: 1,
         concurrency: 1,
         wait: 10,
-        onDocument (doc) {
+        onDocument (_doc) {
           return {
             index: { _index: 'test' }
           }
         },
-        onDrop (doc) {
+        onDrop (_doc) {
           b.abort()
         }
       })
@@ -571,7 +571,7 @@ test('bulk index', t => {
     t.test('Invalid operation', t => {
       t.plan(2)
       const MockConnection = connection.buildMockConnection({
-        onRequest (params) {
+        onRequest (_params) {
           return { body: { errors: false, items: [{}] } }
         }
       })
@@ -586,7 +586,7 @@ test('bulk index', t => {
           flushBytes: 1,
           concurrency: 1,
           // @ts-expect-error
-          onDocument (doc) {
+          onDocument (_doc) {
             return {
               foo: { _index: 'test' }
             }
@@ -596,6 +596,43 @@ test('bulk index', t => {
           t.ok(err instanceof errors.ConfigurationError)
           t.equal(err.message, 'Bulk helper invalid action: \'foo\'')
         })
+    })
+
+    t.test('should call onSuccess callback for each indexed document', async t => {
+      const MockConnection = connection.buildMockConnection({
+        onRequest (params) {
+          // @ts-expect-error
+          let [action] = params.body.split('\n')
+          action = JSON.parse(action)
+          return { body: { errors: false, items: [action] } }
+        }
+      })
+
+      const client = new Client({
+        node: 'http://localhost:9200',
+        Connection: MockConnection
+      })
+
+      let count = 0
+      await client.helpers.bulk<Document>({
+        datasource: dataset.slice(),
+        flushBytes: 1,
+        concurrency: 1,
+        onDocument (_doc) {
+          return {
+            index: { _index: 'test' }
+          }
+        },
+        onSuccess ({ result, document }) {
+          t.same(result, { index: { _index: 'test' }})
+          t.same(document, dataset[count++])
+        },
+        onDrop (_doc) {
+          t.fail('This should never be called')
+        }
+      })
+      t.equal(count, 3)
+      t.end()
     })
 
     t.end()
@@ -652,6 +689,44 @@ test('bulk index', t => {
       })
     })
 
+    t.test('onSuccess is called for each indexed document', async t => {
+      const MockConnection = connection.buildMockConnection({
+        onRequest (params) {
+          // @ts-expect-error
+          let [action] = params.body.split('\n')
+          action = JSON.parse(action)
+          return { body: { errors: false, items: [action] } }
+        }
+      })
+
+      const client = new Client({
+        node: 'http://localhost:9200',
+        Connection: MockConnection
+      })
+      const stream = createReadStream(join(__dirname, '..', '..', 'fixtures', 'small-dataset.ndjson'), 'utf8')
+
+      let count = 0
+      await client.helpers.bulk<Document>({
+        datasource: stream.pipe(split()),
+        flushBytes: 1,
+        concurrency: 1,
+        onDocument (_doc) {
+          return {
+            index: { _index: 'test' }
+          }
+        },
+        onSuccess ({ result, document }) {
+          t.same(result, { index: { _index: 'test' }})
+          t.same(document, dataset[count++])
+        },
+        onDrop (_doc) {
+          t.fail('This should never be called')
+        }
+      })
+      t.equal(count, 3)
+      t.end()
+    })
+
     t.end()
   })
 
@@ -706,6 +781,50 @@ test('bulk index', t => {
         failed: 0,
         aborted: false
       })
+    })
+
+    t.test('onSuccess is called for each indexed document', async t => {
+      const MockConnection = connection.buildMockConnection({
+        onRequest (params) {
+          // @ts-expect-error
+          let [action] = params.body.split('\n')
+          action = JSON.parse(action)
+          return { body: { errors: false, items: [action] } }
+        }
+      })
+
+      const client = new Client({
+        node: 'http://localhost:9200',
+        Connection: MockConnection
+      })
+
+      async function * generator () {
+        const data = dataset.slice()
+        for (const doc of data) {
+          yield doc
+        }
+      }
+
+      let count = 0
+      await client.helpers.bulk<Document>({
+        datasource: generator(),
+        flushBytes: 1,
+        concurrency: 1,
+        onDocument (_doc) {
+          return {
+            index: { _index: 'test' }
+          }
+        },
+        onSuccess ({ result, document }) {
+          t.same(result, { index: { _index: 'test' }})
+          t.same(document, dataset[count++])
+        },
+        onDrop (_doc) {
+          t.fail('This should never be called')
+        }
+      })
+      t.equal(count, 3)
+      t.end()
     })
     t.end()
   })
@@ -914,6 +1033,8 @@ test('bulk update', t => {
     })
   })
 
+
+
   t.end()
 })
 
@@ -1102,6 +1223,63 @@ test('bulk delete', t => {
       aborted: false
     })
     server.stop()
+  })
+
+  t.test('should call onSuccess callback with delete action object', async t => {
+    const MockConnection = connection.buildMockConnection({
+      onRequest (params) {
+        // @ts-expect-error
+        let [action, payload] = params.body.split('\n')
+        action = JSON.parse(action)
+        return { body: { errors: false, items: [action] } }
+      }
+    })
+
+    const client = new Client({
+      node: 'http://localhost:9200',
+      Connection: MockConnection
+    })
+
+    let docCount = 0
+    let successCount = 0
+    await client.helpers.bulk<Document>({
+      datasource: dataset.slice(),
+      flushBytes: 1,
+      concurrency: 1,
+      onDocument (_doc) {
+        if (docCount++ === 1) {
+          return {
+            delete: {
+              _index: 'test',
+              _id: String(docCount)
+            }
+          }
+        } else {
+          return {
+            index: { _index: 'test' }
+          }
+        }
+      },
+      onSuccess ({ result, document }) {
+        const item = dataset[successCount]
+        if (successCount++ === 1) {
+          t.same(result, {
+            delete: {
+              _index: 'test',
+              _id: String(successCount)
+            }
+          })
+        } else {
+          t.same(result, { index: { _index: 'test' }})
+          t.same(document, item)
+        }
+      },
+      onDrop (_doc) {
+        t.fail('This should never be called')
+      }
+    })
+
+    t.end()
   })
 
   t.end()

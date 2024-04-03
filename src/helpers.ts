@@ -101,6 +101,24 @@ export interface OnDropDocument<TDocument = unknown> {
   retried: boolean
 }
 
+type BulkResponseItem = Partial<Record<T.BulkOperationType, T.BulkResponseItem>>
+
+export interface OnSuccessDocument<TDocument = unknown> {
+  result: BulkResponseItem
+  document?: TDocument
+}
+
+interface ZippedResult<TDocument = unknown> {
+  result: BulkResponseItem
+  raw: {
+    action: string
+    document?: string
+  }
+  // this is a function so that deserialization is only done when needed
+  // to avoid a performance hit
+  document?: () => TDocument
+}
+
 export interface BulkHelperOptions<TDocument = unknown> extends T.BulkRequest {
   datasource: TDocument[] | Buffer | Readable | AsyncIterator<TDocument>
   onDocument: (doc: TDocument) => Action
