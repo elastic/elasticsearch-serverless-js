@@ -17,12 +17,12 @@
  * under the License.
  */
 
+import FakeTimers from '@sinonjs/fake-timers'
 import { AssertionError } from 'assert'
-import * as http from 'http'
 import { createReadStream } from 'fs'
+import * as http from 'http'
 import { join } from 'path'
 import split from 'split2'
-import FakeTimers from '@sinonjs/fake-timers'
 import { test } from 'tap'
 import { Client, errors } from '../../../'
 import { buildServer, connection } from '../../utils'
@@ -610,7 +610,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false
       })
 
       let count = 0
@@ -701,7 +702,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false
       })
       const stream = createReadStream(join(__dirname, '..', '..', 'fixtures', 'small-dataset.ndjson'), 'utf8')
 
@@ -795,7 +797,8 @@ test('bulk index', t => {
 
       const client = new Client({
         node: 'http://localhost:9200',
-        Connection: MockConnection
+        Connection: MockConnection,
+        compression: false
       })
 
       async function * generator () {
@@ -1033,8 +1036,6 @@ test('bulk update', t => {
     })
   })
 
-
-
   t.end()
 })
 
@@ -1164,7 +1165,7 @@ test('bulk delete', t => {
   t.test('Should call onDrop on the correct document when doing a mix of operations that includes deletes', async t => {
     // checks to ensure onDrop doesn't provide the wrong document when some operations are deletes
     // see https://github.com/elastic/elasticsearch-js/issues/1751
-    async function handler (req: http.IncomingMessage, res: http.ServerResponse) {
+    async function handler (_req: http.IncomingMessage, res: http.ServerResponse) {
       res.setHeader('content-type', 'application/json')
       res.end(JSON.stringify({
         took: 0,
@@ -1178,14 +1179,17 @@ test('bulk delete', t => {
     }
 
     const [{ port }, server] = await buildServer(handler)
-    const client = new Client({ node: `http://localhost:${port}` })
+    const client = new Client({
+      node: `http://localhost:${port}`,
+      compression: false
+    })
     let counter = 0
     const result = await client.helpers.bulk({
       datasource: dataset.slice(),
       concurrency: 1,
       wait: 10,
       retries: 0,
-      onDocument (doc) {
+      onDocument (_doc) {
         counter++
         if (counter === 1) {
           return {
@@ -1237,7 +1241,8 @@ test('bulk delete', t => {
 
     const client = new Client({
       node: 'http://localhost:9200',
-      Connection: MockConnection
+      Connection: MockConnection,
+      compression: false
     })
 
     let docCount = 0
@@ -1464,12 +1469,12 @@ test('Flush interval', t => {
       })(),
       flushBytes: 5000000,
       concurrency: 1,
-      onDocument (doc) {
+      onDocument (_doc) {
         return {
           index: { _index: 'test' }
         }
       },
-      onDrop (doc) {
+      onDrop (_doc) {
         t.fail('This should never be called')
       }
     })
@@ -1525,12 +1530,12 @@ test('Flush interval', t => {
       })(),
       flushBytes: 5000000,
       concurrency: 1,
-      onDocument (doc) {
+      onDocument (_doc) {
         return {
           index: { _index: 'test' }
         }
       },
-      onDrop (doc) {
+      onDrop (_doc) {
         t.fail('This should never be called')
       }
     })
