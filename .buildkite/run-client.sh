@@ -19,8 +19,10 @@ docker build \
 
 echo "--- :javascript: Running tests"
 
-GITHUB_TOKEN=$(vault read -field=token "$GITHUB_TOKEN_PATH")
-export GITHUB_TOKEN
+if [ -z "$GITHUB_TOKEN" ]; then
+  GITHUB_TOKEN=$(vault read -field=token "$GITHUB_TOKEN_PATH")
+  export GITHUB_TOKEN
+fi
 
 mkdir -p "$repo/junit-output"
 docker run \
