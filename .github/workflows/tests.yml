@@ -8,7 +8,7 @@ jobs:
     name: Detect files changed
     runs-on: ubuntu-latest
     outputs:
-      src-only: '${{ steps.changes.outputs.src-only }}'
+      src-only: "${{ steps.changes.outputs.src-only }}"
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter/@v2.11.1
@@ -28,7 +28,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [18.x, 20.x, 22.x]
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
@@ -57,7 +57,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
 
     steps:
       - uses: actions/checkout@v4

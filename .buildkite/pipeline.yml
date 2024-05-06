@@ -9,6 +9,7 @@ steps:
         nodejs:
           - "18"
           - "20"
+          - "22"
     env:
       NODE_VERSION: "{{ matrix.nodejs }}"
       EC_PROJECT_PREFIX: "elasticsearch-serverless-js-node{{ matrix.nodejs }}"
