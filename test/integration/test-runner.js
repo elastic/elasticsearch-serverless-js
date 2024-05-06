@@ -881,6 +881,7 @@ async function deleteIndices(client) {
     .trim()
     .split('\n')
     .map(row => row.split(' ')[2])
+    .filter(Boolean)
     .filter(name => !name.startsWith('.'))
   if (indexNames.length > 0) {
     await client.indices.delete({
