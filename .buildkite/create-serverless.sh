@@ -9,9 +9,7 @@ export EC_REGION=aws-eu-west-1
 export EC_PROJECT_NAME="$EC_PROJECT_PREFIX-$BUILDKITE_JOB_ID"
 
 # fetch cloud creds used by qaf
-if [ -z "$CLOUD_ACCESS_KEY" ]; then
-  CLOUD_ACCESS_KEY=$(vault read -field="$EC_ENV" "$CLOUD_CREDENTIALS_PATH")
-fi
+CLOUD_ACCESS_KEY=$(vault read -field="$EC_ENV" "$CLOUD_CREDENTIALS_PATH")
 echo "{\"api_key\":{\"$EC_ENV\":\"$CLOUD_ACCESS_KEY\"}}" >"$(pwd)/cloud.json"
 
 run_qaf() {
