@@ -308,6 +308,9 @@ function build (opts = {}) {
       if (JSON.stringify(exc).includes('resource_already_exists_exception')) {
         console.warn(`Resource already exists: ${JSON.stringify(cmd.params)}`)
         // setup task was already done because cleanup didn't catch it? do nothing
+      } else if (JSON.stringify(exc).includes('api_not_available_exception')) {
+        // 410 api_not_available_exception should be ignored
+        console.warn(`API not available on serverless: ${cmd.method}`)
       } else {
         throw exc
       }
