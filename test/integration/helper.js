@@ -130,6 +130,10 @@ async function updateParams (cmd) {
       cmd.params[pathParams[key]] = cmd.params[key]
       delete cmd.params[key]
     }
+    // wait_for_active_shards is not supported for serverless
+    if (key === 'wait_for_active_shards') {
+      delete cmd.params[key]
+    }
   }
 
   return cmd
