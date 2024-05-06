@@ -305,17 +305,17 @@ function build (opts = {}) {
     try {
       [err, result] = await to(api(cmd.params, options))
     } catch (exc) {
-      console.log(JSON.parse(exc.meta))
       if (JSON.stringify(exc).includes('resource_already_exists_exception')) {
         console.warn(`Resource already exists: ${JSON.stringify(cmd.params)}`)
         // setup task was already done because cleanup didn't catch it? do nothing
-      } else if (JSON.parse(exc.meta).statusCode === 410) {
+      } else if (JSON.stringify(exc).includes('api_not_available_exception')) {
         // 410 api_not_available_exception should be ignored
         console.warn(`API not available on serverless: ${cmd.method}`)
       } else {
         throw exc
       }
     }
+
     let warnings = result ? result.warnings : null
     const body = result ? result.body : null
 

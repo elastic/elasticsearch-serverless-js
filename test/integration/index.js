@@ -58,9 +58,14 @@ const skips = {
   // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
   // remove if/when https://github.com/elastic/elasticsearch-clients-tests/issues/37 is resolved
   'machine_learning/data_frame_evaluate.yml': ['*'],
-  // TODO wait_for_active_shards and rollover with conditions are not supported on serverless
+  // TODO: wait_for_active_shards and rollover with conditions are not supported on serverless
   // see https://github.com/elastic/elasticsearch-clients-tests/issues/55
-  'indices/rollover.yml': ['*']
+  'indices/rollover.yml': ['*'],
+  // TODO: test runner needs to support ignoring 410 errors
+  'indices/data_lifecycle.yml': ['*'],
+  // TODO: test runner needs to support ignoring 410 errors
+  'enrich/10_basic.yml': ['*'],
+
 }
 
 const shouldSkip = (file, name) => {
