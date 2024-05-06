@@ -58,6 +58,9 @@ const skips = {
   // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
   // remove if/when https://github.com/elastic/elasticsearch-clients-tests/issues/37 is resolved
   'machine_learning/data_frame_evaluate.yml': ['*'],
+  // TODO wait_for_active_shards and rollover with conditions are not supported on serverless
+  // see https://github.com/elastic/elasticsearch-clients-tests/issues/55
+  'indices/rollover.yml': ['*']
 }
 
 const shouldSkip = (file, name) => {
