@@ -312,6 +312,7 @@ function build (opts = {}) {
         // 410 api_not_available_exception should be ignored
         console.warn(`API not available on serverless: ${cmd.method}`)
       } else {
+        console.warn(JSON.parse(exc.meta))
         throw exc
       }
     }
