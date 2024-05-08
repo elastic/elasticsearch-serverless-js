@@ -58,6 +58,19 @@ const skips = {
   // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
   // remove if/when https://github.com/elastic/elasticsearch-clients-tests/issues/37 is resolved
   'machine_learning/data_frame_evaluate.yml': ['*'],
+  // TODO: wait_for_active_shards and rollover with conditions are not supported on serverless
+  // see https://github.com/elastic/elasticsearch-clients-tests/issues/55
+  'indices/rollover.yml': ['*'],
+  // TODO: test runner needs to support ignoring 410 errors
+  'indices/data_lifecycle.yml': ['*'],
+  // TODO: test runner needs to support ignoring 410 errors
+  'enrich/10_basic.yml': ['*'],
+  // TODO: parameter `enabled` is not allowed in source
+  // Same underlying problem as https://github.com/elastic/elasticsearch-clients-tests/issues/55
+  'cluster/component_templates.yml': ['*'],
+  // TODO: expecting `ct_field` field mapping to be returned, but instead only finds `field`
+  'indices/simulate_template.yml': ['*'],
+  'indices/simulate_index_template.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
@@ -132,9 +145,9 @@ async function start ({ client }) {
     const fileTime = now()
     const data = readFileSync(file, 'utf8')
 
-    // get the test yaml (as object), some file has multiple yaml documents inside,
-    // every document is separated by '---', so we split on the separator
-    // and then we remove the empty strings, finally we parse them
+    // get the test yaml as an object. files have multiple YAML documents inside,
+    // separated by '---', so we split on the separator and remove the empty strings
+    // before parsing them
     const tests = data
       .split('\n---\n')
       .map(s => s.trim())
@@ -144,18 +157,23 @@ async function start ({ client }) {
       // null values
       .filter(Boolean)
 
-    // get setup and teardown if present
+    // get setup, teardown and requires rules if present
     let setupTest = null
     let teardownTest = null
+    let requires = null
     for (const test of tests) {
       if (test.setup) setupTest = test.setup
       if (test.teardown) teardownTest = test.teardown
+      if (test.requires) requires = test.requires
     }
 
     const cleanPath = file.slice(file.lastIndexOf(apiName))
 
     // skip if --suite CLI arg doesn't match
     if (options.suite && !cleanPath.endsWith(options.suite)) continue
+
+    // skip if `requires.serverless` is not true
+    if (typeof requires === 'object' && requires.serverless != true) continue
 
     const junitTestSuite = junitTestSuites.testsuite(apiName.slice(1) + ' - ' + cleanPath)
 
@@ -164,7 +182,7 @@ async function start ({ client }) {
       const name = Object.keys(test)[0]
 
       // skip setups, teardowns and anything that doesn't match --test flag when present
-      if (name === 'setup' || name === 'teardown') continue
+      if (name === 'setup' || name === 'teardown' || name === 'requires') continue
       if (options.test && !name.endsWith(options.test)) continue
 
       const junitTestCase = junitTestSuite.testcase(name, `node_${process.version}: ${cleanPath}`)
