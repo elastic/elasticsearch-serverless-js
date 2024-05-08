@@ -11,7 +11,7 @@ jobs:
       src-only: "${{ steps.changes.outputs.src-only }}"
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter/@v2.11.1
+      - uses: dorny/paths-filter/@v3.0.2
         id: changes
         with:
           filters: |
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -55,17 +55,13 @@ jobs:
     name: License check
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
 
       - name: Install
         run: |
@@ -73,5 +69,4 @@ jobs:
 
       - name: License checker
         run: |
-          # TODO: remove excludePrivatePackages after this goes live
-          npm run license-checker -- --excludePrivatePackages
+          npm run license-checker
