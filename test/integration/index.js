@@ -65,7 +65,12 @@ const skips = {
   'indices/data_lifecycle.yml': ['*'],
   // TODO: test runner needs to support ignoring 410 errors
   'enrich/10_basic.yml': ['*'],
-
+  // TODO: parameter `enabled` is not allowed in source
+  // Same underlying problem as https://github.com/elastic/elasticsearch-clients-tests/issues/55
+  'cluster/component_templates.yml': ['*'],
+  // TODO: expecting `ct_field` field mapping to be returned, but instead only finds `field`
+  'indices/simulate_template.yml': ['*'],
+  'indices/simulate_index_template.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
