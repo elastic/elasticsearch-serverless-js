@@ -9783,7 +9783,7 @@ export interface EsqlQueryRequest extends RequestBase {
     locale?: string
     params?: ScalarValue[]
     query: string
-    version: EsqlEsqlVersion
+    version?: EsqlEsqlVersion
   }
 }
 
