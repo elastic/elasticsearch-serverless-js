@@ -39,6 +39,7 @@ import deleteByQueryApi from './api/delete_by_query'
 import deleteScriptApi from './api/delete_script'
 import EnrichApi from './api/enrich'
 import EqlApi from './api/eql'
+import EsqlApi from './api/esql'
 import existsApi from './api/exists'
 import existsSourceApi from './api/exists_source'
 import explainApi from './api/explain'
@@ -97,6 +98,7 @@ export default interface API {
   deleteScript: typeof deleteScriptApi
   enrich: EnrichApi
   eql: EqlApi
+  esql: EsqlApi
   exists: typeof existsApi
   existsSource: typeof existsSourceApi
   explain: typeof explainApi
@@ -146,6 +148,7 @@ const kCat = Symbol('Cat')
 const kCluster = Symbol('Cluster')
 const kEnrich = Symbol('Enrich')
 const kEql = Symbol('Eql')
+const kEsql = Symbol('Esql')
 const kGraph = Symbol('Graph')
 const kIndices = Symbol('Indices')
 const kInference = Symbol('Inference')
@@ -167,6 +170,7 @@ export default class API {
   [kCluster]: symbol | null
   [kEnrich]: symbol | null
   [kEql]: symbol | null
+  [kEsql]: symbol | null
   [kGraph]: symbol | null
   [kIndices]: symbol | null
   [kInference]: symbol | null
@@ -187,6 +191,7 @@ export default class API {
     this[kCluster] = null
     this[kEnrich] = null
     this[kEql] = null
+    this[kEsql] = null
     this[kGraph] = null
     this[kIndices] = null
     this[kInference] = null
@@ -256,6 +261,9 @@ Object.defineProperties(API.prototype, {
   },
   eql: {
     get () { return this[kEql] === null ? (this[kEql] = new EqlApi(this.transport)) : this[kEql] }
+  },
+  esql: {
+    get () { return this[kEsql] === null ? (this[kEsql] = new EsqlApi(this.transport)) : this[kEsql] }
   },
   graph: {
     get () { return this[kGraph] === null ? (this[kGraph] = new GraphApi(this.transport)) : this[kGraph] }

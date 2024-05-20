@@ -1854,6 +1854,31 @@ client.eql.search({ index, query })
 ** *`ignore_unavailable` (Optional, boolean)*: If true, missing or closed indices are not included in the response.
 
 [discrete]
+=== esql
+[discrete]
+==== query
+Executes an ESQL request
+
+{ref}/esql-rest.html[Endpoint documentation]
+[source,ts]
+----
+client.esql.query({ query })
+----
+
+[discrete]
+==== Arguments
+
+* *Request (object):*
+** *`query` (string)*: The ES|QL query API accepts an ES|QL query string in the query parameter, runs it, and returns the results.
+** *`columnar` (Optional, boolean)*: By default, ES|QL returns results as rows. For example, FROM returns each individual document as one row. For the JSON, YAML, CBOR and smile formats, ES|QL can return the results in a columnar fashion where one row represents all the values of a certain column in the results.
+** *`filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, field_masking_span, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Specify a Query DSL query in the filter parameter to filter the set of documents that an ES|QL query runs on.
+** *`locale` (Optional, string)*
+** *`params` (Optional, number | number | string | boolean | null[])*: To avoid any attempts of hacking or code injection, extract the values in a separate list of parameters. Use question mark placeholders (?) in the query string for each of the parameters.
+** *`version` (Optional, Enum("2024.04.01"))*: The version of the ES|QL language in which the "query" field was written.
+** *`format` (Optional, string)*: A short version of the Accept header, e.g. json, yaml.
+** *`delimiter` (Optional, string)*: The character to use between values within a CSV row. Only valid for the CSV format.
+
+[discrete]
 === graph
 [discrete]
 ==== explore
