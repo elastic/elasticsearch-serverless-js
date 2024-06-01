@@ -1765,4 +1765,42 @@ export default class Ml {
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}/_update`
     return await this.transport.request({ path, method, querystring, body }, options)
   }
+
+  /**
+    * Updates certain properties of trained model deployment.
+    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/update-trained-model-deployment.html | Elasticsearch API documentation}
+    */
+  async updateTrainedModelDeployment (this: That, params: T.MlUpdateTrainedModelDeploymentRequest | TB.MlUpdateTrainedModelDeploymentRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlUpdateTrainedModelDeploymentResponse>
+  async updateTrainedModelDeployment (this: That, params: T.MlUpdateTrainedModelDeploymentRequest | TB.MlUpdateTrainedModelDeploymentRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.MlUpdateTrainedModelDeploymentResponse, unknown>>
+  async updateTrainedModelDeployment (this: That, params: T.MlUpdateTrainedModelDeploymentRequest | TB.MlUpdateTrainedModelDeploymentRequest, options?: TransportRequestOptions): Promise<T.MlUpdateTrainedModelDeploymentResponse>
+  async updateTrainedModelDeployment (this: That, params: T.MlUpdateTrainedModelDeploymentRequest | TB.MlUpdateTrainedModelDeploymentRequest, options?: TransportRequestOptions): Promise<any> {
+    const acceptedPath: string[] = ['model_id']
+    const acceptedBody: string[] = ['number_of_allocations']
+    const querystring: Record<string, any> = {}
+    // @ts-expect-error
+    const userBody: any = params?.body
+    let body: Record<string, any> | string
+    if (typeof userBody === 'string') {
+      body = userBody
+    } else {
+      body = userBody != null ? { ...userBody } : undefined
+    }
+
+    for (const key in params) {
+      if (acceptedBody.includes(key)) {
+        body = body ?? {}
+        // @ts-expect-error
+        body[key] = params[key]
+      } else if (acceptedPath.includes(key)) {
+        continue
+      } else if (key !== 'body') {
+        // @ts-expect-error
+        querystring[key] = params[key]
+      }
+    }
+
+    const method = 'POST'
+    const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/deployment/_update`
+    return await this.transport.request({ path, method, querystring, body }, options)
+  }
 }
