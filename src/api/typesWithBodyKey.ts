@@ -828,7 +828,7 @@ export interface MsearchTemplateTemplateConfig {
 }
 
 export interface MtermvectorsOperation {
-  _id: Id
+  _id?: Id
   _index?: IndexName
   doc?: any
   fields?: Fields
@@ -1452,7 +1452,7 @@ export type SearchHighlighterType = 'plain' | 'fvh' | 'unified' | string
 
 export interface SearchHit<TDocument = unknown> {
   _index: IndexName
-  _id: Id
+  _id?: Id
   _score?: double | null
   _explanation?: ExplainExplanation
   fields?: Record<string, any>
@@ -2977,9 +2977,9 @@ export interface AggregationsAggregationContainer {
 }
 
 export interface AggregationsAggregationRange {
-  from?: double | string | null
+  from?: double
   key?: string
-  to?: double | string | null
+  to?: double
 }
 
 export interface AggregationsArrayPercentilesItem {
@@ -4145,7 +4145,7 @@ export type AggregationsTermsAggregationCollectMode = 'depth_first' | 'breadth_f
 export type AggregationsTermsAggregationExecutionHint = 'map' | 'global_ordinals' | 'global_ordinals_hash' | 'global_ordinals_low_cardinality'
 
 export interface AggregationsTermsBucketBase extends AggregationsMultiBucketBase {
-  doc_count_error?: long
+  doc_count_error_upper_bound?: long
 }
 
 export type AggregationsTermsExclude = string | string[]
@@ -4414,16 +4414,16 @@ export type AnalysisIcuCollationStrength = 'primary' | 'secondary' | 'tertiary' 
 export interface AnalysisIcuCollationTokenFilter extends AnalysisTokenFilterBase {
   type: 'icu_collation'
   alternate?: AnalysisIcuCollationAlternate
-  caseFirst?: AnalysisIcuCollationCaseFirst
-  caseLevel?: boolean
+  case_first?: AnalysisIcuCollationCaseFirst
+  case_level?: boolean
   country?: string
   decomposition?: AnalysisIcuCollationDecomposition
-  hiraganaQuaternaryMode?: boolean
+  hiragana_quaternary_mode?: boolean
   language?: string
   numeric?: boolean
   rules?: string
   strength?: AnalysisIcuCollationStrength
-  variableTop?: string
+  variable_top?: string
   variant?: string
 }
 
@@ -4686,7 +4686,7 @@ export type AnalysisPhoneticRuleType = 'approx' | 'exact'
 export interface AnalysisPhoneticTokenFilter extends AnalysisTokenFilterBase {
   type: 'phonetic'
   encoder: AnalysisPhoneticEncoder
-  languageset: AnalysisPhoneticLanguage[]
+  languageset: AnalysisPhoneticLanguage | AnalysisPhoneticLanguage[]
   max_code_len?: integer
   name_type: AnalysisPhoneticNameType
   replace?: boolean
@@ -5039,12 +5039,14 @@ export interface MappingDynamicProperty extends MappingDocValuesPropertyBase {
 
 export interface MappingDynamicTemplate {
   mapping?: MappingProperty
-  match?: string
-  match_mapping_type?: string
+  runtime?: MappingProperty
+  match?: string | string[]
+  path_match?: string | string[]
+  unmatch?: string | string[]
+  path_unmatch?: string | string[]
+  match_mapping_type?: string | string[]
+  unmatch_mapping_type?: string | string[]
   match_pattern?: MappingMatchType
-  path_match?: string
-  path_unmatch?: string
-  unmatch?: string
 }
 
 export interface MappingFieldAliasProperty extends MappingPropertyBase {
@@ -5061,7 +5063,7 @@ export interface MappingFieldNamesField {
   enabled: boolean
 }
 
-export type MappingFieldType = 'none' | 'geo_point' | 'geo_shape' | 'ip' | 'binary' | 'keyword' | 'text' | 'search_as_you_type' | 'date' | 'date_nanos' | 'boolean' | 'completion' | 'nested' | 'object' | 'murmur3' | 'token_count' | 'percolator' | 'integer' | 'long' | 'short' | 'byte' | 'float' | 'half_float' | 'scaled_float' | 'double' | 'integer_range' | 'float_range' | 'long_range' | 'double_range' | 'date_range' | 'ip_range' | 'alias' | 'join' | 'rank_feature' | 'rank_features' | 'flattened' | 'shape' | 'histogram' | 'constant_keyword' | 'aggregate_metric_double' | 'dense_vector' | 'sparse_vector' | 'match_only_text'
+export type MappingFieldType = 'none' | 'geo_point' | 'geo_shape' | 'ip' | 'binary' | 'keyword' | 'text' | 'search_as_you_type' | 'date' | 'date_nanos' | 'boolean' | 'completion' | 'nested' | 'object' | 'version' | 'murmur3' | 'token_count' | 'percolator' | 'integer' | 'long' | 'short' | 'byte' | 'float' | 'half_float' | 'scaled_float' | 'double' | 'integer_range' | 'float_range' | 'long_range' | 'double_range' | 'date_range' | 'ip_range' | 'alias' | 'join' | 'rank_feature' | 'rank_features' | 'flattened' | 'shape' | 'histogram' | 'constant_keyword' | 'aggregate_metric_double' | 'dense_vector' | 'semantic_text' | 'sparse_vector' | 'match_only_text' | 'icu_collation_keyword'
 
 export interface MappingFlattenedProperty extends MappingPropertyBase {
   boost?: double
@@ -5118,6 +5120,26 @@ export interface MappingHistogramProperty extends MappingPropertyBase {
   type: 'histogram'
 }
 
+export interface MappingIcuCollationProperty extends MappingDocValuesPropertyBase {
+  type: 'icu_collation_keyword'
+  norms?: boolean
+  index_options?: MappingIndexOptions
+  index?: boolean
+  null_value?: string
+  rules?: string
+  language?: string
+  country?: string
+  variant?: string
+  strength?: AnalysisIcuCollationStrength
+  decomposition?: AnalysisIcuCollationDecomposition
+  alternate?: AnalysisIcuCollationAlternate
+  case_level?: boolean
+  case_first?: AnalysisIcuCollationCaseFirst
+  numeric?: boolean
+  variable_top?: string
+  hiragana_quaternary_mode?: boolean
+}
+
 export interface MappingIndexField {
   enabled: boolean
 }
@@ -5158,6 +5180,8 @@ export interface MappingKeywordProperty extends MappingDocValuesPropertyBase {
   eager_global_ordinals?: boolean
   index?: boolean
   index_options?: MappingIndexOptions
+  script?: Script
+  on_script_error?: MappingOnScriptError
   normalizer?: string
   norms?: boolean
   null_value?: string
@@ -5222,7 +5246,7 @@ export interface MappingPointProperty extends MappingDocValuesPropertyBase {
   type: 'point'
 }
 
-export type MappingProperty = MappingBinaryProperty | MappingBooleanProperty | MappingDynamicProperty | MappingJoinProperty | MappingKeywordProperty | MappingMatchOnlyTextProperty | MappingPercolatorProperty | MappingRankFeatureProperty | MappingRankFeaturesProperty | MappingSearchAsYouTypeProperty | MappingTextProperty | MappingVersionProperty | MappingWildcardProperty | MappingDateNanosProperty | MappingDateProperty | MappingAggregateMetricDoubleProperty | MappingDenseVectorProperty | MappingSparseVectorProperty | MappingFlattenedProperty | MappingNestedProperty | MappingObjectProperty | MappingCompletionProperty | MappingConstantKeywordProperty | MappingFieldAliasProperty | MappingHistogramProperty | MappingIpProperty | MappingMurmur3HashProperty | MappingTokenCountProperty | MappingGeoPointProperty | MappingGeoShapeProperty | MappingPointProperty | MappingShapeProperty | MappingByteNumberProperty | MappingDoubleNumberProperty | MappingFloatNumberProperty | MappingHalfFloatNumberProperty | MappingIntegerNumberProperty | MappingLongNumberProperty | MappingScaledFloatNumberProperty | MappingShortNumberProperty | MappingUnsignedLongNumberProperty | MappingDateRangeProperty | MappingDoubleRangeProperty | MappingFloatRangeProperty | MappingIntegerRangeProperty | MappingIpRangeProperty | MappingLongRangeProperty
+export type MappingProperty = MappingBinaryProperty | MappingBooleanProperty | MappingDynamicProperty | MappingJoinProperty | MappingKeywordProperty | MappingMatchOnlyTextProperty | MappingPercolatorProperty | MappingRankFeatureProperty | MappingRankFeaturesProperty | MappingSearchAsYouTypeProperty | MappingTextProperty | MappingVersionProperty | MappingWildcardProperty | MappingDateNanosProperty | MappingDateProperty | MappingAggregateMetricDoubleProperty | MappingDenseVectorProperty | MappingFlattenedProperty | MappingNestedProperty | MappingObjectProperty | MappingSemanticTextProperty | MappingSparseVectorProperty | MappingCompletionProperty | MappingConstantKeywordProperty | MappingFieldAliasProperty | MappingHistogramProperty | MappingIpProperty | MappingMurmur3HashProperty | MappingTokenCountProperty | MappingGeoPointProperty | MappingGeoShapeProperty | MappingPointProperty | MappingShapeProperty | MappingByteNumberProperty | MappingDoubleNumberProperty | MappingFloatNumberProperty | MappingHalfFloatNumberProperty | MappingIntegerNumberProperty | MappingLongNumberProperty | MappingScaledFloatNumberProperty | MappingShortNumberProperty | MappingUnsignedLongNumberProperty | MappingDateRangeProperty | MappingDoubleRangeProperty | MappingFloatRangeProperty | MappingIntegerRangeProperty | MappingIpRangeProperty | MappingLongRangeProperty | MappingIcuCollationProperty
 
 export interface MappingPropertyBase {
   meta?: Record<string, string>
@@ -5287,6 +5311,12 @@ export interface MappingSearchAsYouTypeProperty extends MappingCorePropertyBase 
   search_quote_analyzer?: string
   term_vector?: MappingTermVectorOption
   type: 'search_as_you_type'
+}
+
+export interface MappingSemanticTextProperty {
+  type: 'semantic_text'
+  meta?: Record<string, string>
+  inference_id: Id
 }
 
 export interface MappingShapeProperty extends MappingDocValuesPropertyBase {
@@ -5898,7 +5928,7 @@ export interface QueryDslQueryContainer {
   shape?: QueryDslShapeQuery
   simple_query_string?: QueryDslSimpleQueryStringQuery
   span_containing?: QueryDslSpanContainingQuery
-  field_masking_span?: QueryDslSpanFieldMaskingQuery
+  span_field_masking?: QueryDslSpanFieldMaskingQuery
   span_first?: QueryDslSpanFirstQuery
   span_multi?: QueryDslSpanMultiTermQuery
   span_near?: QueryDslSpanNearQuery
@@ -6009,6 +6039,11 @@ export interface QueryDslScriptScoreQuery extends QueryDslQueryBase {
   script: Script
 }
 
+export interface QueryDslSemanticQuery extends QueryDslQueryBase {
+  field: string
+  query: string
+}
+
 export interface QueryDslShapeFieldQuery {
   indexed_shape?: QueryDslFieldLookup
   relation?: GeoShapeRelation
@@ -6082,7 +6117,7 @@ export interface QueryDslSpanOrQuery extends QueryDslQueryBase {
 
 export interface QueryDslSpanQuery {
   span_containing?: QueryDslSpanContainingQuery
-  field_masking_span?: QueryDslSpanFieldMaskingQuery
+  span_field_masking?: QueryDslSpanFieldMaskingQuery
   span_first?: QueryDslSpanFirstQuery
   span_gap?: QueryDslSpanGapQuery
   span_multi?: QueryDslSpanMultiTermQuery
@@ -9801,12 +9836,6 @@ export type EqlSearchResponse<TEvent = unknown> = EqlEqlSearchResponseBase<TEven
 
 export type EqlSearchResultPosition = 'tail' | 'head'
 
-export type EsqlBaseServerlessEsqlVersion = '2024.04.01'
-
-export type EsqlBaseStatefulEsqlVersion = '2024.04.01'
-
-export type EsqlEsqlVersion = '2024.04.01'
-
 export interface EsqlQueryRequest extends RequestBase {
   format?: string
   delimiter?: string
@@ -9817,7 +9846,6 @@ export interface EsqlQueryRequest extends RequestBase {
     locale?: string
     params?: ScalarValue[]
     query: string
-    version?: EsqlEsqlVersion
   }
 }
 
@@ -10526,11 +10554,11 @@ export interface IndicesMappingLimitSettings {
 }
 
 export interface IndicesMappingLimitSettingsDepth {
-  limit?: integer
+  limit?: long
 }
 
 export interface IndicesMappingLimitSettingsDimensionFields {
-  limit?: integer
+  limit?: long
 }
 
 export interface IndicesMappingLimitSettingsFieldNameLength {
@@ -10538,15 +10566,15 @@ export interface IndicesMappingLimitSettingsFieldNameLength {
 }
 
 export interface IndicesMappingLimitSettingsNestedFields {
-  limit?: integer
+  limit?: long
 }
 
 export interface IndicesMappingLimitSettingsNestedObjects {
-  limit?: integer
+  limit?: long
 }
 
 export interface IndicesMappingLimitSettingsTotalFields {
-  limit?: integer
+  limit?: long
 }
 
 export interface IndicesMerge {
@@ -10676,7 +10704,7 @@ export interface IndicesStorage {
   allow_mmap?: boolean
 }
 
-export type IndicesStorageType = 'fs' | '' | 'niofs' | 'mmapfs' | 'hybridfs' | string
+export type IndicesStorageType = 'fs' | 'niofs' | 'mmapfs' | 'hybridfs' | string
 
 export interface IndicesTemplateMapping {
   aliases: Record<IndexName, IndicesAlias>
@@ -11398,7 +11426,7 @@ export interface IndicesPutTemplateRequest extends RequestBase {
     index_patterns?: string | string[]
     mappings?: MappingTypeMapping
     order?: integer
-    settings?: Record<string, any>
+    settings?: IndicesIndexSettings
     version?: VersionNumber
   }
 }
@@ -12049,6 +12077,10 @@ export interface InferenceCompletionResult {
   result: string
 }
 
+export interface InferenceDeleteInferenceEndpointResult extends AcknowledgedResponseBase {
+  pipelines: string[]
+}
+
 export type InferenceDenseByteVector = byte[]
 
 export type InferenceDenseVector = float[]
@@ -12101,9 +12133,11 @@ export interface InferenceTextEmbeddingResult {
 export interface InferenceDeleteRequest extends RequestBase {
   task_type?: InferenceTaskType
   inference_id: Id
+  dry_run?: boolean
+  force?: boolean
 }
 
-export type InferenceDeleteResponse = AcknowledgedResponseBase
+export type InferenceDeleteResponse = InferenceDeleteInferenceEndpointResult
 
 export interface InferenceGetRequest extends RequestBase {
   task_type?: InferenceTaskType
@@ -13032,8 +13066,8 @@ export interface MlDatafeedConfig {
   datafeed_id?: Id
   delayed_data_check_config?: MlDelayedDataCheckConfig
   frequency?: Duration
-  indices?: string[]
-  indexes?: string[]
+  indices?: Indices
+  indexes?: Indices
   indices_options?: IndicesOptions
   job_id?: Id
   max_empty_searches?: integer
@@ -13449,7 +13483,7 @@ export interface MlInferenceConfigUpdateContainer {
 export interface MlInferenceResponseResult {
   entities?: MlTrainedModelEntities[]
   is_truncated?: boolean
-  predicted_value?: MlPredictedValue[]
+  predicted_value?: MlPredictedValue | MlPredictedValue[]
   predicted_value_sequence?: string
   prediction_probability?: double
   prediction_score?: double
@@ -14572,14 +14606,14 @@ export interface MlGetRecordsResponse {
 }
 
 export interface MlGetTrainedModelsRequest extends RequestBase {
-  model_id?: Id
+  model_id?: Ids
   allow_no_match?: boolean
   decompress_definition?: boolean
   exclude_generated?: boolean
   from?: integer
   include?: MlInclude
   size?: integer
-  tags?: string
+  tags?: string | string[]
 }
 
 export interface MlGetTrainedModelsResponse {
@@ -14752,7 +14786,7 @@ export interface MlPutCalendarResponse {
 
 export interface MlPutCalendarJobRequest extends RequestBase {
   calendar_id: Id
-  job_id: Id
+  job_id: Ids
 }
 
 export interface MlPutCalendarJobResponse {
@@ -15270,6 +15304,18 @@ export interface MlUpdateModelSnapshotRequest extends RequestBase {
 export interface MlUpdateModelSnapshotResponse {
   acknowledged: boolean
   model: MlModelSnapshot
+}
+
+export interface MlUpdateTrainedModelDeploymentRequest extends RequestBase {
+  model_id: Id
+  /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
+  body?: {
+    number_of_allocations?: integer
+  }
+}
+
+export interface MlUpdateTrainedModelDeploymentResponse {
+  assignment: MlTrainedModelAssignment
 }
 
 export interface MlUpgradeJobSnapshotRequest extends RequestBase {
@@ -15957,7 +16003,7 @@ export interface NodesInfoNodeInfoRepositoriesUrl {
 
 export interface NodesInfoNodeInfoScript {
   allowed_types: string
-  disable_max_compilations_rate: string
+  disable_max_compilations_rate?: string
 }
 
 export interface NodesInfoNodeInfoSearch {
@@ -15975,7 +16021,7 @@ export interface NodesInfoNodeInfoSettings {
   repositories?: NodesInfoNodeInfoRepositories
   discovery?: NodesInfoNodeInfoDiscover
   action?: NodesInfoNodeInfoAction
-  client: NodesInfoNodeInfoClient
+  client?: NodesInfoNodeInfoClient
   http: NodesInfoNodeInfoSettingsHttp
   bootstrap?: NodesInfoNodeInfoBootstrap
   transport: NodesInfoNodeInfoSettingsTransport
@@ -16046,7 +16092,7 @@ export interface NodesInfoNodeInfoSettingsIngest {
 }
 
 export interface NodesInfoNodeInfoSettingsNetwork {
-  host: Host
+  host?: Host
 }
 
 export interface NodesInfoNodeInfoSettingsNode {
@@ -16718,7 +16764,6 @@ export interface SecurityIndicesPrivileges {
   names: Indices
   privileges: SecurityIndexPrivilege[]
   query?: SecurityIndicesPrivilegesQuery
-  allow_restricted_indices?: boolean
 }
 
 export type SecurityIndicesPrivilegesQuery = string | QueryDslQueryContainer | SecurityRoleTemplateQuery
@@ -17378,7 +17423,6 @@ export interface SecurityPutRoleRequest extends RequestBase {
   body?: {
     applications?: SecurityApplicationPrivileges[]
     cluster?: SecurityClusterPrivilege[]
-    global?: Record<string, any>
     indices?: SecurityIndicesPrivileges[]
     metadata?: Metadata
     run_as?: string[]
@@ -18368,7 +18412,7 @@ export interface SynonymsPutSynonymRequest extends RequestBase {
 
 export interface SynonymsPutSynonymResponse {
   result: Result
-  reload_analyzers_details: IndicesReloadSearchAnalyzersReloadDetails
+  reload_analyzers_details: IndicesReloadSearchAnalyzersReloadResult
 }
 
 export interface SynonymsPutSynonymRuleRequest extends RequestBase {
