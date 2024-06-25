@@ -168,7 +168,7 @@ export default class Client extends API {
         'elastic-api-version': `${apiVersion.slice(0, 4)}-${apiVersion.slice(4, 6)}-${apiVersion.slice(6, 8)}`
       },
       generateRequestId: null,
-      name: 'elasticsearch-js',
+      name: 'elasticsearch-serverless-js',
       auth: null,
       opaqueIdPrefix: null,
       context: null,
