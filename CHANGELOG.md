@@ -13,6 +13,23 @@
 * Add Elastic-Api-Version, fix MIME types ([#28](https://github.com/elastic/elasticsearch-serverless-js/issues/28)) ([3bf1bd0](https://github.com/elastic/elasticsearch-serverless-js/commit/3bf1bd0cb9ac30222a7114b5888e4d2b2aec7690))
 * **http:** Serverless-optimized HTTP options ([#18](https://github.com/elastic/elasticsearch-serverless-js/issues/18)) ([7ef4666](https://github.com/elastic/elasticsearch-serverless-js/commit/7ef46666287d57da051a23f38eb0d4e9eb2a1f06))
 
+## [0.4.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.3.0+20231031...v0.4.0+20231031) (2024-06-25)
+
+
+### Features
+
+* ES|QL object API helper ([#57](https://github.com/elastic/elasticsearch-serverless-js/issues/57)) ([6ce1ff1](https://github.com/elastic/elasticsearch-serverless-js/commit/6ce1ff11ae753c3ceda285272a94884fab6c0701))
+* latest Elasticsearch serverless specification changes ([#68](https://github.com/elastic/elasticsearch-serverless-js/issues/68)) ([e834c0e](https://github.com/elastic/elasticsearch-serverless-js/commit/e834c0e510eb4db1b6937e5263d625c619f557d5))
+* latest serverless API changes ([#65](https://github.com/elastic/elasticsearch-serverless-js/issues/65)) ([558510d](https://github.com/elastic/elasticsearch-serverless-js/commit/558510d3e1fe0fbafb40358fd55ed9591283238c))
+* Support latest Elasticsearch serverless API specification ([3c2539b](https://github.com/elastic/elasticsearch-serverless-js/commit/3c2539b347885f7dc297f6aee7346249b71da2dc))
+
+
+### Bug Fixes
+
+* Bump transport to 8.6.1 ([#73](https://github.com/elastic/elasticsearch-serverless-js/issues/73)) ([67d185b](https://github.com/elastic/elasticsearch-serverless-js/commit/67d185bf7eb4323b5ba9f914ef1077e1b06b7715))
+* ES|QL queries no longer require a version ([#64](https://github.com/elastic/elasticsearch-serverless-js/issues/64)) ([24fa939](https://github.com/elastic/elasticsearch-serverless-js/commit/24fa9398d7e5592c341f2e183aeca71760f372ae))
+* Use unique name for serverless client ([#75](https://github.com/elastic/elasticsearch-serverless-js/issues/75)) ([d716e2e](https://github.com/elastic/elasticsearch-serverless-js/commit/d716e2e0a0b9e420d7a427a2a16170a34e638c7b))
+
 ## [0.3.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.2.0+20231031...v0.3.0+20231031) (2024-04-03)
 
 
