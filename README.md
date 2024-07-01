@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="https://github.com/elastic/elasticsearch-py/raw/main/docs/logo-elastic-glyph-color.svg" width="20%" alt="Elastic logo" />
+</p>
+
 # Elasticsearch Serverless Client
 
 [![main](https://github.com/elastic/elasticsearch-serverless-js/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/elastic/elasticsearch-serverless-js/actions/workflows/tests.yml)
 
-This is the official Node.js Elastic client for the **Elasticsearch Serverless** service.
+This is the official Node.js Elastic client for the [**Elasticsearch Cloud Serverless** service](https://www.elastic.co/elasticsearch/serverless).
 If you're looking to develop your Node.js application with the Elasticsearch Stack, you should look at the [Elasticsearch Client](https://github.com/elastic/elasticsearch-js) instead.
 If you're looking to develop your Node.js application with Elastic Enterprise Search, you should look at the [Enterprise Search Client](https://github.com/elastic/enterprise-search-js/).
 
@@ -76,4 +80,4 @@ See [CONTRIBUTING](./CONTRIBUTING.md).
 
 ### Docs
 
-Some questions, assumptions and general notes about this project can be found in [the docs directory](./docs/questions-and-assumptions.md).
+Some general notes about this project can be found in [the docs directory](./docs/).
