@@ -71,6 +71,13 @@ const skips = {
   // TODO: expecting `ct_field` field mapping to be returned, but instead only finds `field`
   'indices/simulate_template.yml': ['*'],
   'indices/simulate_index_template.yml': ['*'],
+  // TODO: enable this test after connector API is included in client generation
+  'entsearch/20_connector.yml': ['*'],
+  'entsearch/30_sync_jobs_serverless.yml': ['*'],
+  'entsearch/30_sync_jobs_stack.yml': ['*'],
+  'entsearch/40_connector_secret.yml': ['*'],
+  'entsearch/50_connector_updates.yml': ['*'],
+  'entsearch/60_connector_updates_stack.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
