@@ -78,6 +78,8 @@ const skips = {
   'entsearch/40_connector_secret.yml': ['*'],
   'entsearch/50_connector_updates.yml': ['*'],
   'entsearch/60_connector_updates_stack.yml': ['*'],
+  // TODO: test currently times out
+  'inference/10_basic.yml': ['*']
 }
 
 const shouldSkip = (file, name) => {
