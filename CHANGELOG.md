@@ -1,3 +1,5 @@
+# Changelog
+
 ## [0.4.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.3.0+20231031...v0.4.0+20231031) (2024-06-25)
 
 
