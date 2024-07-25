@@ -14,8 +14,9 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - uses: googleapis/release-please-action@v4
         with:
           release-type: node
           package-name: "@elastic/elasticsearch-serverless"
           bootstrap-sha: "e71b2ff05abf70702e9342378da571032e670c8c"
+          token: ${{ secrets.TOKEN_RELEASE_PLEASE }}
