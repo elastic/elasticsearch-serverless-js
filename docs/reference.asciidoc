@@ -27,7 +27,9 @@
 
 [discrete]
 === bulk
-Allows to perform multiple index/update/delete operations in a single request.
+Bulk index or delete documents.
+Performs multiple indexing or delete operations in a single API call.
+This reduces overhead and can greatly increase indexing speed.
 
 {ref}/docs-bulk.html[Endpoint documentation]
 [source,ts]
@@ -56,7 +58,7 @@ Set to all or any positive integer up to the total number of shards in the index
 
 [discrete]
 === clear_scroll
-Explicitly clears the search context for a scroll.
+Clears the search context and results for a scrolling search.
 
 {ref}/clear-scroll-api.html[Endpoint documentation]
 [source,ts]
@@ -72,7 +74,7 @@ To clear all scroll IDs, use `_all`.
 
 [discrete]
 === close_point_in_time
-Close a point in time
+Closes a point-in-time.
 
 {ref}/point-in-time-api.html[Endpoint documentation]
 [source,ts]
@@ -101,7 +103,7 @@ client.count({ ... })
 ** *`index` (Optional, string | string[])*: List of data streams, indices, and aliases to search.
 Supports wildcards (`*`).
 To search all data streams and indices, omit this parameter or use `*` or `_all`.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
 ** *`allow_no_indices` (Optional, boolean)*: If `false`, the request returns an error if any wildcard expression, index alias, or `_all` value targets only missing or closed indices.
 This behavior applies even if the request targets other open indices.
 ** *`analyzer` (Optional, string)*: Analyzer to use for the query string.
@@ -129,9 +131,9 @@ Elasticsearch collects documents before sorting.
 
 [discrete]
 === create
-Creates a new document in the index.
-
-Returns a 409 response when a document with a same ID already exists in the index.
+Index a document.
+Adds a JSON document to the specified data stream or index and makes it searchable.
+If the target is an index and the document already exists, the request updates the document and increments its version.
 
 {ref}/docs-index_.html[Endpoint documentation]
 [source,ts]
@@ -162,7 +164,8 @@ Set to `all` or any positive integer up to the total number of shards in the ind
 
 [discrete]
 === delete
-Removes a document from the index.
+Delete a document.
+Removes a JSON document from the specified index.
 
 {ref}/docs-delete.html[Endpoint documentation]
 [source,ts]
@@ -189,7 +192,8 @@ Set to `all` or any positive integer up to the total number of shards in the ind
 
 [discrete]
 === delete_by_query
-Deletes documents matching the provided query.
+Delete documents.
+Deletes documents that match the specified query.
 
 {ref}/docs-delete-by-query.html[Endpoint documentation]
 [source,ts]
@@ -204,7 +208,7 @@ client.deleteByQuery({ index })
 Supports wildcards (`*`).
 To search all data streams or indices, omit this parameter or use `*` or `_all`.
 ** *`max_docs` (Optional, number)*: The maximum number of documents to delete.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Specifies the documents to delete using the Query DSL.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Specifies the documents to delete using the Query DSL.
 ** *`slice` (Optional, { field, id, max })*: Slice the request manually using the provided slice ID and total number of slices.
 ** *`allow_no_indices` (Optional, boolean)*: If `false`, the request returns an error if any wildcard expression, index alias, or `_all` value targets only missing or closed indices.
 This behavior applies even if the request targets other open indices.
@@ -252,7 +256,8 @@ Set to all or any positive integer up to the total number of shards in the index
 
 [discrete]
 === delete_script
-Deletes a script.
+Delete a script or search template.
+Deletes a stored script or search template.
 
 {ref}/modules-scripting.html[Endpoint documentation]
 [source,ts]
@@ -271,7 +276,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 === exists
-Returns information about whether a document exists in an index.
+Check a document.
+Checks if a specified document exists.
 
 {ref}/docs-get.html[Endpoint documentation]
 [source,ts]
@@ -302,7 +308,8 @@ The specified version must match the current version of the document for the req
 
 [discrete]
 === exists_source
-Returns information about whether a document source exists in an index.
+Check for a document source.
+Checks if a document's `_source` is stored.
 
 {ref}/docs-get.html[Endpoint documentation]
 [source,ts]
@@ -330,7 +337,8 @@ The specified version must match the current version of the document for the req
 
 [discrete]
 === explain
-Returns information about why a specific matches (or doesn't match) a query.
+Explain a document match result.
+Returns information about why a specific document matches, or doesn’t match, a query.
 
 {ref}/search-explain.html[Endpoint documentation]
 [source,ts]
@@ -344,7 +352,7 @@ client.explain({ id, index })
 ** *`id` (string)*: Defines the document ID.
 ** *`index` (string)*: Index names used to limit the request.
 Only a single index name can be provided to this parameter.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
 ** *`analyzer` (Optional, string)*: Analyzer to use for the query string.
 This parameter can only be used when the `q` query string parameter is specified.
 ** *`analyze_wildcard` (Optional, boolean)*: If `true`, wildcard and prefix queries are analyzed.
@@ -362,7 +370,9 @@ Random by default.
 
 [discrete]
 === field_caps
-Returns the information about the capabilities of fields among multiple indices.
+The field capabilities API returns the information about the capabilities of fields among multiple indices.
+The field capabilities API returns runtime fields like any other field. For example, a runtime field with a type
+of keyword is returned as any other field that belongs to the `keyword` family.
 
 {ref}/search-field-caps.html[Endpoint documentation]
 [source,ts]
@@ -374,18 +384,24 @@ client.fieldCaps({ ... })
 
 * *Request (object):*
 ** *`index` (Optional, string | string[])*: List of data streams, indices, and aliases used to limit the request. Supports wildcards (*). To target all data streams and indices, omit this parameter or use * or _all.
-** *`index_filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Allows to filter indices if the provided query rewrites to match_none on every shard.
+** *`fields` (Optional, string | string[])*: List of fields to retrieve capabilities for. Wildcard (`*`) expressions are supported.
+** *`index_filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Allows to filter indices if the provided query rewrites to match_none on every shard.
+** *`runtime_mappings` (Optional, Record<string, { fetch_fields, format, input_field, target_field, target_index, script, type }>)*: Defines ad-hoc runtime fields in the request similar to the way it is done in search requests.
+These fields exist only as part of the query and take precedence over fields defined with the same name in the index mappings.
 ** *`allow_no_indices` (Optional, boolean)*: If false, the request returns an error if any wildcard expression, index alias,
 or `_all` value targets only missing or closed indices. This behavior applies even if the request targets other open indices. For example, a request
 targeting `foo*,bar*` returns an error if an index starts with foo but no index starts with bar.
 ** *`expand_wildcards` (Optional, Enum("all" | "open" | "closed" | "hidden" | "none") | Enum("all" | "open" | "closed" | "hidden" | "none")[])*: Type of index that wildcard patterns can match. If the request can target data streams, this argument determines whether wildcard expressions match hidden data streams. Supports a list of values, such as `open,hidden`.
-** *`fields` (Optional, string | string[])*: List of fields to retrieve capabilities for. Wildcard (`*`) expressions are supported.
 ** *`ignore_unavailable` (Optional, boolean)*: If `true`, missing or closed indices are not included in the response.
 ** *`include_unmapped` (Optional, boolean)*: If true, unmapped fields are included in the response.
+** *`filters` (Optional, string)*: An optional set of filters: can include +metadata,-metadata,-nested,-multifield,-parent
+** *`types` (Optional, string[])*: Only return results for fields that have one of the types in the list
+** *`include_empty_fields` (Optional, boolean)*: If false, empty fields are not included in the response.
 
 [discrete]
 === get
-Returns a document.
+Get a document by its ID.
+Retrieves the document with the specified ID from an index.
 
 {ref}/docs-get.html[Endpoint documentation]
 [source,ts]
@@ -413,7 +429,8 @@ If this field is specified, the `_source` parameter defaults to false.
 
 [discrete]
 === get_script
-Returns a script.
+Get a script or search template.
+Retrieves a stored script or search template.
 
 {ref}/modules-scripting.html[Endpoint documentation]
 [source,ts]
@@ -429,6 +446,7 @@ client.getScript({ id })
 
 [discrete]
 === get_source
+Get a document's source.
 Returns the source of a document.
 
 {ref}/docs-get.html[Endpoint documentation]
@@ -455,7 +473,9 @@ client.getSource({ id, index })
 
 [discrete]
 === index
-Creates or updates a document in an index.
+Index a document.
+Adds a JSON document to the specified data stream or index and makes it searchable.
+If the target is an index and the document already exists, the request updates the document and increments its version.
 
 {ref}/docs-index_.html[Endpoint documentation]
 [source,ts]
@@ -493,6 +513,7 @@ Set to all or any positive integer up to the total number of shards in the index
 
 [discrete]
 === info
+Get cluster info.
 Returns basic information about the cluster.
 
 {ref}/index.html[Endpoint documentation]
@@ -543,7 +564,7 @@ client.msearch({ ... })
 
 * *Request (object):*
 ** *`index` (Optional, string | string[])*: List of data streams, indices, and index aliases to search.
-** *`searches` (Optional, { allow_no_indices, expand_wildcards, ignore_unavailable, index, preference, request_cache, routing, search_type, ccs_minimize_roundtrips, allow_partial_search_results, ignore_throttled } | { aggregations, collapse, query, explain, ext, stored_fields, docvalue_fields, from, highlight, indices_boost, min_score, post_filter, profile, rescore, script_fields, search_after, size, sort, _source, fields, terminate_after, stats, timeout, track_scores, track_total_hits, version, runtime_mappings, seq_no_primary_term, pit, suggest }[])*
+** *`searches` (Optional, { allow_no_indices, expand_wildcards, ignore_unavailable, index, preference, request_cache, routing, search_type, ccs_minimize_roundtrips, allow_partial_search_results, ignore_throttled } | { aggregations, collapse, query, explain, ext, stored_fields, docvalue_fields, knn, from, highlight, indices_boost, min_score, post_filter, profile, rescore, script_fields, search_after, size, sort, _source, fields, terminate_after, stats, timeout, track_scores, track_total_hits, version, runtime_mappings, seq_no_primary_term, pit, suggest }[])*
 ** *`allow_no_indices` (Optional, boolean)*: If false, the request returns an error if any wildcard expression, index alias, or _all value targets only missing or closed indices. This behavior applies even if the request targets other open indices. For example, a request targeting foo*,bar* returns an error if an index starts with foo but no index starts with bar.
 ** *`ccs_minimize_roundtrips` (Optional, boolean)*: If true, network roundtrips between the coordinating node and remote clusters are minimized for cross-cluster search requests.
 ** *`expand_wildcards` (Optional, Enum("all" | "open" | "closed" | "hidden" | "none") | Enum("all" | "open" | "closed" | "hidden" | "none")[])*: Type of index that wildcard expressions can match. If the request can target data streams, this argument determines whether wildcard expressions match hidden data streams.
@@ -559,7 +580,7 @@ client.msearch({ ... })
 
 [discrete]
 === msearch_template
-Allows to execute several search template operations in one request.
+Runs multiple templated searches with a single request.
 
 {ref}/search-multi-search.html[Endpoint documentation]
 [source,ts]
@@ -573,7 +594,7 @@ client.msearchTemplate({ ... })
 ** *`index` (Optional, string | string[])*: List of data streams, indices, and aliases to search.
 Supports wildcards (`*`).
 To search all data streams and indices, omit this parameter or use `*`.
-** *`search_templates` (Optional, { allow_no_indices, expand_wildcards, ignore_unavailable, index, preference, request_cache, routing, search_type, ccs_minimize_roundtrips, allow_partial_search_results, ignore_throttled } | { aggregations, collapse, query, explain, ext, stored_fields, docvalue_fields, from, highlight, indices_boost, min_score, post_filter, profile, rescore, script_fields, search_after, size, sort, _source, fields, terminate_after, stats, timeout, track_scores, track_total_hits, version, runtime_mappings, seq_no_primary_term, pit, suggest }[])*
+** *`search_templates` (Optional, { allow_no_indices, expand_wildcards, ignore_unavailable, index, preference, request_cache, routing, search_type, ccs_minimize_roundtrips, allow_partial_search_results, ignore_throttled } | { aggregations, collapse, query, explain, ext, stored_fields, docvalue_fields, knn, from, highlight, indices_boost, min_score, post_filter, profile, rescore, script_fields, search_after, size, sort, _source, fields, terminate_after, stats, timeout, track_scores, track_total_hits, version, runtime_mappings, seq_no_primary_term, pit, suggest }[])*
 ** *`ccs_minimize_roundtrips` (Optional, boolean)*: If `true`, network round-trips are minimized for cross-cluster search requests.
 ** *`max_concurrent_searches` (Optional, number)*: Maximum number of concurrent searches the API can run.
 ** *`search_type` (Optional, Enum("query_then_fetch" | "dfs_query_then_fetch"))*: The type of the search operation.
@@ -614,7 +635,12 @@ Random by default.
 
 [discrete]
 === open_point_in_time
-Open a point in time that can be used in subsequent searches
+A search request by default executes against the most recent visible data of the target indices,
+which is called point in time. Elasticsearch pit (point in time) is a lightweight view into the
+state of the data as it existed when initiated. In some cases, it’s preferred to perform multiple
+search requests using the same point in time. For example, if refreshes happen between
+`search_after` requests, then the results of those requests might not be consistent as changes happening
+between searches are only visible to the more recent point in time.
 
 {ref}/point-in-time-api.html[Endpoint documentation]
 [source,ts]
@@ -637,6 +663,7 @@ Supports a list of values, such as `open,hidden`. Valid values are: `all`, `open
 
 [discrete]
 === ping
+Ping the cluster.
 Returns whether the cluster is running.
 
 {ref}/index.html[Endpoint documentation]
@@ -647,7 +674,8 @@ client.ping()
 
 [discrete]
 === put_script
-Creates or updates a script.
+Create or update a script or search template.
+Creates or updates a stored script or search template.
 
 {ref}/modules-scripting.html[Endpoint documentation]
 [source,ts]
@@ -670,7 +698,7 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 === rank_eval
-Allows to evaluate the quality of ranked search results over a set of typical search queries
+Enables you to evaluate the quality of ranked search results over a set of typical search queries.
 
 {ref}/search-rank-eval.html[Endpoint documentation]
 [source,ts]
@@ -692,9 +720,8 @@ To target all data streams and indices in a cluster, omit this parameter or use 
 
 [discrete]
 === reindex
-Allows to copy documents from one index to another, optionally filtering the source
-documents by a query, changing the destination index settings, or fetching the
-documents from a remote cluster.
+Reindex documents.
+Copies documents from a source to a destination. The source can be any existing index, alias, or data stream. The destination must differ from the source. For example, you cannot reindex a data stream into itself.
 
 {ref}/docs-reindex.html[Endpoint documentation]
 [source,ts]
@@ -709,7 +736,7 @@ client.reindex({ dest, source })
 ** *`source` ({ index, query, remote, size, slice, sort, _source, runtime_mappings })*: The source you are copying from.
 ** *`conflicts` (Optional, Enum("abort" | "proceed"))*: Set to proceed to continue reindexing even if there are conflicts.
 ** *`max_docs` (Optional, number)*: The maximum number of documents to reindex.
-** *`script` (Optional, { lang, options, source } | { id })*: The script to run to update the document source or metadata when reindexing.
+** *`script` (Optional, { source, id, params, lang, options })*: The script to run to update the document source or metadata when reindexing.
 ** *`size` (Optional, number)*
 ** *`refresh` (Optional, boolean)*: If `true`, the request refreshes affected shards to make this operation visible to search.
 ** *`requests_per_second` (Optional, float)*: The throttle for this request in sub-requests per second.
@@ -725,7 +752,7 @@ Set to `all` or any positive integer up to the total number of shards in the ind
 
 [discrete]
 === render_search_template
-Allows to use the Mustache language to pre-render a search definition.
+Renders a search template as a search request body.
 
 {ref}/render-search-template-api.html[Endpoint documentation]
 [source,ts]
@@ -749,7 +776,8 @@ If no `id` or `<templated-id>` is specified, this parameter is required.
 
 [discrete]
 === scripts_painless_execute
-Allows an arbitrary script to be executed and a result to be returned
+Run a script.
+Runs a script and returns a result.
 
 {painless}/painless-execute-api.html[Endpoint documentation]
 [source,ts]
@@ -762,7 +790,7 @@ client.scriptsPainlessExecute({ ... })
 * *Request (object):*
 ** *`context` (Optional, string)*: The context that the script should run in.
 ** *`context_setup` (Optional, { document, index, query })*: Additional parameters for the `context`.
-** *`script` (Optional, { lang, options, source })*: The Painless script to execute.
+** *`script` (Optional, { source, id, params, lang, options })*: The Painless script to execute.
 
 [discrete]
 === scroll
@@ -783,7 +811,9 @@ client.scroll({ scroll_id })
 
 [discrete]
 === search
-Returns results matching a query.
+Returns search hits that match the query defined in the request.
+You can provide search queries using the `q` query string parameter or the request body.
+If both are specified, only the query parameter is used.
 
 {ref}/search-search.html[Endpoint documentation]
 [source,ts]
@@ -797,7 +827,7 @@ client.search({ ... })
 ** *`index` (Optional, string | string[])*: List of data streams, indices, and aliases to search.
 Supports wildcards (`*`).
 To search all data streams and indices, omit this parameter or use `*` or `_all`.
-** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, cardinality, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: Defines the aggregations that are run as part of the search request.
+** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, bucket_count_ks_test, bucket_correlation, cardinality, categorize_text, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: Defines the aggregations that are run as part of the search request.
 ** *`collapse` (Optional, { field, inner_hits, max_concurrent_group_searches, collapse })*: Collapses search results the values of the specified field.
 ** *`explain` (Optional, boolean)*: If true, returns detailed information about score computation as part of a hit.
 ** *`ext` (Optional, Record<string, User-defined value>)*: Configuration of search extensions defined by Elasticsearch plugins.
@@ -812,15 +842,18 @@ If `false`, the  response does not include the total number of hits matching the
 ** *`indices_boost` (Optional, Record<string, number>[])*: Boosts the _score of documents from specified indices.
 ** *`docvalue_fields` (Optional, { field, format, include_unmapped }[])*: Array of wildcard (`*`) patterns.
 The request returns doc values for field names matching these patterns in the `hits.fields` property of the response.
+** *`knn` (Optional, { field, query_vector, query_vector_builder, k, num_candidates, boost, filter, similarity, inner_hits } | { field, query_vector, query_vector_builder, k, num_candidates, boost, filter, similarity, inner_hits }[])*: Defines the approximate kNN search to run.
+** *`rank` (Optional, { rrf })*: Defines the Reciprocal Rank Fusion (RRF) to use.
 ** *`min_score` (Optional, number)*: Minimum `_score` for matching documents.
 Documents with a lower `_score` are not included in the search results.
-** *`post_filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Use the `post_filter` parameter to filter search results.
+** *`post_filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Use the `post_filter` parameter to filter search results.
 The search hits are filtered after the aggregations are calculated.
 A post filter has no impact on the aggregation results.
 ** *`profile` (Optional, boolean)*: Set to `true` to return detailed timing information about the execution of individual components in a search request.
 NOTE: This is a debugging tool and adds significant overhead to search execution.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
 ** *`rescore` (Optional, { window_size, query, learning_to_rank } | { window_size, query, learning_to_rank }[])*: Can be used to improve precision by reordering just the top (for example 100 - 500) documents returned by the `query` and `post_filter` phases.
+** *`retriever` (Optional, { standard, knn, rrf })*: A retriever is a specification to describe top documents returned from a search. A retriever replaces other elements of the search API that also return top documents such as query and knn.
 ** *`script_fields` (Optional, Record<string, { script, ignore_failure }>)*: Retrieve a script evaluation (based on different fields) for each hit.
 ** *`search_after` (Optional, number | number | string | boolean | null | User-defined value[])*: Used to retrieve the next page of hits using a set of sort values from the previous page.
 ** *`size` (Optional, number)*: The number of hits to return.
@@ -926,7 +959,8 @@ Query parameter searches do not support the full Elasticsearch Query DSL but are
 
 [discrete]
 === search_mvt
-Searches a vector tile for geospatial values. Returns results as a binary Mapbox vector tile.
+Search a vector tile.
+Searches a vector tile for geospatial values.
 
 {ref}/search-vector-tile-api.html[Endpoint documentation]
 [source,ts]
@@ -942,7 +976,7 @@ client.searchMvt({ index, field, zoom, x, y })
 ** *`zoom` (number)*: Zoom level for the vector tile to search
 ** *`x` (number)*: X coordinate for the vector tile to search
 ** *`y` (number)*: Y coordinate for the vector tile to search
-** *`aggs` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, cardinality, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: Sub-aggregations for the geotile_grid.
+** *`aggs` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, bucket_count_ks_test, bucket_correlation, cardinality, categorize_text, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: Sub-aggregations for the geotile_grid.
 
 Supports the following aggregation types:
 - avg
@@ -969,7 +1003,7 @@ don’t include the aggs layer.
 each feature represents a geotile_grid cell. If 'grid' each feature is a Polygon
 of the cells bounding box. If 'point' each feature is a Point that is the centroid
 of the cell.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Query DSL used to filter documents for the search.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Query DSL used to filter documents for the search.
 ** *`runtime_mappings` (Optional, Record<string, { fetch_fields, format, input_field, target_field, target_index, script, type }>)*: Defines one or more runtime fields in the search request. These fields take
 precedence over mapped fields with the same name.
 ** *`size` (Optional, number)*: Maximum number of features to return in the hits layer. Accepts 0-10000.
@@ -985,7 +1019,7 @@ suggested label positions for the original features.
 
 [discrete]
 === search_template
-Allows to use the Mustache language to pre-render a search definition.
+Runs a search with a search template.
 
 {ref}/search-template.html[Endpoint documentation]
 [source,ts]
@@ -1024,6 +1058,7 @@ Random by default.
 ** *`scroll` (Optional, string | -1 | 0)*: Specifies how long a consistent view of the index
 should be maintained for scrolled search.
 ** *`search_type` (Optional, Enum("query_then_fetch" | "dfs_query_then_fetch"))*: The type of the search operation.
+** *`rest_total_hits_as_int` (Optional, boolean)*: If true, hits.total are rendered as an integer in the response.
 ** *`typed_keys` (Optional, boolean)*: If `true`, the response prefixes aggregation and suggester names with their respective types.
 
 [discrete]
@@ -1044,12 +1079,13 @@ client.termsEnum({ index, field })
 ** *`size` (Optional, number)*: How many matching terms to return.
 ** *`timeout` (Optional, string | -1 | 0)*: The maximum length of time to spend collecting results. Defaults to "1s" (one second). If the timeout is exceeded the complete flag set to false in the response and the results may be partial or empty.
 ** *`case_insensitive` (Optional, boolean)*: When true the provided search string is matched against index terms without case sensitivity.
-** *`index_filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Allows to filter an index shard if the provided query rewrites to match_none.
+** *`index_filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Allows to filter an index shard if the provided query rewrites to match_none.
 ** *`string` (Optional, string)*: The string after which terms in the index should be returned. Allows for a form of pagination if the last result from one request is passed as the search_after parameter for a subsequent request.
 ** *`search_after` (Optional, string)*
 
 [discrete]
 === termvectors
+Get term vector information.
 Returns information and statistics about terms in the fields of a particular document.
 
 {ref}/docs-termvectors.html[Endpoint documentation]
@@ -1082,7 +1118,8 @@ Random by default.
 
 [discrete]
 === update
-Updates a document with a script or partial document.
+Update a document.
+Updates a document by running a script or passing a partial document.
 
 {ref}/docs-update.html[Endpoint documentation]
 [source,ts]
@@ -1099,7 +1136,7 @@ client.update({ id, index })
 to 'noop' if no change to the document occurred.
 ** *`doc` (Optional, object)*: A partial update to an existing document.
 ** *`doc_as_upsert` (Optional, boolean)*: Set to true to use the contents of 'doc' as the value of 'upsert'
-** *`script` (Optional, { lang, options, source } | { id })*: Script to execute to update the document.
+** *`script` (Optional, { source, id, params, lang, options })*: Script to execute to update the document.
 ** *`scripted_upsert` (Optional, boolean)*: Set to true to execute the script whether or not the document exists.
 ** *`_source` (Optional, boolean | { excludes, includes })*: Set to false to disable source retrieval. You can also specify a comma-separated
 list of the fields you want to retrieve.
@@ -1125,9 +1162,9 @@ Set to 'all' or any positive integer up to the total number of shards in the ind
 
 [discrete]
 === update_by_query
-Updates documents that match the specified query. If no query is specified,
- performs an update on every document in the index without changing the source,
-for example to pick up a mapping change.
+Update documents.
+Updates documents that match the specified query.
+If no query is specified, performs an update on every document in the data stream or index without modifying the source, which is useful for picking up mapping changes.
 
 {ref}/docs-update-by-query.html[Endpoint documentation]
 [source,ts]
@@ -1142,8 +1179,8 @@ client.updateByQuery({ index })
 Supports wildcards (`*`).
 To search all data streams or indices, omit this parameter or use `*` or `_all`.
 ** *`max_docs` (Optional, number)*: The maximum number of documents to update.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Specifies the documents to update using the Query DSL.
-** *`script` (Optional, { lang, options, source } | { id })*: The script to run to update the document source or metadata when updating.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Specifies the documents to update using the Query DSL.
+** *`script` (Optional, { source, id, params, lang, options })*: The script to run to update the document source or metadata when updating.
 ** *`slice` (Optional, { field, id, max })*: Slice the request manually using the provided slice ID and total number of slices.
 ** *`conflicts` (Optional, Enum("abort" | "proceed"))*: What to do if update by query hits version conflicts: `abort` or `proceed`.
 ** *`allow_no_indices` (Optional, boolean)*: If `false`, the request returns an error if any wildcard expression, index alias, or `_all` value targets only missing or closed indices.
@@ -1194,7 +1231,10 @@ Set to `all` or any positive integer up to the total number of shards in the ind
 === async_search
 [discrete]
 ==== delete
-Deletes an async search by ID. If the search is still running, the search request will be cancelled. Otherwise, the saved search results are deleted.
+Deletes an async search by identifier.
+If the search is still running, the search request will be cancelled.
+Otherwise, the saved search results are deleted.
+If the Elasticsearch security features are enabled, the deletion of a specific async search is restricted to: the authenticated user that submitted the original search request; users that have the `cancel_task` cluster privilege.
 
 {ref}/async-search.html[Endpoint documentation]
 [source,ts]
@@ -1210,7 +1250,8 @@ client.asyncSearch.delete({ id })
 
 [discrete]
 ==== get
-Retrieves the results of a previously submitted async search request given its ID.
+Retrieves the results of a previously submitted async search request given its identifier.
+If the Elasticsearch security features are enabled, access to the results of a specific async search is restricted to the user or API key that submitted it.
 
 {ref}/async-search.html[Endpoint documentation]
 [source,ts]
@@ -1235,7 +1276,9 @@ By default no timeout is set meaning that the currently available results will b
 
 [discrete]
 ==== status
-Retrieves the status of a previously submitted async search request given its ID.
+Get async search status
+Retrieves the status of a previously submitted async search request given its identifier, without retrieving search results.
+If the Elasticsearch security features are enabled, use of this API is restricted to the `monitoring_user` role.
 
 {ref}/async-search.html[Endpoint documentation]
 [source,ts]
@@ -1251,7 +1294,11 @@ client.asyncSearch.status({ id })
 
 [discrete]
 ==== submit
-Executes a search request asynchronously.
+Runs a search request asynchronously.
+When the primary sort of the results is an indexed field, shards get sorted based on minimum and maximum value that they hold for that field, hence partial results become available following the sort criteria that was requested.
+Warning: Async search does not support scroll nor search requests that only include the suggest section.
+By default, Elasticsearch doesn’t allow you to store an async search response larger than 10Mb and an attempt to do this results in an error.
+The maximum allowed size for a stored async search response can be set by changing the `search.max_async_search_response_size` cluster level setting.
 
 {ref}/async-search.html[Endpoint documentation]
 [source,ts]
@@ -1264,7 +1311,7 @@ client.asyncSearch.submit({ ... })
 
 * *Request (object):*
 ** *`index` (Optional, string | string[])*: A list of index names to search; use `_all` or empty string to perform the operation on all indices
-** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, cardinality, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*
+** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, bucket_count_ks_test, bucket_correlation, cardinality, categorize_text, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*
 ** *`collapse` (Optional, { field, inner_hits, max_concurrent_group_searches, collapse })*
 ** *`explain` (Optional, boolean)*: If true, returns detailed information about score computation as part of a hit.
 ** *`ext` (Optional, Record<string, User-defined value>)*: Configuration of search extensions defined by Elasticsearch plugins.
@@ -1279,11 +1326,12 @@ Defaults to 10,000 hits.
 ** *`indices_boost` (Optional, Record<string, number>[])*: Boosts the _score of documents from specified indices.
 ** *`docvalue_fields` (Optional, { field, format, include_unmapped }[])*: Array of wildcard (*) patterns. The request returns doc values for field
 names matching these patterns in the hits.fields property of the response.
+** *`knn` (Optional, { field, query_vector, query_vector_builder, k, num_candidates, boost, filter, similarity, inner_hits } | { field, query_vector, query_vector_builder, k, num_candidates, boost, filter, similarity, inner_hits }[])*: Defines the approximate kNN search to run.
 ** *`min_score` (Optional, number)*: Minimum _score for matching documents. Documents with a lower _score are
 not included in the search results.
-** *`post_filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*
+** *`post_filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*
 ** *`profile` (Optional, boolean)*
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Defines the search definition using the Query DSL.
 ** *`rescore` (Optional, { window_size, query, learning_to_rank } | { window_size, query, learning_to_rank }[])*
 ** *`script_fields` (Optional, Record<string, { script, ignore_failure }>)*: Retrieve a script evaluation (based on different fields) for each hit.
 ** *`search_after` (Optional, number | number | string | boolean | null | User-defined value[])*
@@ -1358,7 +1406,11 @@ A partial reduction is performed every time the coordinating node has received a
 === cat
 [discrete]
 ==== aliases
-Shows information about currently configured aliases to indices including filter and routing infos.
+Get aliases.
+Retrieves the cluster’s index aliases, including filter and routing information.
+The API does not return data stream aliases.
+> info
+> CAT APIs are only intended for human consumption using the command line or the Kibana console. They are not intended for use by applications. For application consumption, use [the /_alias endpoints](#endpoint-alias).
 
 {ref}/cat-alias.html[Endpoint documentation]
 [source,ts]
@@ -1375,7 +1427,12 @@ client.cat.aliases({ ... })
 
 [discrete]
 ==== component_templates
-Returns information about existing component_templates templates.
+Get component templates.
+Returns information about component templates in a cluster.
+Component templates are building blocks for constructing index templates that specify index mappings, settings, and aliases.
+> info
+> CAT APIs are only intended for human consumption using the command line or Kibana console.
+They are not intended for use by applications. For application consumption, use [the /_component_template endpoints](#endpoint-component-template).
 
 {ref}/cat-component-templates.html[Endpoint documentation]
 [source,ts]
@@ -1391,7 +1448,12 @@ client.cat.componentTemplates({ ... })
 
 [discrete]
 ==== count
-Provides quick access to the document count of the entire cluster, or individual indices.
+Get a document count.
+Provides quick access to a document count for a data stream, an index, or an entire cluster.n/
+The document count only includes live documents, not deleted documents which have not yet been removed by the merge process.
+> info
+> CAT APIs are only intended for human consumption using the command line or Kibana console.
+They are not intended for use by applications. For application consumption, use [the /_count endpoints](#endpoint-count).
 
 {ref}/cat-count.html[Endpoint documentation]
 [source,ts]
@@ -1408,7 +1470,8 @@ Supports wildcards (`*`). To target all data streams and indices, omit this para
 
 [discrete]
 ==== help
-Returns help for the Cat APIs.
+Get CAT help.
+Returns help for the CAT APIs.
 
 {ref}/cat.html[Endpoint documentation]
 [source,ts]
@@ -1419,7 +1482,21 @@ client.cat.help()
 
 [discrete]
 ==== indices
-Returns information about indices: number of primaries and replicas, document counts, disk size, ...
+Get index information.
+Returns high-level information about indices in a cluster, including backing indices for data streams.
+> info
+> CAT APIs are only intended for human consumption using the command line or Kibana console.
+They are not intended for use by applications. For application consumption, use an index endpoint.
+
+Use this request to get the following information for each index in a cluster:
+- shard count
+- document count
+- deleted document count
+- primary store size
+- total store size of all shards, including shard replicas
+
+These metrics are retrieved directly from Lucene, which Elasticsearch uses internally to power indexing and search. As a result, all document counts include hidden nested documents.
+To get an accurate count of Elasticsearch documents, use the [/_cat/count](#operation-cat-count) or [count](#endpoint-count) endpoints.
 
 {ref}/cat-indices.html[Endpoint documentation]
 [source,ts]
@@ -1442,7 +1519,13 @@ Supports wildcards (`*`). To target all data streams and indices, omit this para
 
 [discrete]
 ==== ml_data_frame_analytics
-Gets configuration and usage information about data frame analytics jobs.
+Get data frame analytics jobs.
+Returns configuration and usage information about data frame analytics jobs.
+
+> info
+> CAT APIs are only intended for human consumption using the Kibana
+console or command line. They are not intended for use by applications. For
+application consumption, use [the /_ml/data_frame/analytics endpoints](#endpoint-ml).
 
 {ref}/cat-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -1464,7 +1547,16 @@ response.
 
 [discrete]
 ==== ml_datafeeds
-Gets configuration and usage information about datafeeds.
+Get datafeeds.
+Returns configuration and usage information about datafeeds.
+This API returns a maximum of 10,000 datafeeds.
+If the Elasticsearch security features are enabled, you must have `monitor_ml`, `monitor`, `manage_ml`, or `manage`
+cluster privileges to use this API.
+
+> info
+> CAT APIs are only intended for human consumption using the Kibana
+console or command line. They are not intended for use by applications. For
+application consumption, use [the /_ml/datafeeds endpoints](#endpoint-ml).
 
 {ref}/cat-datafeeds.html[Endpoint documentation]
 [source,ts]
@@ -1492,7 +1584,16 @@ partial matches.
 
 [discrete]
 ==== ml_jobs
-Gets configuration and usage information about anomaly detection jobs.
+Get anomaly detection jobs.
+Returns configuration and usage information for anomaly detection jobs.
+This API returns a maximum of 10,000 jobs.
+If the Elasticsearch security features are enabled, you must have `monitor_ml`,
+`monitor`, `manage_ml`, or `manage` cluster privileges to use this API.
+
+> info
+> CAT APIs are only intended for human consumption using the Kibana
+console or command line. They are not intended for use by applications. For
+application consumption, use [the /_ml/anomaly_detectors endpoints](#endpoint-ml).
 
 {ref}/cat-anomaly-detectors.html[Endpoint documentation]
 [source,ts]
@@ -1521,7 +1622,13 @@ matches.
 
 [discrete]
 ==== ml_trained_models
-Gets configuration and usage information about inference trained models.
+Get trained models.
+Returns configuration and usage information about inference trained models.
+
+> info
+> CAT APIs are only intended for human consumption using the Kibana
+console or command line. They are not intended for use by applications. For
+application consumption, use [the /_ml/trained_models endpoints](#endpoint-ml).
 
 {ref}/cat-trained-model.html[Endpoint documentation]
 [source,ts]
@@ -1545,7 +1652,13 @@ If `false`, the API returns a 404 status code when there are no matches or only 
 
 [discrete]
 ==== transforms
-Gets configuration and usage information about transforms.
+Get transforms.
+Returns configuration and usage information about transforms.
+
+> info
+> CAT APIs are only intended for human consumption using the Kibana
+console or command line. They are not intended for use by applications. For
+application consumption, use [the /_transform endpoints](#endpoint-transform).
 
 {ref}/cat-transforms.html[Endpoint documentation]
 [source,ts]
@@ -1572,7 +1685,9 @@ If `false`, the request returns a 404 status code when there are no matches or o
 === cluster
 [discrete]
 ==== delete_component_template
-Deletes a component template
+Delete component templates.
+Deletes component templates.
+Component templates are building blocks for constructing index templates that specify index mappings, settings, and aliases.
 
 {ref}/indices-component-template.html[Endpoint documentation]
 [source,ts]
@@ -1592,7 +1707,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== exists_component_template
-Returns information about whether a particular component template exist
+Check component templates.
+Returns information about whether a particular component template exists.
 
 {ref}/indices-component-template.html[Endpoint documentation]
 [source,ts]
@@ -1614,7 +1730,8 @@ Defaults to false, which means information is retrieved from the master node.
 
 [discrete]
 ==== get_component_template
-Returns one or more component templates
+Get component templates.
+Retrieves information about component templates.
 
 {ref}/indices-component-template.html[Endpoint documentation]
 [source,ts]
@@ -1629,6 +1746,7 @@ client.cluster.getComponentTemplate({ ... })
 ** *`name` (Optional, string)*: List of component template names used to limit the request.
 Wildcard (`*`) expressions are supported.
 ** *`flat_settings` (Optional, boolean)*: If `true`, returns settings in flat format.
+** *`include_defaults` (Optional, boolean)*: Return all default configurations for the component template (default: false)
 ** *`local` (Optional, boolean)*: If `true`, the request retrieves information from the local node only.
 If `false`, information is retrieved from the master node.
 ** *`master_timeout` (Optional, string | -1 | 0)*: Period to wait for a connection to the master node.
@@ -1636,7 +1754,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== info
-Returns different information about the cluster.
+Get cluster info.
+Returns basic information about the cluster.
 
 {ref}/cluster-info.html[Endpoint documentation]
 [source,ts]
@@ -1652,7 +1771,22 @@ client.cluster.info({ target })
 
 [discrete]
 ==== put_component_template
-Creates or updates a component template
+Create or update a component template.
+Creates or updates a component template.
+Component templates are building blocks for constructing index templates that specify index mappings, settings, and aliases.
+
+An index template can be composed of multiple component templates.
+To use a component template, specify it in an index template’s `composed_of` list.
+Component templates are only applied to new data streams and indices as part of a matching index template.
+
+Settings and mappings specified directly in the index template or the create index request override any settings or mappings specified in a component template.
+
+Component templates are only used during index creation.
+For data streams, this includes data stream creation and the creation of a stream’s backing indices.
+Changes to component templates do not affect existing indices, including a stream’s backing indices.
+
+You can use C-style `/* *\/` block comments in component templates.
+You can include comments anywhere in the request body except before the opening curly bracket.
 
 {ref}/indices-component-template.html[Endpoint documentation]
 [source,ts]
@@ -1669,7 +1803,7 @@ Elasticsearch includes the following built-in component templates: `logs-mapping
 Elastic Agent uses these templates to configure backing indices for its data streams.
 If you use Elastic Agent and want to overwrite one of these templates, set the `version` for your replacement template higher than the current version.
 If you don’t use Elastic Agent and want to disable all built-in component and index templates, set `stack.templates.enabled` to `false` using the cluster update settings API.
-** *`template` ({ aliases, mappings, settings, defaults, data_stream })*: The template to be applied which includes mappings, settings, or aliases configuration.
+** *`template` ({ aliases, mappings, settings, defaults, data_stream, lifecycle })*: The template to be applied which includes mappings, settings, or aliases configuration.
 ** *`version` (Optional, number)*: Version number used to manage component templates externally.
 This number isn't automatically generated or incremented by Elasticsearch.
 To unset a version, replace the template without specifying a version.
@@ -1687,6 +1821,7 @@ If no response is received before the timeout expires, the request fails and ret
 === enrich
 [discrete]
 ==== delete_policy
+Delete an enrich policy.
 Deletes an existing enrich policy and its enrich index.
 
 {ref}/delete-enrich-policy-api.html[Endpoint documentation]
@@ -1720,7 +1855,8 @@ client.enrich.executePolicy({ name })
 
 [discrete]
 ==== get_policy
-Gets information about an enrich policy.
+Get an enrich policy.
+Returns information about an enrich policy.
 
 {ref}/get-enrich-policy-api.html[Endpoint documentation]
 [source,ts]
@@ -1737,7 +1873,8 @@ To return information for all enrich policies, omit this parameter.
 
 [discrete]
 ==== put_policy
-Creates a new enrich policy.
+Create an enrich policy.
+Creates an enrich policy.
 
 {ref}/put-enrich-policy-api.html[Endpoint documentation]
 [source,ts]
@@ -1756,7 +1893,8 @@ client.enrich.putPolicy({ name })
 
 [discrete]
 ==== stats
-Gets enrich coordinator statistics and information about enrich policies that are currently executing.
+Get enrich stats.
+Returns enrich coordinator statistics and information about enrich policies that are currently executing.
 
 {ref}/enrich-stats-api.html[Endpoint documentation]
 [source,ts]
@@ -1769,7 +1907,8 @@ client.enrich.stats()
 === eql
 [discrete]
 ==== delete
-Deletes an async EQL search by ID. If the search is still running, the search request will be cancelled. Otherwise, the saved search results are deleted.
+Deletes an async EQL search or a stored synchronous EQL search.
+The API also deletes results for the search.
 
 {ref}/eql-search-api.html[Endpoint documentation]
 [source,ts]
@@ -1787,7 +1926,7 @@ A search ID is also provided if the request’s `keep_on_completion` parameter i
 
 [discrete]
 ==== get
-Returns async results from previously executed Event Query Language (EQL) search
+Returns the current status and available results for an async EQL search or a stored synchronous EQL search.
 
 {ref}/get-async-eql-search-api.html[Endpoint documentation]
 [source,ts]
@@ -1807,7 +1946,7 @@ Defaults to no timeout, meaning the request waits for complete search results.
 
 [discrete]
 ==== get_status
-Returns the status of a previously submitted async or stored Event Query Language (EQL) search
+Returns the current status for an async EQL search or a stored synchronous EQL search without returning results.
 
 {ref}/get-async-eql-status-api.html[Endpoint documentation]
 [source,ts]
@@ -1842,13 +1981,14 @@ client.eql.search({ index, query })
 ** *`tiebreaker_field` (Optional, string)*: Field used to sort hits with the same timestamp in ascending order
 ** *`timestamp_field` (Optional, string)*: Field containing event timestamp. Default "@timestamp"
 ** *`fetch_size` (Optional, number)*: Maximum number of events to search at a time for sequence queries.
-** *`filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type } | { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type }[])*: Query, written in Query DSL, used to filter the events on which the EQL query runs.
+** *`filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type } | { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type }[])*: Query, written in Query DSL, used to filter the events on which the EQL query runs.
 ** *`keep_alive` (Optional, string | -1 | 0)*
 ** *`keep_on_completion` (Optional, boolean)*
 ** *`wait_for_completion_timeout` (Optional, string | -1 | 0)*
 ** *`size` (Optional, number)*: For basic queries, the maximum number of matching events to return. Defaults to 10
 ** *`fields` (Optional, { field, format, include_unmapped } | { field, format, include_unmapped }[])*: Array of wildcard (*) patterns. The response returns values for field names matching these patterns in the fields property of each hit.
 ** *`result_position` (Optional, Enum("tail" | "head"))*
+** *`runtime_mappings` (Optional, Record<string, { fetch_fields, format, input_field, target_field, target_index, script, type }>)*
 ** *`allow_no_indices` (Optional, boolean)*
 ** *`expand_wildcards` (Optional, Enum("all" | "open" | "closed" | "hidden" | "none") | Enum("all" | "open" | "closed" | "hidden" | "none")[])*
 ** *`ignore_unavailable` (Optional, boolean)*: If true, missing or closed indices are not included in the response.
@@ -1857,7 +1997,7 @@ client.eql.search({ index, query })
 === esql
 [discrete]
 ==== query
-Executes an ESQL request
+Executes an ES|QL request
 
 {ref}/esql-rest.html[Endpoint documentation]
 [source,ts]
@@ -1871,17 +2011,25 @@ client.esql.query({ query })
 * *Request (object):*
 ** *`query` (string)*: The ES|QL query API accepts an ES|QL query string in the query parameter, runs it, and returns the results.
 ** *`columnar` (Optional, boolean)*: By default, ES|QL returns results as rows. For example, FROM returns each individual document as one row. For the JSON, YAML, CBOR and smile formats, ES|QL can return the results in a columnar fashion where one row represents all the values of a certain column in the results.
-** *`filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Specify a Query DSL query in the filter parameter to filter the set of documents that an ES|QL query runs on.
+** *`filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Specify a Query DSL query in the filter parameter to filter the set of documents that an ES|QL query runs on.
 ** *`locale` (Optional, string)*
-** *`params` (Optional, number | number | string | boolean | null[])*: To avoid any attempts of hacking or code injection, extract the values in a separate list of parameters. Use question mark placeholders (?) in the query string for each of the parameters.
+** *`params` (Optional, number | number | string | boolean | null | User-defined value[])*: To avoid any attempts of hacking or code injection, extract the values in a separate list of parameters. Use question mark placeholders (?) in the query string for each of the parameters.
+** *`profile` (Optional, boolean)*: If provided and `true` the response will include an extra `profile` object
+with information on how the query was executed. This information is for human debugging
+and its format can change at any time but it can give some insight into the performance
+of each part of the query.
+** *`tables` (Optional, Record<string, Record<string, { integer, keyword, long, double }>>)*: Tables to use with the LOOKUP operation. The top level key is the table
+name and the next level key is the column name.
 ** *`format` (Optional, string)*: A short version of the Accept header, e.g. json, yaml.
 ** *`delimiter` (Optional, string)*: The character to use between values within a CSV row. Only valid for the CSV format.
+** *`drop_null_columns` (Optional, boolean)*: Should columns that are entirely `null` be removed from the `columns` and `values` portion of the results?
+Defaults to `false`. If `true` then the response will include an extra section under the name `all_columns` which has the name of all columns.
 
 [discrete]
 === graph
 [discrete]
 ==== explore
-Explore extracted and summarized information about the documents and terms in an index.
+Extracts and summarizes information about the documents and terms in an Elasticsearch data stream or index.
 
 {ref}/graph-explore-api.html[Endpoint documentation]
 [source,ts]
@@ -1896,7 +2044,7 @@ client.graph.explore({ index })
 ** *`index` (string | string[])*: Name of the index.
 ** *`connections` (Optional, { connections, query, vertices })*: Specifies or more fields from which you want to extract terms that are associated with the specified vertices.
 ** *`controls` (Optional, { sample_diversity, sample_size, timeout, use_significance })*: Direct the Graph API how to build the graph.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: A seed query that identifies the documents of interest. Can be any valid Elasticsearch query.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: A seed query that identifies the documents of interest. Can be any valid Elasticsearch query.
 ** *`vertices` (Optional, { exclude, field, include, min_doc_count, shard_min_doc_count, size }[])*: Specifies one or more fields that contain the terms you want to include in the graph as vertices.
 ** *`routing` (Optional, string)*: Custom value used to route operations to a specific shard.
 ** *`timeout` (Optional, string | -1 | 0)*: Specifies the period of time to wait for a response from each shard.
@@ -1907,7 +2055,8 @@ Defaults to no timeout.
 === indices
 [discrete]
 ==== add_block
-Adds a block to an index.
+Add an index block.
+Limits the operations allowed on an index by blocking specific operation types.
 
 {ref}/index-modules-blocks.html[Endpoint documentation]
 [source,ts]
@@ -1929,7 +2078,7 @@ client.indices.addBlock({ index, block })
 
 [discrete]
 ==== analyze
-Performs the analysis process on a text and return the tokens breakdown of the text.
+Performs analysis on a text string and returns the resulting tokens.
 
 {ref}/indices-analyze.html[Endpoint documentation]
 [source,ts]
@@ -1960,7 +2109,8 @@ If an array of strings is provided, it is analyzed as a multi-value field.
 
 [discrete]
 ==== create
-Creates an index with optional settings and mappings.
+Create an index.
+Creates a new index.
 
 {ref}/indices-create-index.html[Endpoint documentation]
 [source,ts]
@@ -1974,7 +2124,7 @@ client.indices.create({ index })
 * *Request (object):*
 ** *`index` (string)*: Name of the index you wish to create.
 ** *`aliases` (Optional, Record<string, { filter, index_routing, is_hidden, is_write_index, routing, search_routing }>)*: Aliases for the index.
-** *`mappings` (Optional, { all_field, date_detection, dynamic, dynamic_date_formats, dynamic_templates, _field_names, index_field, _meta, numeric_detection, properties, _routing, _size, _source, runtime, enabled, subobjects })*: Mapping for fields in the index. If specified, this mapping can include:
+** *`mappings` (Optional, { all_field, date_detection, dynamic, dynamic_date_formats, dynamic_templates, _field_names, index_field, _meta, numeric_detection, properties, _routing, _size, _source, runtime, enabled, subobjects, _data_stream_timestamp })*: Mapping for fields in the index. If specified, this mapping can include:
 - Field names
 - Field data types
 - Mapping parameters
@@ -1988,7 +2138,9 @@ Set to `all` or any positive integer up to the total number of shards in the ind
 
 [discrete]
 ==== create_data_stream
-Creates a data stream
+Create a data stream.
+Creates a data stream.
+You must have a matching index template with data stream enabled.
 
 {ref}/data-streams.html[Endpoint documentation]
 [source,ts]
@@ -2009,7 +2161,8 @@ Cannot be longer than 255 bytes. Multi-byte characters count towards this limit 
 
 [discrete]
 ==== data_streams_stats
-Provides statistics on operations happening in a data stream.
+Get data stream stats.
+Retrieves statistics for one or more data streams.
 
 {ref}/data-streams.html[Endpoint documentation]
 [source,ts]
@@ -2029,7 +2182,8 @@ Supports a list of values, such as `open,hidden`.
 
 [discrete]
 ==== delete
-Deletes an index.
+Delete indices.
+Deletes one or more indices.
 
 {ref}/indices-delete-index.html[Endpoint documentation]
 [source,ts]
@@ -2059,7 +2213,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== delete_alias
-Deletes an alias.
+Delete an alias.
+Removes a data stream or index from an alias.
 
 {ref}/indices-aliases.html[Endpoint documentation]
 [source,ts]
@@ -2082,7 +2237,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== delete_data_lifecycle
-Deletes the data stream lifecycle of the selected data streams.
+Delete data stream lifecycles.
+Removes the data stream lifecycle from a data stream, rendering it not managed by the data stream lifecycle.
 
 {ref}/data-streams-delete-lifecycle.html[Endpoint documentation]
 [source,ts]
@@ -2101,7 +2257,8 @@ client.indices.deleteDataLifecycle({ name })
 
 [discrete]
 ==== delete_data_stream
-Deletes a data stream.
+Delete data streams.
+Deletes one or more data streams and their backing indices.
 
 {ref}/data-streams.html[Endpoint documentation]
 [source,ts]
@@ -2118,7 +2275,10 @@ client.indices.deleteDataStream({ name })
 
 [discrete]
 ==== delete_index_template
-Deletes an index template.
+Delete an index template.
+The provided <index-template> may contain multiple template names separated by a comma. If multiple template
+names are specified then there is no wildcard support and the provided names should match completely with
+existing templates.
 
 {ref}/indices-delete-template.html[Endpoint documentation]
 [source,ts]
@@ -2136,7 +2296,8 @@ client.indices.deleteIndexTemplate({ name })
 
 [discrete]
 ==== exists
-Returns information about whether a particular index exists.
+Check indices.
+Checks if one or more indices, index aliases, or data streams exist.
 
 {ref}/indices-exists.html[Endpoint documentation]
 [source,ts]
@@ -2162,7 +2323,8 @@ Valid values are: `all`, `open`, `closed`, `hidden`, `none`.
 
 [discrete]
 ==== exists_alias
-Returns information about whether a particular alias exists.
+Check aliases.
+Checks if one or more data stream or index aliases exist.
 
 {ref}/indices-aliases.html[Endpoint documentation]
 [source,ts]
@@ -2205,7 +2367,8 @@ client.indices.existsIndexTemplate({ name })
 
 [discrete]
 ==== explain_data_lifecycle
-Retrieves information about the index's current data stream lifecycle, such as any potential encountered error, time since creation etc.
+Get the status for a data stream lifecycle.
+Retrieves information about an index or data stream’s current data stream lifecycle status, such as time since index creation, time since rollover, the lifecycle configuration managing the index, or any errors encountered during lifecycle execution.
 
 {ref}/data-streams-explain-lifecycle.html[Endpoint documentation]
 [source,ts]
@@ -2223,7 +2386,9 @@ client.indices.explainDataLifecycle({ index })
 
 [discrete]
 ==== get
-Returns information about one or more indices.
+Get index information.
+Returns information about one or more indices. For data streams, the API returns information about the
+stream’s backing indices.
 
 {ref}/indices-get-index.html[Endpoint documentation]
 [source,ts]
@@ -2248,10 +2413,12 @@ such as open,hidden.
 ** *`include_defaults` (Optional, boolean)*: If true, return all default settings in the response.
 ** *`local` (Optional, boolean)*: If true, the request retrieves information from the local node only. Defaults to false, which means information is retrieved from the master node.
 ** *`master_timeout` (Optional, string | -1 | 0)*: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+** *`features` (Optional, { name, description } | { name, description }[])*: Return only information on specified index features
 
 [discrete]
 ==== get_alias
-Returns an alias.
+Get aliases.
+Retrieves information for one or more data stream or index aliases.
 
 {ref}/indices-aliases.html[Endpoint documentation]
 [source,ts]
@@ -2280,7 +2447,8 @@ Valid values are: `all`, `open`, `closed`, `hidden`, `none`.
 
 [discrete]
 ==== get_data_lifecycle
-Returns the data stream lifecycle of the selected data streams.
+Get data stream lifecycles.
+Retrieves the data stream lifecycle configuration of one or more data streams.
 
 {ref}/data-streams-get-lifecycle.html[Endpoint documentation]
 [source,ts]
@@ -2302,7 +2470,8 @@ Valid values are: `all`, `open`, `closed`, `hidden`, `none`.
 
 [discrete]
 ==== get_data_stream
-Returns data streams.
+Get data streams.
+Retrieves information about one or more data streams.
 
 {ref}/data-streams.html[Endpoint documentation]
 [source,ts]
@@ -2318,10 +2487,12 @@ client.indices.getDataStream({ ... })
 Wildcard (`*`) expressions are supported. If omitted, all data streams are returned.
 ** *`expand_wildcards` (Optional, Enum("all" | "open" | "closed" | "hidden" | "none") | Enum("all" | "open" | "closed" | "hidden" | "none")[])*: Type of data stream that wildcard patterns can match.
 Supports a list of values, such as `open,hidden`.
+** *`include_defaults` (Optional, boolean)*: If true, returns all relevant default configurations for the index template.
 
 [discrete]
 ==== get_index_template
-Returns an index template.
+Get index templates.
+Returns information about one or more index templates.
 
 {ref}/indices-get-template.html[Endpoint documentation]
 [source,ts]
@@ -2337,10 +2508,13 @@ client.indices.getIndexTemplate({ ... })
 ** *`local` (Optional, boolean)*: If true, the request retrieves information from the local node only. Defaults to false, which means information is retrieved from the master node.
 ** *`flat_settings` (Optional, boolean)*: If true, returns settings in flat format.
 ** *`master_timeout` (Optional, string | -1 | 0)*: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+** *`include_defaults` (Optional, boolean)*: If true, returns all relevant default configurations for the index template.
 
 [discrete]
 ==== get_mapping
-Returns mappings for one or more indices.
+Get mapping definitions.
+Retrieves mapping definitions for one or more indices.
+For data streams, the API retrieves mappings for the stream’s backing indices.
 
 {ref}/indices-get-mapping.html[Endpoint documentation]
 [source,ts]
@@ -2368,7 +2542,9 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== get_settings
-Returns settings for one or more indices.
+Get index settings.
+Returns setting information for one or more indices. For data streams,
+returns setting information for the stream’s backing indices.
 
 {ref}/indices-get-settings.html[Endpoint documentation]
 [source,ts]
@@ -2403,7 +2579,17 @@ error.
 
 [discrete]
 ==== migrate_to_data_stream
-Migrates an alias to a data stream
+Convert an index alias to a data stream.
+Converts an index alias to a data stream.
+You must have a matching index template that is data stream enabled.
+The alias must meet the following criteria:
+The alias must have a write index;
+All indices for the alias must have a `@timestamp` field mapping of a `date` or `date_nanos` field type;
+The alias must not have any filters;
+The alias must not use custom routing.
+If successful, the request removes the alias and creates a data stream with the same name.
+The indices for the alias become hidden backing indices for the stream.
+The write index for the alias becomes the write index for the stream.
 
 {ref}/data-streams.html[Endpoint documentation]
 [source,ts]
@@ -2419,7 +2605,8 @@ client.indices.migrateToDataStream({ name })
 
 [discrete]
 ==== modify_data_stream
-Modifies a data stream
+Update data streams.
+Performs one or more data stream modification actions in a single atomic operation.
 
 {ref}/data-streams.html[Endpoint documentation]
 [source,ts]
@@ -2435,7 +2622,8 @@ client.indices.modifyDataStream({ actions })
 
 [discrete]
 ==== put_alias
-Creates or updates an alias.
+Create or update an alias.
+Adds a data stream or index to an alias.
 
 {ref}/indices-aliases.html[Endpoint documentation]
 [source,ts]
@@ -2453,7 +2641,7 @@ Wildcard patterns that match both data streams and indices return an error.
 ** *`name` (string)*: Alias to update.
 If the alias doesn’t exist, the request creates it.
 Index alias names support date math.
-** *`filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Query used to limit documents the alias can access.
+** *`filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Query used to limit documents the alias can access.
 ** *`index_routing` (Optional, string)*: Value used to route indexing operations to a specific shard.
 If specified, this overwrites the `routing` value for indexing operations.
 Data stream aliases don’t support this parameter.
@@ -2473,7 +2661,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== put_data_lifecycle
-Updates the data stream lifecycle of the selected data streams.
+Update data stream lifecycles.
+Update the data stream lifecycle of the specified data streams.
 
 {ref}/data-streams-put-lifecycle.html[Endpoint documentation]
 [source,ts]
@@ -2504,7 +2693,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== put_index_template
-Creates or updates an index template.
+Create or update an index template.
+Index templates define settings, mappings, and aliases that can be applied automatically to new indices.
 
 {ref}/indices-put-template.html[Endpoint documentation]
 [source,ts]
@@ -2520,7 +2710,7 @@ client.indices.putIndexTemplate({ name })
 ** *`index_patterns` (Optional, string | string[])*: Name of the index template to create.
 ** *`composed_of` (Optional, string[])*: An ordered list of component template names.
 Component templates are merged in the order specified, meaning that the last component template specified has the highest precedence.
-** *`template` (Optional, { aliases, mappings, settings })*: Template to be applied.
+** *`template` (Optional, { aliases, mappings, settings, lifecycle })*: Template to be applied.
 It may optionally include an `aliases`, `mappings`, or `settings` configuration.
 ** *`data_stream` (Optional, { hidden })*: If this object is included, the template is used to create data streams and their backing indices.
 Supports an empty object.
@@ -2548,7 +2738,10 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== put_mapping
-Updates the index mappings.
+Update field mappings.
+Adds new fields to an existing data stream or index.
+You can also use this API to change the search settings of existing fields.
+For data streams, these changes are applied to all backing indices by default.
 
 {ref}/indices-put-mapping.html[Endpoint documentation]
 [source,ts]
@@ -2572,7 +2765,7 @@ a new date field is added instead of string.
 not used at all by Elasticsearch, but can be used to store
 application-specific metadata.
 ** *`numeric_detection` (Optional, boolean)*: Automatically map strings into numeric data types for all fields.
-** *`properties` (Optional, Record<string, { type } | { boost, fielddata, index, null_value, type } | { type, enabled, null_value, boost, coerce, script, on_script_error, ignore_malformed, time_series_metric, analyzer, eager_global_ordinals, index, index_options, index_phrases, index_prefixes, norms, position_increment_gap, search_analyzer, search_quote_analyzer, term_vector, format, precision_step, locale } | { relations, eager_global_ordinals, type } | { boost, eager_global_ordinals, index, index_options, script, on_script_error, normalizer, norms, null_value, split_queries_on_whitespace, type } | { type, fields, meta, copy_to } | { type } | { positive_score_impact, type } | { positive_score_impact, type } | { analyzer, index, index_options, max_shingle_size, norms, search_analyzer, search_quote_analyzer, term_vector, type } | { analyzer, boost, eager_global_ordinals, fielddata, fielddata_frequency_filter, index, index_options, index_phrases, index_prefixes, norms, position_increment_gap, search_analyzer, search_quote_analyzer, term_vector, type } | { type } | { type } | { boost, format, ignore_malformed, index, null_value, precision_step, type } | { boost, fielddata, format, ignore_malformed, index, null_value, precision_step, locale, type } | { type, default_metric, metrics, time_series_metric } | { type, element_type, dims, similarity, index, index_options } | { boost, depth_limit, doc_values, eager_global_ordinals, index, index_options, null_value, similarity, split_queries_on_whitespace, type } | { enabled, include_in_parent, include_in_root, type } | { enabled, subobjects, type } | { type, meta, inference_id } | { type } | { analyzer, contexts, max_input_length, preserve_position_increments, preserve_separators, search_analyzer, type } | { value, type } | { path, type } | { ignore_malformed, type } | { boost, index, ignore_malformed, null_value, on_script_error, script, type } | { type } | { analyzer, boost, index, null_value, enable_position_increments, type } | { ignore_malformed, ignore_z_value, null_value, index, on_script_error, script, type } | { coerce, ignore_malformed, ignore_z_value, orientation, strategy, type } | { ignore_malformed, ignore_z_value, null_value, type } | { coerce, ignore_malformed, ignore_z_value, orientation, type } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value, scaling_factor } | { type, null_value } | { type, null_value } | { format, type } | { type } | { type } | { type } | { type } | { type } | { type, norms, index_options, index, null_value, rules, language, country, variant, strength, decomposition, alternate, case_level, case_first, numeric, variable_top, hiragana_quaternary_mode }>)*: Mapping for a field. For new fields, this mapping can include:
+** *`properties` (Optional, Record<string, { type } | { boost, fielddata, index, null_value, type } | { type, enabled, null_value, boost, coerce, script, on_script_error, ignore_malformed, time_series_metric, analyzer, eager_global_ordinals, index, index_options, index_phrases, index_prefixes, norms, position_increment_gap, search_analyzer, search_quote_analyzer, term_vector, format, precision_step, locale } | { relations, eager_global_ordinals, type } | { boost, eager_global_ordinals, index, index_options, script, on_script_error, normalizer, norms, null_value, split_queries_on_whitespace, time_series_dimension, type } | { type, fields, meta, copy_to } | { type } | { positive_score_impact, type } | { positive_score_impact, type } | { analyzer, index, index_options, max_shingle_size, norms, search_analyzer, search_quote_analyzer, term_vector, type } | { analyzer, boost, eager_global_ordinals, fielddata, fielddata_frequency_filter, index, index_options, index_phrases, index_prefixes, norms, position_increment_gap, search_analyzer, search_quote_analyzer, term_vector, type } | { type } | { type, null_value } | { boost, format, ignore_malformed, index, null_value, precision_step, type } | { boost, fielddata, format, ignore_malformed, index, null_value, precision_step, locale, type } | { type, default_metric, metrics, time_series_metric } | { type, element_type, dims, similarity, index, index_options } | { boost, depth_limit, doc_values, eager_global_ordinals, index, index_options, null_value, similarity, split_queries_on_whitespace, type } | { enabled, include_in_parent, include_in_root, type } | { enabled, subobjects, type } | { type, meta, inference_id } | { type } | { analyzer, contexts, max_input_length, preserve_position_increments, preserve_separators, search_analyzer, type } | { value, type } | { path, type } | { ignore_malformed, type } | { boost, index, ignore_malformed, null_value, on_script_error, script, time_series_dimension, type } | { type } | { analyzer, boost, index, null_value, enable_position_increments, type } | { ignore_malformed, ignore_z_value, null_value, index, on_script_error, script, type } | { coerce, ignore_malformed, ignore_z_value, orientation, strategy, type } | { ignore_malformed, ignore_z_value, null_value, type } | { coerce, ignore_malformed, ignore_z_value, orientation, type } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value } | { type, null_value, scaling_factor } | { type, null_value } | { type, null_value } | { format, type } | { type } | { type } | { type } | { type } | { type } | { type, norms, index_options, index, null_value, rules, language, country, variant, strength, decomposition, alternate, case_level, case_first, numeric, variable_top, hiragana_quaternary_mode }>)*: Mapping for a field. For new fields, this mapping can include:
 
 - Field name
 - Field data type
@@ -2595,7 +2788,9 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== put_settings
-Updates the index settings.
+Update index settings.
+Changes dynamic index settings in real time. For data streams, index setting
+changes are applied to all backing indices by default.
 
 {ref}/indices-update-settings.html[Endpoint documentation]
 [source,ts]
@@ -2631,7 +2826,8 @@ error.
 
 [discrete]
 ==== put_template
-Creates or updates an index template.
+Create or update an index template.
+Index templates define settings, mappings, and aliases that can be applied automatically to new indices.
 
 {ref}/indices-templates-v1.html[Endpoint documentation]
 [source,ts]
@@ -2647,7 +2843,7 @@ client.indices.putTemplate({ name })
 ** *`aliases` (Optional, Record<string, { filter, index_routing, is_hidden, is_write_index, routing, search_routing }>)*: Aliases for the index.
 ** *`index_patterns` (Optional, string | string[])*: Array of wildcard expressions used to match the names
 of indices during creation.
-** *`mappings` (Optional, { all_field, date_detection, dynamic, dynamic_date_formats, dynamic_templates, _field_names, index_field, _meta, numeric_detection, properties, _routing, _size, _source, runtime, enabled, subobjects })*: Mapping for fields in the index.
+** *`mappings` (Optional, { all_field, date_detection, dynamic, dynamic_date_formats, dynamic_templates, _field_names, index_field, _meta, numeric_detection, properties, _routing, _size, _source, runtime, enabled, subobjects, _data_stream_timestamp })*: Mapping for fields in the index.
 ** *`order` (Optional, number)*: Order in which Elasticsearch applies this template if index
 matches multiple templates.
 
@@ -2663,7 +2859,9 @@ received before the timeout expires, the request fails and returns an error.
 
 [discrete]
 ==== refresh
-Performs the refresh operation in one or more indices.
+Refresh an index.
+A refresh makes recent operations performed on one or more indices available for search.
+For data streams, the API runs the refresh operation on the stream’s backing indices.
 
 {ref}/indices-refresh.html[Endpoint documentation]
 [source,ts]
@@ -2688,7 +2886,8 @@ Valid values are: `all`, `open`, `closed`, `hidden`, `none`.
 
 [discrete]
 ==== resolve_index
-Returns information about any matching indices, aliases, and data streams
+Resolves the specified name(s) and/or index patterns for indices, aliases, and data streams.
+Multiple patterns and remote clusters are supported.
 
 {ref}/indices-resolve-index-api.html[Endpoint documentation]
 [source,ts]
@@ -2709,8 +2908,8 @@ Valid values are: `all`, `open`, `closed`, `hidden`, `none`.
 
 [discrete]
 ==== rollover
-Updates an alias to point to a new index when the existing index
-is considered to be too large or too old.
+Roll over to a new index.
+Creates a new index for a data stream or index alias.
 
 {ref}/indices-rollover-index.html[Endpoint documentation]
 [source,ts]
@@ -2733,7 +2932,7 @@ If specified, Elasticsearch only performs the rollover if the current index sati
 If this parameter is not specified, Elasticsearch performs the rollover unconditionally.
 If conditions are specified, at least one of them must be a `max_*` condition.
 The index will rollover if any `max_*` condition is satisfied and all `min_*` conditions are satisfied.
-** *`mappings` (Optional, { all_field, date_detection, dynamic, dynamic_date_formats, dynamic_templates, _field_names, index_field, _meta, numeric_detection, properties, _routing, _size, _source, runtime, enabled, subobjects })*: Mapping for fields in the index.
+** *`mappings` (Optional, { all_field, date_detection, dynamic, dynamic_date_formats, dynamic_templates, _field_names, index_field, _meta, numeric_detection, properties, _routing, _size, _source, runtime, enabled, subobjects, _data_stream_timestamp })*: Mapping for fields in the index.
 If specified, this mapping can include field names, field data types, and mapping paramaters.
 ** *`settings` (Optional, Record<string, User-defined value>)*: Configuration options for the index.
 Data streams do not support this parameter.
@@ -2747,7 +2946,8 @@ Set to all or any positive integer up to the total number of shards in the index
 
 [discrete]
 ==== simulate_index_template
-Simulate matching the given index name against the index templates in the system
+Simulate an index.
+Returns the index configuration that would be applied to the specified index from an existing index template.
 
 {ref}/indices-simulate-index.html[Endpoint documentation]
 [source,ts]
@@ -2761,10 +2961,12 @@ client.indices.simulateIndexTemplate({ name })
 * *Request (object):*
 ** *`name` (string)*: Name of the index to simulate
 ** *`master_timeout` (Optional, string | -1 | 0)*: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+** *`include_defaults` (Optional, boolean)*: If true, returns all relevant default configurations for the index template.
 
 [discrete]
 ==== simulate_template
-Simulate resolving the given template name or body
+Simulate an index template.
+Returns the index configuration that would be applied by a particular index template.
 
 {ref}/indices-simulate-template.html[Endpoint documentation]
 [source,ts]
@@ -2784,7 +2986,7 @@ If set to `false`, then indices or data streams matching the template must alway
 ** *`index_patterns` (Optional, string | string[])*: Array of wildcard (`*`) expressions used to match the names of data streams and indices during creation.
 ** *`composed_of` (Optional, string[])*: An ordered list of component template names.
 Component templates are merged in the order specified, meaning that the last component template specified has the highest precedence.
-** *`template` (Optional, { aliases, mappings, settings })*: Template to be applied.
+** *`template` (Optional, { aliases, mappings, settings, lifecycle })*: Template to be applied.
 It may optionally include an `aliases`, `mappings`, or `settings` configuration.
 ** *`data_stream` (Optional, { hidden })*: If this object is included, the template is used to create data streams and their backing indices.
 Supports an empty object.
@@ -2804,10 +3006,12 @@ references a component template that might not exist
 that uses deprecated components, Elasticsearch will emit a deprecation warning.
 ** *`create` (Optional, boolean)*: If true, the template passed in the body is only used if no existing templates match the same index patterns. If false, the simulation uses the template with the highest priority. Note that the template is not permanently added or updated in either case; it is only used for the simulation.
 ** *`master_timeout` (Optional, string | -1 | 0)*: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
+** *`include_defaults` (Optional, boolean)*: If true, returns all relevant default configurations for the index template.
 
 [discrete]
 ==== update_aliases
-Updates index aliases.
+Create or update an alias.
+Adds a data stream or index to an alias.
 
 {ref}/indices-aliases.html[Endpoint documentation]
 [source,ts]
@@ -2827,7 +3031,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== validate_query
-Allows a user to validate a potentially expensive query without executing it.
+Validate a query.
+Validates a query without running it.
 
 {ref}/search-validate.html[Endpoint documentation]
 [source,ts]
@@ -2842,7 +3047,7 @@ client.indices.validateQuery({ ... })
 ** *`index` (Optional, string | string[])*: List of data streams, indices, and aliases to search.
 Supports wildcards (`*`).
 To search all data streams or indices, omit this parameter or use `*` or `_all`.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Query in the Lucene query string syntax.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Query in the Lucene query string syntax.
 ** *`allow_no_indices` (Optional, boolean)*: If `false`, the request returns an error if any wildcard expression, index alias, or `_all` value targets only missing or closed indices.
 This behavior applies even if the request targets other open indices.
 ** *`all_shards` (Optional, boolean)*: If `true`, the validation is executed on all shards instead of one random shard per index.
@@ -2902,7 +3107,7 @@ client.inference.get({ ... })
 
 [discrete]
 ==== inference
-Perform inference
+Perform inference on the service
 
 {ref}/post-inference-api.html[Endpoint documentation]
 [source,ts]
@@ -2925,7 +3130,7 @@ Not required for other tasks.
 
 [discrete]
 ==== put
-Configure an inference endpoint for use in the Inference API
+Create an inference endpoint
 
 {ref}/put-inference-api.html[Endpoint documentation]
 [source,ts]
@@ -2945,7 +3150,7 @@ client.inference.put({ inference_id })
 === ingest
 [discrete]
 ==== delete_pipeline
-Deletes a pipeline.
+Deletes one or more existing ingest pipeline.
 
 {ref}/delete-pipeline-api.html[Endpoint documentation]
 [source,ts]
@@ -2966,7 +3171,8 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== get_pipeline
-Returns a pipeline.
+Returns information about one or more ingest pipelines.
+This API returns a local reference of the pipeline.
 
 {ref}/get-pipeline-api.html[Endpoint documentation]
 [source,ts]
@@ -2987,7 +3193,9 @@ If no response is received before the timeout expires, the request fails and ret
 
 [discrete]
 ==== processor_grok
-Returns a list of the built-in patterns.
+Extracts structured fields out of a single text field within a document.
+You choose which field to extract matched fields from, as well as the grok pattern you expect will match.
+A grok pattern is like a regular expression that supports aliased expressions that can be reused.
 
 {ref}/grok-processor.html[Endpoint documentation]
 [source,ts]
@@ -2998,7 +3206,8 @@ client.ingest.processorGrok()
 
 [discrete]
 ==== put_pipeline
-Creates or updates a pipeline.
+Creates or updates an ingest pipeline.
+Changes made using this API take effect immediately.
 
 {ref}/ingest.html[Endpoint documentation]
 [source,ts]
@@ -3013,8 +3222,8 @@ client.ingest.putPipeline({ id })
 ** *`id` (string)*: ID of the ingest pipeline to create or update.
 ** *`_meta` (Optional, Record<string, User-defined value>)*: Optional metadata about the ingest pipeline. May have any contents. This map is not automatically generated by Elasticsearch.
 ** *`description` (Optional, string)*: Description of the ingest pipeline.
-** *`on_failure` (Optional, { attachment, append, csv, convert, date, date_index_name, dot_expander, enrich, fail, foreach, json, user_agent, kv, geoip, grok, gsub, join, lowercase, remove, rename, reroute, script, set, sort, split, trim, uppercase, urldecode, bytes, dissect, set_security_user, pipeline, drop, circle, inference }[])*: Processors to run immediately after a processor failure. Each processor supports a processor-level `on_failure` value. If a processor without an `on_failure` value fails, Elasticsearch uses this pipeline-level parameter as a fallback. The processors in this parameter run sequentially in the order specified. Elasticsearch will not attempt to run the pipeline's remaining processors.
-** *`processors` (Optional, { attachment, append, csv, convert, date, date_index_name, dot_expander, enrich, fail, foreach, json, user_agent, kv, geoip, grok, gsub, join, lowercase, remove, rename, reroute, script, set, sort, split, trim, uppercase, urldecode, bytes, dissect, set_security_user, pipeline, drop, circle, inference }[])*: Processors used to perform transformations on documents before indexing. Processors run sequentially in the order specified.
+** *`on_failure` (Optional, { append, attachment, bytes, circle, convert, csv, date, date_index_name, dissect, dot_expander, drop, enrich, fail, foreach, geoip, grok, gsub, inference, join, json, kv, lowercase, pipeline, remove, rename, reroute, script, set, set_security_user, sort, split, trim, uppercase, urldecode, user_agent }[])*: Processors to run immediately after a processor failure. Each processor supports a processor-level `on_failure` value. If a processor without an `on_failure` value fails, Elasticsearch uses this pipeline-level parameter as a fallback. The processors in this parameter run sequentially in the order specified. Elasticsearch will not attempt to run the pipeline's remaining processors.
+** *`processors` (Optional, { append, attachment, bytes, circle, convert, csv, date, date_index_name, dissect, dot_expander, drop, enrich, fail, foreach, geoip, grok, gsub, inference, join, json, kv, lowercase, pipeline, remove, rename, reroute, script, set, set_security_user, sort, split, trim, uppercase, urldecode, user_agent }[])*: Processors used to perform transformations on documents before indexing. Processors run sequentially in the order specified.
 ** *`version` (Optional, number)*: Version number used by external systems to track ingest pipelines. This parameter is intended for external systems only. Elasticsearch does not use or validate pipeline version numbers.
 ** *`master_timeout` (Optional, string | -1 | 0)*: Period to wait for a connection to the master node. If no response is received before the timeout expires, the request fails and returns an error.
 ** *`timeout` (Optional, string | -1 | 0)*: Period to wait for a response. If no response is received before the timeout expires, the request fails and returns an error.
@@ -3022,7 +3231,7 @@ client.ingest.putPipeline({ id })
 
 [discrete]
 ==== simulate
-Allows to simulate a pipeline with example documents.
+Executes an ingest pipeline against a set of provided documents.
 
 {ref}/simulate-pipeline-api.html[Endpoint documentation]
 [source,ts]
@@ -3046,7 +3255,9 @@ If you specify both this and the request path parameter, the API only uses the r
 === license
 [discrete]
 ==== get
-Retrieves licensing information for the cluster
+Get license information.
+Returns information about your Elastic license, including its type, its status, when it was issued, and when it expires.
+For more information about the different types of licenses, refer to [Elastic Stack subscriptions](https://www.elastic.co/subscriptions).
 
 {ref}/get-license.html[Endpoint documentation]
 [source,ts]
@@ -3066,7 +3277,7 @@ This parameter is deprecated and will always be set to true in 8.x.
 === logstash
 [discrete]
 ==== delete_pipeline
-Deletes Logstash Pipelines used by Central Management
+Deletes a pipeline used for Logstash Central Management.
 
 {ref}/logstash-api-delete-pipeline.html[Endpoint documentation]
 [source,ts]
@@ -3082,7 +3293,7 @@ client.logstash.deletePipeline({ id })
 
 [discrete]
 ==== get_pipeline
-Retrieves Logstash Pipelines used by Central Management
+Retrieves pipelines used for Logstash Central Management.
 
 {ref}/logstash-api-get-pipeline.html[Endpoint documentation]
 [source,ts]
@@ -3098,7 +3309,7 @@ client.logstash.getPipeline({ ... })
 
 [discrete]
 ==== put_pipeline
-Adds and updates Logstash Pipelines used for Central Management
+Creates or updates a pipeline used for Logstash Central Management.
 
 {ref}/logstash-api-put-pipeline.html[Endpoint documentation]
 [source,ts]
@@ -3117,7 +3328,11 @@ client.logstash.putPipeline({ id })
 === ml
 [discrete]
 ==== close_job
-Closes one or more anomaly detection jobs. A job can be opened and closed multiple times throughout its lifecycle.
+Close anomaly detection jobs.
+A job can be opened and closed multiple times throughout its lifecycle. A closed job cannot receive data or perform analysis operations, but you can still explore and navigate results.
+When you close a job, it runs housekeeping tasks such as pruning the model history, flushing buffers, calculating final results and persisting the model snapshots. Depending upon the size of the job, it could take several minutes to close and the equivalent time to re-open. After it is closed, the job has a minimal overhead on the cluster except for maintaining its meta data. Therefore it is a best practice to close jobs that are no longer required to process data.
+If you close an anomaly detection job whose datafeed is running, the request first tries to stop the datafeed. This behavior is equivalent to calling stop datafeed API with the same timeout and force parameters as the close job request.
+When a datafeed that has a specified end date stops, it automatically closes its associated job.
 
 {ref}/ml-close-job.html[Endpoint documentation]
 [source,ts]
@@ -3136,7 +3351,7 @@ client.ml.closeJob({ job_id })
 
 [discrete]
 ==== delete_calendar
-Deletes a calendar.
+Removes all scheduled events from a calendar, then deletes it.
 
 {ref}/ml-delete-calendar.html[Endpoint documentation]
 [source,ts]
@@ -3188,7 +3403,7 @@ list of jobs or groups.
 
 [discrete]
 ==== delete_data_frame_analytics
-Deletes an existing data frame analytics job.
+Deletes a data frame analytics job.
 
 {ref}/delete-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -3228,6 +3443,8 @@ stopping and deleting the datafeed.
 [discrete]
 ==== delete_filter
 Deletes a filter.
+If an anomaly detection job references the filter, you cannot delete the
+filter. You must update or delete the job before you can delete the filter.
 
 {ref}/ml-delete-filter.html[Endpoint documentation]
 [source,ts]
@@ -3243,7 +3460,13 @@ client.ml.deleteFilter({ filter_id })
 
 [discrete]
 ==== delete_job
-Deletes an existing anomaly detection job.
+Delete an anomaly detection job.
+All job configuration, model state and results are deleted.
+It is not currently possible to delete multiple jobs using wildcards or a
+comma separated list. If you delete a job that has a datafeed, the request
+first tries to delete the datafeed. This behavior is equivalent to calling
+the delete datafeed API with the same timeout and force parameters as the
+delete job request.
 
 {ref}/ml-delete-job.html[Endpoint documentation]
 [source,ts]
@@ -3266,7 +3489,8 @@ job deletion completes.
 
 [discrete]
 ==== delete_trained_model
-Deletes an existing trained inference model that is currently not referenced by an ingest pipeline.
+Deletes an existing trained inference model that is currently not referenced
+by an ingest pipeline.
 
 {ref}/delete-trained-models.html[Endpoint documentation]
 [source,ts]
@@ -3283,7 +3507,10 @@ client.ml.deleteTrainedModel({ model_id })
 
 [discrete]
 ==== delete_trained_model_alias
-Deletes a model alias that refers to the trained model
+Deletes a trained model alias.
+This API deletes an existing model alias that refers to a trained model. If
+the model alias is missing or refers to a model other than the one identified
+by the `model_id`, this API returns an error.
 
 {ref}/delete-trained-models-aliases.html[Endpoint documentation]
 [source,ts]
@@ -3300,7 +3527,9 @@ client.ml.deleteTrainedModelAlias({ model_alias, model_id })
 
 [discrete]
 ==== estimate_model_memory
-Estimates the model memory
+Makes an estimation of the memory usage for an anomaly detection job model.
+It is based on analysis configuration details for the job and cardinality
+estimates for the fields it references.
 
 {ref}/ml-apis.html[Endpoint documentation]
 [source,ts]
@@ -3330,6 +3559,10 @@ omitted from the request if no detectors have a `by_field_name`,
 [discrete]
 ==== evaluate_data_frame
 Evaluates the data frame analytics for an annotated index.
+The API packages together commonly used evaluation metrics for various types
+of machine learning features. This has been designed for use on indexes
+created by data frame analytics. Evaluation requires both a ground truth
+field and an analytics result field to be present.
 
 {ref}/evaluate-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -3343,11 +3576,19 @@ client.ml.evaluateDataFrame({ evaluation, index })
 * *Request (object):*
 ** *`evaluation` ({ classification, outlier_detection, regression })*: Defines the type of evaluation you want to perform.
 ** *`index` (string)*: Defines the `index` in which the evaluation will be performed.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: A query clause that retrieves a subset of data from the source index.
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: A query clause that retrieves a subset of data from the source index.
 
 [discrete]
 ==== flush_job
 Forces any buffered data to be processed by the job.
+The flush jobs API is only applicable when sending data for analysis using
+the post data API. Depending on the content of the buffer, then it might
+additionally calculate new results. Both flush and close operations are
+similar, however the flush is more efficient if you are expecting to send
+more data for analysis. When flushing, the job remains open and is available
+to continue analyzing data. A close operation additionally prunes and
+persists the model state to disk and the job must be opened again before
+analyzing further data.
 
 {ref}/ml-flush-job.html[Endpoint documentation]
 [source,ts]
@@ -3409,6 +3650,9 @@ client.ml.getCalendars({ ... })
 [discrete]
 ==== get_data_frame_analytics
 Retrieves configuration information for data frame analytics jobs.
+You can get information for multiple data frame analytics jobs in a single
+API request by using a comma-separated list of data frame analytics jobs or a
+wildcard expression.
 
 {ref}/get-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -3475,6 +3719,12 @@ there are no matches or only partial matches.
 [discrete]
 ==== get_datafeed_stats
 Retrieves usage information for datafeeds.
+You can get statistics for multiple datafeeds in a single API request by
+using a comma-separated list of datafeeds or a wildcard expression. You can
+get statistics for all datafeeds by using `_all`, by specifying `*` as the
+`<feed_id>`, or by omitting the `<feed_id>`. If the datafeed is stopped, the
+only information you receive is the `datafeed_id` and the `state`.
+This API returns a maximum of 10,000 datafeeds.
 
 {ref}/ml-get-datafeed-stats.html[Endpoint documentation]
 [source,ts]
@@ -3503,6 +3753,11 @@ partial matches. If this parameter is `false`, the request returns a
 [discrete]
 ==== get_datafeeds
 Retrieves configuration information for datafeeds.
+You can get information for multiple datafeeds in a single API request by
+using a comma-separated list of datafeeds or a wildcard expression. You can
+get information for all datafeeds by using `_all`, by specifying `*` as the
+`<feed_id>`, or by omitting the `<feed_id>`.
+This API returns a maximum of 10,000 datafeeds.
 
 {ref}/ml-get-datafeed.html[Endpoint documentation]
 [source,ts]
@@ -3534,6 +3789,7 @@ be retrieved and then added to another cluster.
 [discrete]
 ==== get_filters
 Retrieves filters.
+You can get a single filter or all filters.
 
 {ref}/ml-get-filter.html[Endpoint documentation]
 [source,ts]
@@ -3581,6 +3837,10 @@ code when there are no matches or only partial matches.
 [discrete]
 ==== get_jobs
 Retrieves configuration information for anomaly detection jobs.
+You can get information for multiple anomaly detection jobs in a single API
+request by using a group name, a comma-separated list of jobs, or a wildcard
+expression. You can get information for all anomaly detection jobs by using
+`_all`, by specifying `*` as the `<job_id>`, or by omitting the `<job_id>`.
 
 {ref}/ml-get-job.html[Endpoint documentation]
 [source,ts]
@@ -3611,7 +3871,23 @@ be retrieved and then added to another cluster.
 
 [discrete]
 ==== get_overall_buckets
-Retrieves overall bucket results that summarize the bucket results of multiple anomaly detection jobs.
+Retrieves overall bucket results that summarize the bucket results of
+multiple anomaly detection jobs.
+
+The `overall_score` is calculated by combining the scores of all the
+buckets within the overall bucket span. First, the maximum
+`anomaly_score` per anomaly detection job in the overall bucket is
+calculated. Then the `top_n` of those scores are averaged to result in
+the `overall_score`. This means that you can fine-tune the
+`overall_score` so that it is more or less sensitive to the number of
+jobs that detect an anomaly at the same time. For example, if you set
+`top_n` to `1`, the `overall_score` is the maximum bucket score in the
+overall bucket. Alternatively, if you set `top_n` to the number of jobs,
+the `overall_score` is high only when all jobs detect anomalies in that
+overall bucket. If you set the `bucket_span` parameter (to a value
+greater than its default), the `overall_score` is the maximum
+`overall_score` of the overall buckets that have a span equal to the
+jobs' largest bucket span.
 
 {ref}/ml-get-overall-buckets.html[Endpoint documentation]
 [source,ts]
@@ -3639,7 +3915,7 @@ using `_all` or by specifying `*` as the `<job_id>`.
 
 [discrete]
 ==== get_trained_models
-Retrieves configuration information for a trained inference model.
+Retrieves configuration information for a trained model.
 
 {ref}/get-trained-models.html[Endpoint documentation]
 [source,ts]
@@ -3679,7 +3955,8 @@ tags are returned.
 
 [discrete]
 ==== get_trained_models_stats
-Retrieves usage information for trained inference models.
+Retrieves usage information for trained models. You can get usage information for multiple trained
+models in a single API request by using a comma-separated list of model IDs or a wildcard expression.
 
 {ref}/get-trained-models-stats.html[Endpoint documentation]
 [source,ts]
@@ -3706,7 +3983,7 @@ subset of results when there are partial matches.
 
 [discrete]
 ==== infer_trained_model
-Evaluate a trained model.
+Evaluates a trained model.
 
 {ref}/infer-trained-model.html[Endpoint documentation]
 [source,ts]
@@ -3727,7 +4004,14 @@ Currently, for NLP models, only a single value is allowed.
 
 [discrete]
 ==== open_job
-Opens one or more anomaly detection jobs.
+Open anomaly detection jobs.
+An anomaly detection job must be opened in order for it to be ready to
+receive and analyze data. It can be opened and closed multiple times
+throughout its lifecycle.
+When you open a new job, it starts with an empty model.
+When you open an existing job, the most recent model state is automatically
+loaded. The job is ready to resume its analysis from where it left off, once
+new data is received.
 
 {ref}/ml-open-job.html[Endpoint documentation]
 [source,ts]
@@ -3744,7 +4028,7 @@ client.ml.openJob({ job_id })
 
 [discrete]
 ==== post_calendar_events
-Posts scheduled events in a calendar.
+Adds scheduled events to a calendar.
 
 {ref}/ml-post-calendar-event.html[Endpoint documentation]
 [source,ts]
@@ -3761,7 +4045,7 @@ client.ml.postCalendarEvents({ calendar_id, events })
 
 [discrete]
 ==== preview_data_frame_analytics
-Previews that will be analyzed given a data frame analytics config.
+Previews the extracted features used by a data frame analytics config.
 
 {ref}/preview-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -3781,6 +4065,14 @@ this API.
 [discrete]
 ==== preview_datafeed
 Previews a datafeed.
+This API returns the first "page" of search results from a datafeed.
+You can preview an existing datafeed or provide configuration details for a datafeed
+and anomaly detection job in the API. The preview shows the structure of the data
+that will be passed to the anomaly detection engine.
+IMPORTANT: When Elasticsearch security features are enabled, the preview uses the credentials of the user that
+called the API. However, when the datafeed starts it uses the roles of the last user that created or updated the
+datafeed. To get a preview that accurately reflects the behavior of the datafeed, use the appropriate credentials.
+You can also use secondary authorization headers to supply the credentials.
 
 {ref}/ml-preview-datafeed.html[Endpoint documentation]
 [source,ts]
@@ -3806,7 +4098,7 @@ used. You cannot specify a `job_config` object unless you also supply a `datafee
 
 [discrete]
 ==== put_calendar
-Instantiates a calendar.
+Creates a calendar.
 
 {ref}/ml-put-calendar.html[Endpoint documentation]
 [source,ts]
@@ -3842,6 +4134,8 @@ client.ml.putCalendarJob({ calendar_id, job_id })
 [discrete]
 ==== put_data_frame_analytics
 Instantiates a data frame analytics job.
+This API creates a data frame analytics job that performs an analysis on the
+source indices and stores the outcome in a destination index.
 
 {ref}/put-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -3907,10 +4201,21 @@ analytical processing. If your `elasticsearch.yml` file contains an
 `xpack.ml.max_model_memory_limit` setting, an error occurs when you try
 to create data frame analytics jobs that have `model_memory_limit` values
 greater than that setting.
+** *`headers` (Optional, Record<string, string | string[]>)*
+** *`version` (Optional, string)*
 
 [discrete]
 ==== put_datafeed
 Instantiates a datafeed.
+Datafeeds retrieve data from Elasticsearch for analysis by an anomaly detection job.
+You can associate only one datafeed with each anomaly detection job.
+The datafeed contains a query that runs at a defined interval (`frequency`).
+If you are concerned about delayed data, you can add a delay (`query_delay') at each interval.
+When Elasticsearch security features are enabled, your datafeed remembers which roles the user who created it had
+at the time of creation and runs the query using those same roles. If you provide secondary authorization headers,
+those credentials are used instead.
+You must use Kibana, this API, or the create anomaly detection jobs API to create a datafeed. Do not add a datafeed
+directly to the `.ml-config` index. Do not give users `write` privileges on the `.ml-config` index.
 
 {ref}/ml-put-datafeed.html[Endpoint documentation]
 [source,ts]
@@ -3925,7 +4230,7 @@ client.ml.putDatafeed({ datafeed_id })
 ** *`datafeed_id` (string)*: A numerical character string that uniquely identifies the datafeed.
 This identifier can contain lowercase alphanumeric characters (a-z and 0-9), hyphens, and underscores.
 It must start and end with alphanumeric characters.
-** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, cardinality, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: If set, the datafeed performs aggregation searches.
+** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, bucket_count_ks_test, bucket_correlation, cardinality, categorize_text, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: If set, the datafeed performs aggregation searches.
 Support for aggregations is limited and should be used only with low cardinality data.
 ** *`chunking_config` (Optional, { mode, time_span })*: Datafeeds might be required to search over long time periods, for several months or years.
 This search is split into time chunks in order to ensure the load on Elasticsearch is managed.
@@ -3949,7 +4254,7 @@ learning nodes must have the `remote_cluster_client` role.
 stops and closes the associated job after this many real-time searches return no documents. In other words,
 it stops after `frequency` times `max_empty_searches` of real-time operation. If not set, a datafeed with no
 end time that sees no data remains started until it is explicitly stopped. By default, it is not set.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: The Elasticsearch query domain-specific language (DSL). This value corresponds to the query object in an
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: The Elasticsearch query domain-specific language (DSL). This value corresponds to the query object in an
 Elasticsearch search POST body. All the options that are supported by Elasticsearch can be used, as this
 object is passed verbatim to Elasticsearch.
 ** *`query_delay` (Optional, string | -1 | 0)*: The number of seconds behind real time that data is queried. For example, if data from 10:04 a.m. might
@@ -3961,6 +4266,7 @@ when there are multiple jobs running on the same node.
 The detector configuration objects in a job can contain functions that use these script fields.
 ** *`scroll_size` (Optional, number)*: The size parameter that is used in Elasticsearch searches when the datafeed does not use aggregations.
 The maximum value is the value of `index.max_result_window`, which is 10,000 by default.
+** *`headers` (Optional, Record<string, string | string[]>)*
 ** *`allow_no_indices` (Optional, boolean)*: If true, wildcard indices expressions that resolve into no concrete indices are ignored. This includes the `_all`
 string or when no indices are specified.
 ** *`expand_wildcards` (Optional, Enum("all" | "open" | "closed" | "hidden" | "none") | Enum("all" | "open" | "closed" | "hidden" | "none")[])*: Type of index that wildcard patterns can match. If the request can target data streams, this argument determines
@@ -3971,6 +4277,8 @@ whether wildcard expressions match hidden data streams. Supports a list of value
 [discrete]
 ==== put_filter
 Instantiates a filter.
+A filter contains a list of strings. It can be used by one or more anomaly detection jobs.
+Specifically, filters are referenced in the `custom_rules` property of detector configuration objects.
 
 {ref}/ml-put-filter.html[Endpoint documentation]
 [source,ts]
@@ -3989,7 +4297,8 @@ Up to 10000 items are allowed in each filter.
 
 [discrete]
 ==== put_job
-Instantiates an anomaly detection job.
+Create an anomaly detection job.
+If you include a `datafeed_config`, you must have read index privileges on the source index.
 
 {ref}/ml-put-job.html[Endpoint documentation]
 [source,ts]
@@ -4012,7 +4321,7 @@ client.ml.putJob({ job_id, analysis_config, data_description })
 ** *`datafeed_config` (Optional, { aggregations, chunking_config, datafeed_id, delayed_data_check_config, frequency, indices, indices_options, job_id, max_empty_searches, query, query_delay, runtime_mappings, script_fields, scroll_size })*: Defines a datafeed for the anomaly detection job. If Elasticsearch security features are enabled, your datafeed remembers which roles the user who created it had at the time of creation and runs the query using those same roles. If you provide secondary authorization headers, those credentials are used instead.
 ** *`description` (Optional, string)*: A description of the job.
 ** *`groups` (Optional, string[])*: A list of job groups. A job can belong to no groups or many.
-** *`model_plot_config` (Optional, { enabled })*: This advanced configuration option stores model information along with the results. It provides a more detailed view into anomaly detection. If you enable model plot it can add considerable overhead to the performance of the system; it is not feasible for jobs with many entities. Model plot provides a simplified and indicative view of the model and its bounds. It does not display complex features such as multivariate correlations or multimodal data. As such, anomalies may occasionally be reported which cannot be seen in the model plot. Model plot config can be configured when the job is created or updated later. It must be disabled if performance issues are experienced.
+** *`model_plot_config` (Optional, { annotations_enabled, enabled, terms })*: This advanced configuration option stores model information along with the results. It provides a more detailed view into anomaly detection. If you enable model plot it can add considerable overhead to the performance of the system; it is not feasible for jobs with many entities. Model plot provides a simplified and indicative view of the model and its bounds. It does not display complex features such as multivariate correlations or multimodal data. As such, anomalies may occasionally be reported which cannot be seen in the model plot. Model plot config can be configured when the job is created or updated later. It must be disabled if performance issues are experienced.
 ** *`model_snapshot_retention_days` (Optional, number)*: Advanced configuration option, which affects the automatic removal of old model snapshots for this job. It specifies the maximum period of time (in days) that snapshots are retained. This period is relative to the timestamp of the most recent snapshot for this job. By default, snapshots ten days older than the newest snapshot are deleted.
 ** *`renormalization_window_days` (Optional, number)*: Advanced configuration option. The period over which adjustments to the score are applied, as new data is seen. The default value is the longer of 30 days or 100 bucket spans.
 ** *`results_index_name` (Optional, string)*: A text string that affects the name of the machine learning results index. By default, the job generates an index named `.ml-anomalies-shared`.
@@ -4020,7 +4329,7 @@ client.ml.putJob({ job_id, analysis_config, data_description })
 
 [discrete]
 ==== put_trained_model
-Creates an inference trained model.
+Enables you to supply a trained model that is not created by data frame analytics.
 
 {ref}/put-trained-models.html[Endpoint documentation]
 [source,ts]
@@ -4039,7 +4348,7 @@ specified.
 ** *`definition` (Optional, { preprocessors, trained_model })*: The inference definition for the model. If definition is specified, then
 compressed_definition cannot be specified.
 ** *`description` (Optional, string)*: A human-readable description of the inference trained model.
-** *`inference_config` (Optional, { regression, classification })*: The default configuration for inference. This can be either a regression
+** *`inference_config` (Optional, { regression, classification, text_classification, zero_shot_classification, fill_mask, ner, pass_through, text_embedding, text_expansion, question_answering })*: The default configuration for inference. This can be either a regression
 or classification configuration. It must match the underlying
 definition.trained_model's target_type. For pre-packaged models such as
 ELSER the config is not required.
@@ -4057,10 +4366,31 @@ so one of, `linux-x86_64`, `linux-aarch64`, `darwin-x86_64`, `darwin-aarch64`,
 or `windows-x86_64`. For portable models (those that work independent of processor
 architecture or OS features), leave this field unset.
 ** *`tags` (Optional, string[])*: An array of tags to organize the model.
+** *`prefix_strings` (Optional, { ingest, search })*: Optional prefix strings applied at inference
+** *`defer_definition_decompression` (Optional, boolean)*: If set to `true` and a `compressed_definition` is provided,
+the request defers definition decompression and skips relevant
+validations.
+** *`wait_for_completion` (Optional, boolean)*: Whether to wait for all child operations (e.g. model download)
+to complete.
 
 [discrete]
 ==== put_trained_model_alias
-Creates a new model alias (or reassigns an existing one) to refer to the trained model
+Creates or updates a trained model alias. A trained model alias is a logical
+name used to reference a single trained model.
+You can use aliases instead of trained model identifiers to make it easier to
+reference your models. For example, you can use aliases in inference
+aggregations and processors.
+An alias must be unique and refer to only a single trained model. However,
+you can have multiple aliases for each trained model.
+If you use this API to update an alias such that it references a different
+trained model ID and the model uses a different type of data frame analytics,
+an error occurs. For example, this situation occurs if you have a trained
+model for regression analysis and a trained model for classification
+analysis; you cannot reassign an alias from one type of trained model to
+another.
+If you use this API to update an alias and there are very few input fields in
+common between the old and new trained models for the model alias, the API
+returns a warning.
 
 {ref}/put-trained-models-aliases.html[Endpoint documentation]
 [source,ts]
@@ -4080,7 +4410,7 @@ already assigned and this parameter is false, the API returns an error.
 
 [discrete]
 ==== put_trained_model_definition_part
-Creates part of a trained model definition
+Creates part of a trained model definition.
 
 {ref}/put-trained-model-definition-part.html[Endpoint documentation]
 [source,ts]
@@ -4101,7 +4431,9 @@ order of their part number. The first part must be `0` and the final part must b
 
 [discrete]
 ==== put_trained_model_vocabulary
-Creates a trained model vocabulary
+Creates a trained model vocabulary.
+This API is supported only for natural language processing (NLP) models.
+The vocabulary is stored in the index as described in `inference_config.*.vocabulary` of the trained model definition.
 
 {ref}/put-trained-model-vocabulary.html[Endpoint documentation]
 [source,ts]
@@ -4115,10 +4447,16 @@ client.ml.putTrainedModelVocabulary({ model_id, vocabulary })
 * *Request (object):*
 ** *`model_id` (string)*: The unique identifier of the trained model.
 ** *`vocabulary` (string[])*: The model vocabulary, which must not be empty.
+** *`merges` (Optional, string[])*: The optional model merges if required by the tokenizer.
+** *`scores` (Optional, number[])*: The optional vocabulary value scores if required by the tokenizer.
 
 [discrete]
 ==== reset_job
-Resets an existing anomaly detection job.
+Resets an anomaly detection job.
+All model state and results are deleted. The job is ready to start over as if
+it had just been created.
+It is not currently possible to reset multiple jobs using wildcards or a
+comma separated list.
 
 {ref}/ml-reset-job.html[Endpoint documentation]
 [source,ts]
@@ -4140,6 +4478,17 @@ reset.
 [discrete]
 ==== start_data_frame_analytics
 Starts a data frame analytics job.
+A data frame analytics job can be started and stopped multiple times
+throughout its lifecycle.
+If the destination index does not exist, it is created automatically the
+first time you start the data frame analytics job. The
+`index.number_of_shards` and `index.number_of_replicas` settings for the
+destination index are copied from the source index. If there are multiple
+source indices, the destination index copies the highest setting values. The
+mappings for the destination index are also copied from the source indices.
+If there are any mapping conflicts, the job fails to start.
+If the destination index exists, it is used as is. You can therefore set up
+the destination index in advance with custom settings and mappings.
 
 {ref}/start-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -4161,6 +4510,18 @@ starts.
 ==== start_datafeed
 Starts one or more datafeeds.
 
+A datafeed must be started in order to retrieve data from Elasticsearch. A datafeed can be started and stopped
+multiple times throughout its lifecycle.
+
+Before you can start a datafeed, the anomaly detection job must be open. Otherwise, an error occurs.
+
+If you restart a stopped datafeed, it continues processing input data from the next millisecond after it was stopped.
+If new data was indexed for that exact millisecond between stopping and starting, it will be ignored.
+
+When Elasticsearch security features are enabled, your datafeed remembers which roles the last user to create or
+update it had at the time of creation or update and runs the query using those same roles. If you provided secondary
+authorization headers when you created or updated the datafeed, those credentials are used instead.
+
 {ref}/ml-start-datafeed.html[Endpoint documentation]
 [source,ts]
 ----
@@ -4180,7 +4541,7 @@ characters.
 
 [discrete]
 ==== start_trained_model_deployment
-Start a trained model deployment.
+Starts a trained model deployment, which allocates the model to every machine learning node.
 
 {ref}/start-trained-model-deployment.html[Endpoint documentation]
 [source,ts]
@@ -4216,6 +4577,8 @@ it will automatically be changed to a value less than the number of hardware thr
 [discrete]
 ==== stop_data_frame_analytics
 Stops one or more data frame analytics jobs.
+A data frame analytics job can be started and stopped multiple times
+throughout its lifecycle.
 
 {ref}/stop-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -4248,6 +4611,8 @@ stops. Defaults to 20 seconds.
 [discrete]
 ==== stop_datafeed
 Stops one or more datafeeds.
+A datafeed that is stopped ceases to retrieve data from Elasticsearch. A datafeed can be started and stopped
+multiple times throughout its lifecycle.
 
 {ref}/ml-stop-datafeed.html[Endpoint documentation]
 [source,ts]
@@ -4268,7 +4633,7 @@ the identifier.
 
 [discrete]
 ==== stop_trained_model_deployment
-Stop a trained model deployment.
+Stops a trained model deployment.
 
 {ref}/stop-trained-model-deployment.html[Endpoint documentation]
 [source,ts]
@@ -4290,7 +4655,7 @@ restart the model deployment.
 
 [discrete]
 ==== update_data_frame_analytics
-Updates certain properties of a data frame analytics job.
+Updates an existing data frame analytics job.
 
 {ref}/update-dfanalytics.html[Endpoint documentation]
 [source,ts]
@@ -4320,7 +4685,11 @@ learning node capacity for it to be immediately assigned to a node.
 
 [discrete]
 ==== update_datafeed
-Updates certain properties of a datafeed.
+Updates the properties of a datafeed.
+You must stop and start the datafeed for the changes to be applied.
+When Elasticsearch security features are enabled, your datafeed remembers which roles the user who updated it had at
+the time of the update and runs the query using those same roles. If you provide secondary authorization headers,
+those credentials are used instead.
 
 {ref}/ml-update-datafeed.html[Endpoint documentation]
 [source,ts]
@@ -4335,7 +4704,7 @@ client.ml.updateDatafeed({ datafeed_id })
 ** *`datafeed_id` (string)*: A numerical character string that uniquely identifies the datafeed.
 This identifier can contain lowercase alphanumeric characters (a-z and 0-9), hyphens, and underscores.
 It must start and end with alphanumeric characters.
-** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, cardinality, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: If set, the datafeed performs aggregation searches. Support for aggregations is limited and should be used only
+** *`aggregations` (Optional, Record<string, { aggregations, meta, adjacency_matrix, auto_date_histogram, avg, avg_bucket, boxplot, bucket_script, bucket_selector, bucket_sort, bucket_count_ks_test, bucket_correlation, cardinality, categorize_text, children, composite, cumulative_cardinality, cumulative_sum, date_histogram, date_range, derivative, diversified_sampler, extended_stats, extended_stats_bucket, frequent_item_sets, filter, filters, geo_bounds, geo_centroid, geo_distance, geohash_grid, geo_line, geotile_grid, geohex_grid, global, histogram, ip_range, ip_prefix, inference, line, matrix_stats, max, max_bucket, median_absolute_deviation, min, min_bucket, missing, moving_avg, moving_percentiles, moving_fn, multi_terms, nested, normalize, parent, percentile_ranks, percentiles, percentiles_bucket, range, rare_terms, rate, reverse_nested, sampler, scripted_metric, serial_diff, significant_terms, significant_text, stats, stats_bucket, string_stats, sum, sum_bucket, terms, top_hits, t_test, top_metrics, value_count, weighted_avg, variable_width_histogram }>)*: If set, the datafeed performs aggregation searches. Support for aggregations is limited and should be used only
 with low cardinality data.
 ** *`chunking_config` (Optional, { mode, time_span })*: Datafeeds might search over long time periods, for several months or years. This search is split into time
 chunks in order to ensure the load on Elasticsearch is managed. Chunking configuration controls how the size of
@@ -4358,7 +4727,7 @@ learning nodes must have the `remote_cluster_client` role.
 stops and closes the associated job after this many real-time searches return no documents. In other words,
 it stops after `frequency` times `max_empty_searches` of real-time operation. If not set, a datafeed with no
 end time that sees no data remains started until it is explicitly stopped. By default, it is not set.
-** *`query` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: The Elasticsearch query domain-specific language (DSL). This value corresponds to the query object in an
+** *`query` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: The Elasticsearch query domain-specific language (DSL). This value corresponds to the query object in an
 Elasticsearch search POST body. All the options that are supported by Elasticsearch can be used, as this
 object is passed verbatim to Elasticsearch. Note that if you change the query, the analyzed data is also
 changed. Therefore, the time required to learn might be long and the understandability of the results is
@@ -4389,7 +4758,7 @@ whether wildcard expressions match hidden data streams. Supports a list of value
 
 [discrete]
 ==== update_filter
-Updates the description of a filter, adds items, or removes items.
+Updates the description of a filter, adds items, or removes items from the list.
 
 {ref}/ml-update-filter.html[Endpoint documentation]
 [source,ts]
@@ -4446,7 +4815,7 @@ For example, it can contain custom URL information as shown in Adding
 custom URLs to machine learning results.
 ** *`categorization_filters` (Optional, string[])*
 ** *`description` (Optional, string)*: A description of the job.
-** *`model_plot_config` (Optional, { enabled })*
+** *`model_plot_config` (Optional, { annotations_enabled, enabled, terms })*
 ** *`model_prune_window` (Optional, string | -1 | 0)*
 ** *`daily_model_snapshot_retention_after_days` (Optional, number)*: Advanced configuration option, which affects the automatic removal of old
 model snapshots for this job. It specifies a period of time (in days)
@@ -4473,7 +4842,7 @@ value is null, which means all results are retained.
 
 [discrete]
 ==== update_trained_model_deployment
-Updates certain properties of trained model deployment.
+Starts a trained model deployment, which allocates the model to every machine learning node.
 
 {ref}/update-trained-model-deployment.html[Endpoint documentation]
 [source,ts]
@@ -4494,15 +4863,32 @@ If this setting is greater than the number of hardware threads
 it will automatically be changed to a value less than the number of hardware threads.
 
 [discrete]
-=== query_ruleset
+=== query_rules
 [discrete]
-==== delete
+==== delete_rule
+Deletes a query rule within a query ruleset.
+
+{ref}/delete-query-rule.html[Endpoint documentation]
+[source,ts]
+----
+client.queryRules.deleteRule({ ruleset_id, rule_id })
+----
+
+[discrete]
+==== Arguments
+
+* *Request (object):*
+** *`ruleset_id` (string)*: The unique identifier of the query ruleset containing the rule to delete
+** *`rule_id` (string)*: The unique identifier of the query rule within the specified ruleset to delete
+
+[discrete]
+==== delete_ruleset
 Deletes a query ruleset.
 
 {ref}/delete-query-ruleset.html[Endpoint documentation]
 [source,ts]
 ----
-client.queryRuleset.delete({ ruleset_id })
+client.queryRules.deleteRuleset({ ruleset_id })
 ----
 
 [discrete]
@@ -4512,13 +4898,30 @@ client.queryRuleset.delete({ ruleset_id })
 ** *`ruleset_id` (string)*: The unique identifier of the query ruleset to delete
 
 [discrete]
-==== get
-Returns the details about a query ruleset.
+==== get_rule
+Returns the details about a query rule within a query ruleset
+
+{ref}/get-query-rule.html[Endpoint documentation]
+[source,ts]
+----
+client.queryRules.getRule({ ruleset_id, rule_id })
+----
+
+[discrete]
+==== Arguments
+
+* *Request (object):*
+** *`ruleset_id` (string)*: The unique identifier of the query ruleset containing the rule to retrieve
+** *`rule_id` (string)*: The unique identifier of the query rule within the specified ruleset to retrieve
+
+[discrete]
+==== get_ruleset
+Returns the details about a query ruleset
 
 {ref}/get-query-ruleset.html[Endpoint documentation]
 [source,ts]
 ----
-client.queryRuleset.get({ ruleset_id })
+client.queryRules.getRuleset({ ruleset_id })
 ----
 
 [discrete]
@@ -4528,13 +4931,13 @@ client.queryRuleset.get({ ruleset_id })
 ** *`ruleset_id` (string)*: The unique identifier of the query ruleset
 
 [discrete]
-==== list
-Lists query rulesets.
+==== list_rulesets
+Returns summarized information about existing query rulesets.
 
 {ref}/list-query-rulesets.html[Endpoint documentation]
 [source,ts]
 ----
-client.queryRuleset.list({ ... })
+client.queryRules.listRulesets({ ... })
 ----
 
 [discrete]
@@ -4545,13 +4948,34 @@ client.queryRuleset.list({ ... })
 ** *`size` (Optional, number)*: specifies a max number of results to get
 
 [discrete]
-==== put
+==== put_rule
+Creates or updates a query rule within a query ruleset.
+
+{ref}/put-query-rule.html[Endpoint documentation]
+[source,ts]
+----
+client.queryRules.putRule({ ruleset_id, rule_id, type, criteria, actions })
+----
+
+[discrete]
+==== Arguments
+
+* *Request (object):*
+** *`ruleset_id` (string)*: The unique identifier of the query ruleset containing the rule to be created or updated
+** *`rule_id` (string)*: The unique identifier of the query rule within the specified ruleset to be created or updated
+** *`type` (Enum("pinned"))*
+** *`criteria` ({ type, metadata, values } | { type, metadata, values }[])*
+** *`actions` ({ ids, docs })*
+** *`priority` (Optional, number)*
+
+[discrete]
+==== put_ruleset
 Creates or updates a query ruleset.
 
 {ref}/put-query-ruleset.html[Endpoint documentation]
 [source,ts]
 ----
-client.queryRuleset.put({ ruleset_id, rules })
+client.queryRules.putRuleset({ ruleset_id, rules })
 ----
 
 [discrete]
@@ -4559,7 +4983,7 @@ client.queryRuleset.put({ ruleset_id, rules })
 
 * *Request (object):*
 ** *`ruleset_id` (string)*: The unique identifier of the query ruleset to be created or updated
-** *`rules` ({ rule_id, type, criteria, actions }[])*
+** *`rules` ({ rule_id, type, criteria, actions, priority } | { rule_id, type, criteria, actions, priority }[])*
 
 [discrete]
 === search_application
@@ -4597,7 +5021,7 @@ client.searchApplication.deleteBehavioralAnalytics({ name })
 
 [discrete]
 ==== get
-Returns the details about a search application.
+Returns the details about a search application
 
 {ref}/get-search-application.html[Endpoint documentation]
 [source,ts]
@@ -4681,7 +5105,7 @@ client.searchApplication.putBehavioralAnalytics({ name })
 
 [discrete]
 ==== search
-Perform a search against a search application
+Perform a search against a search application.
 
 {ref}/search-application-search.html[Endpoint documentation]
 [source,ts]
@@ -4695,12 +5119,17 @@ client.searchApplication.search({ name })
 * *Request (object):*
 ** *`name` (string)*: The name of the search application to be searched.
 ** *`params` (Optional, Record<string, User-defined value>)*: Query parameters specific to this request, which will override any defaults specified in the template.
+** *`typed_keys` (Optional, boolean)*: Determines whether aggregation names are prefixed by their respective types in the response.
 
 [discrete]
 === security
 [discrete]
 ==== authenticate
-Enables authentication as a user and retrieve information about the authenticated user.
+Authenticate a user.
+Authenticates a user and returns information about the authenticated user.
+Include the user information in a [basic auth header](https://en.wikipedia.org/wiki/Basic_access_authentication).
+A successful call returns a JSON structure that shows user information such as their username, the roles that are assigned to the user, any assigned metadata, and information about the realms that authenticated and authorized the user.
+If the user cannot be authenticated, this API returns a 401 status code.
 
 {ref}/security-api-authenticate.html[Endpoint documentation]
 [source,ts]
@@ -4711,7 +5140,11 @@ client.security.authenticate()
 
 [discrete]
 ==== create_api_key
+Create an API key.
 Creates an API key for access without requiring basic authentication.
+A successful request returns a JSON structure that contains the API key, its unique id, and its name.
+If applicable, it also returns expiration information for the API key in milliseconds.
+NOTE: By default, API keys never expire. You can specify expiration information when you create the API keys.
 
 {ref}/security-api-create-api-key.html[Endpoint documentation]
 [source,ts]
@@ -4725,12 +5158,16 @@ client.security.createApiKey({ ... })
 * *Request (object):*
 ** *`expiration` (Optional, string | -1 | 0)*: Expiration time for the API key. By default, API keys never expire.
 ** *`name` (Optional, string)*: Specifies the name for this API key.
-** *`role_descriptors` (Optional, Record<string, { cluster, indices, global, applications, metadata, run_as, transient_metadata }>)*: An array of role descriptors for this API key. This parameter is optional. When it is not specified or is an empty array, then the API key will have a point in time snapshot of permissions of the authenticated user. If you supply role descriptors then the resultant permissions would be an intersection of API keys permissions and authenticated user’s permissions thereby limiting the access scope for API keys. The structure of role descriptor is the same as the request for create role API. For more details, see create or update roles API.
+** *`role_descriptors` (Optional, Record<string, { cluster, indices, applications, metadata, run_as, description, transient_metadata }>)*: An array of role descriptors for this API key. This parameter is optional. When it is not specified or is an empty array, then the API key will have a point in time snapshot of permissions of the authenticated user. If you supply role descriptors then the resultant permissions would be an intersection of API keys permissions and authenticated user’s permissions thereby limiting the access scope for API keys. The structure of role descriptor is the same as the request for create role API. For more details, see create or update roles API.
+** *`metadata` (Optional, Record<string, User-defined value>)*: Arbitrary metadata that you want to associate with the API key. It supports nested data structure. Within the metadata object, keys beginning with `_` are reserved for system usage.
 ** *`refresh` (Optional, Enum(true | false | "wait_for"))*: If `true` (the default) then refresh the affected shards to make this operation visible to search, if `wait_for` then wait for a refresh to make this operation visible to search, if `false` then do nothing with refreshes.
 
 [discrete]
 ==== get_api_key
+Get API key information.
 Retrieves information for one or more API keys.
+NOTE: If you have only the `manage_own_api_key` privilege, this API returns only the API keys that you own.
+If you have `read_security`, `manage_api_key` or greater privileges (including `manage_security`), this API returns all API keys regardless of ownership.
 
 {ref}/security-api-get-api-key.html[Endpoint documentation]
 [source,ts]
@@ -4753,9 +5190,16 @@ The `realm_name` or `username` parameters cannot be specified when this paramete
 This parameter cannot be used with either `id` or `name` or when `owner` flag is set to `true`.
 ** *`username` (Optional, string)*: The username of a user.
 This parameter cannot be used with either `id` or `name` or when `owner` flag is set to `true`.
+** *`with_limited_by` (Optional, boolean)*: Return the snapshot of the owner user's role descriptors
+associated with the API key. An API key's actual
+permission is the intersection of its assigned role
+descriptors and the owner user's role descriptors.
+** *`active_only` (Optional, boolean)*: A boolean flag that can be used to query API keys that are currently active. An API key is considered active if it is neither invalidated, nor expired at query time. You can specify this together with other parameters such as `owner` or `name`. If `active_only` is false, the response will include both active and inactive (expired or invalidated) keys.
+** *`with_profile_uid` (Optional, boolean)*: Determines whether to also retrieve the profile uid, for the API key owner principal, if it exists.
 
 [discrete]
 ==== has_privileges
+Check user privileges.
 Determines whether the specified user has a specified list of privileges.
 
 {ref}/security-api-has-privileges.html[Endpoint documentation]
@@ -4770,12 +5214,19 @@ client.security.hasPrivileges({ ... })
 * *Request (object):*
 ** *`user` (Optional, string)*: Username
 ** *`application` (Optional, { application, privileges, resources }[])*
-** *`cluster` (Optional, Enum("all" | "cancel_task" | "create_snapshot" | "cross_cluster_replication" | "cross_cluster_search" | "delegate_pki" | "grant_api_key" | "manage" | "manage_api_key" | "manage_autoscaling" | "manage_behavioral_analytics" | "manage_ccr" | "manage_data_frame_transforms" | "manage_data_stream_global_retention" | "manage_enrich" | "manage_ilm" | "manage_index_templates" | "manage_inference" | "manage_ingest_pipelines" | "manage_logstash_pipelines" | "manage_ml" | "manage_oidc" | "manage_own_api_key" | "manage_pipeline" | "manage_rollup" | "manage_saml" | "manage_search_application" | "manage_search_query_rules" | "manage_search_synonyms" | "manage_security" | "manage_service_account" | "manage_slm" | "manage_token" | "manage_transform" | "manage_user_profile" | "manage_watcher" | "monitor" | "monitor_data_frame_transforms" | "monitor_data_stream_global_retention" | "monitor_enrich" | "monitor_inference" | "monitor_ml" | "monitor_rollup" | "monitor_snapshot" | "monitor_text_structure" | "monitor_transform" | "monitor_watcher" | "none" | "post_behavioral_analytics_event" | "read_ccr" | "read_connector_secrets" | "read_fleet_secrets" | "read_ilm" | "read_pipeline" | "read_security" | "read_slm" | "transport_client" | "write_connector_secrets" | "write_fleet_secrets")[])*: A list of the cluster privileges that you want to check.
+** *`cluster` (Optional, Enum("all" | "cancel_task" | "create_snapshot" | "cross_cluster_replication" | "cross_cluster_search" | "delegate_pki" | "grant_api_key" | "manage" | "manage_api_key" | "manage_autoscaling" | "manage_behavioral_analytics" | "manage_ccr" | "manage_data_frame_transforms" | "manage_data_stream_global_retention" | "manage_enrich" | "manage_ilm" | "manage_index_templates" | "manage_inference" | "manage_ingest_pipelines" | "manage_logstash_pipelines" | "manage_ml" | "manage_oidc" | "manage_own_api_key" | "manage_pipeline" | "manage_rollup" | "manage_saml" | "manage_search_application" | "manage_search_query_rules" | "manage_search_synonyms" | "manage_security" | "manage_service_account" | "manage_slm" | "manage_token" | "manage_transform" | "manage_user_profile" | "manage_watcher" | "monitor" | "monitor_data_frame_transforms" | "monitor_data_stream_global_retention" | "monitor_enrich" | "monitor_inference" | "monitor_ml" | "monitor_rollup" | "monitor_snapshot" | "monitor_text_structure" | "monitor_transform" | "monitor_watcher" | "none" | "post_behavioral_analytics_event" | "read_ccr" | "read_fleet_secrets" | "read_ilm" | "read_pipeline" | "read_security" | "read_slm" | "transport_client" | "write_connector_secrets" | "write_fleet_secrets")[])*: A list of the cluster privileges that you want to check.
 ** *`index` (Optional, { names, privileges, allow_restricted_indices }[])*
 
 [discrete]
 ==== invalidate_api_key
+Invalidate API keys.
 Invalidates one or more API keys.
+The `manage_api_key` privilege allows deleting any API keys.
+The `manage_own_api_key` only allows deleting API keys that are owned by the user.
+In addition, with the `manage_own_api_key` privilege, an invalidation request must be issued in one of the three formats:
+- Set the parameter `owner=true`.
+- Or, set both `username` and `realm_name` to match the user’s identity.
+- Or, if the request is issued by an API key, i.e. an API key invalidates itself, specify its ID in the `ids` field.
 
 {ref}/security-api-invalidate-api-key.html[Endpoint documentation]
 [source,ts]
@@ -4801,7 +5252,8 @@ This parameter cannot be used with either `ids` or `name`, or when `owner` flag 
 
 [discrete]
 ==== query_api_keys
-Retrieves information for API keys using a subset of query DSL
+Query API keys.
+Retrieves a paginated list of API keys and their information. You can optionally filter the results with a query.
 
 {ref}/security-api-query-api-key.html[Endpoint documentation]
 [source,ts]
@@ -4833,10 +5285,27 @@ In addition, sort can also be applied to the `_doc` field to sort by index order
 By default, you cannot page through more than 10,000 hits using the `from` and `size` parameters.
 To page through more hits, use the `search_after` parameter.
 ** *`search_after` (Optional, number | number | string | boolean | null | User-defined value[])*: Search after definition
+** *`with_limited_by` (Optional, boolean)*: Return the snapshot of the owner user's role descriptors associated with the API key.
+An API key's actual permission is the intersection of its assigned role descriptors and the owner user's role descriptors.
+** *`with_profile_uid` (Optional, boolean)*: Determines whether to also retrieve the profile uid, for the API key owner principal, if it exists.
+** *`typed_keys` (Optional, boolean)*: Determines whether aggregation names are prefixed by their respective types in the response.
 
 [discrete]
 ==== update_api_key
+Update an API key.
 Updates attributes of an existing API key.
+Users can only update API keys that they created or that were granted to them.
+Use this API to update API keys created by the create API Key or grant API Key APIs.
+If you need to apply the same update to many API keys, you can use bulk update API Keys to reduce overhead.
+It’s not possible to update expired API keys, or API keys that have been invalidated by invalidate API Key.
+This API supports updates to an API key’s access scope and metadata.
+The access scope of an API key is derived from the `role_descriptors` you specify in the request, and a snapshot of the owner user’s permissions at the time of the request.
+The snapshot of the owner’s permissions is updated automatically on every call.
+If you don’t specify `role_descriptors` in the request, a call to this API might still change the API key’s access scope.
+This change can occur if the owner user’s permissions have changed since the API key was created or last modified.
+To update another user’s API key, use the `run_as` feature to submit a request on behalf of another user.
+IMPORTANT: It’s not possible to use an API key as the authentication credential for this API.
+To update an API key, the owner user’s credentials are required.
 
 {ref}/security-api-update-api-key.html[Endpoint documentation]
 [source,ts]
@@ -4849,7 +5318,7 @@ client.security.updateApiKey({ id })
 
 * *Request (object):*
 ** *`id` (string)*: The ID of the API key to update.
-** *`role_descriptors` (Optional, Record<string, { cluster, indices, global, applications, metadata, run_as, transient_metadata }>)*: An array of role descriptors for this API key. This parameter is optional. When it is not specified or is an empty array, then the API key will have a point in time snapshot of permissions of the authenticated user. If you supply role descriptors then the resultant permissions would be an intersection of API keys permissions and authenticated user’s permissions thereby limiting the access scope for API keys. The structure of role descriptor is the same as the request for create role API. For more details, see create or update roles API.
+** *`role_descriptors` (Optional, Record<string, { cluster, indices, applications, metadata, run_as, description, transient_metadata }>)*: An array of role descriptors for this API key. This parameter is optional. When it is not specified or is an empty array, then the API key will have a point in time snapshot of permissions of the authenticated user. If you supply role descriptors then the resultant permissions would be an intersection of API keys permissions and authenticated user’s permissions thereby limiting the access scope for API keys. The structure of role descriptor is the same as the request for create role API. For more details, see create or update roles API.
 ** *`metadata` (Optional, Record<string, User-defined value>)*: Arbitrary metadata that you want to associate with the API key. It supports nested data structure. Within the metadata object, keys beginning with _ are reserved for system usage.
 ** *`expiration` (Optional, string | -1 | 0)*: Expiration time for the API key.
 
@@ -4946,7 +5415,7 @@ client.sql.query({ ... })
 If you specify a cursor, the API only uses the `columnar` and `time_zone` request body parameters.
 It ignores other request body parameters.
 ** *`fetch_size` (Optional, number)*: The maximum number of rows (or entries) to return in one response
-** *`filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Elasticsearch query DSL for additional filtering.
+** *`filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Elasticsearch query DSL for additional filtering.
 ** *`query` (Optional, string)*: SQL query to run.
 ** *`request_timeout` (Optional, string | -1 | 0)*: The timeout before the request fails.
 ** *`page_timeout` (Optional, string | -1 | 0)*: The timeout before a pagination request fails.
@@ -4977,7 +5446,7 @@ client.sql.translate({ query })
 * *Request (object):*
 ** *`query` (string)*: SQL query to run.
 ** *`fetch_size` (Optional, number)*: The maximum number of rows (or entries) to return in one response.
-** *`filter` (Optional, { bool, boosting, common, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule_query, script, script_score, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, term, terms, terms_set, wildcard, wrapper, type })*: Elasticsearch query DSL for additional filtering.
+** *`filter` (Optional, { bool, boosting, common, combined_fields, constant_score, dis_max, distance_feature, exists, function_score, fuzzy, geo_bounding_box, geo_distance, geo_polygon, geo_shape, has_child, has_parent, ids, intervals, knn, match, match_all, match_bool_prefix, match_none, match_phrase, match_phrase_prefix, more_like_this, multi_match, nested, parent_id, percolate, pinned, prefix, query_string, range, rank_feature, regexp, rule, script, script_score, semantic, shape, simple_query_string, span_containing, span_field_masking, span_first, span_multi, span_near, span_not, span_or, span_term, span_within, sparse_vector, term, terms, terms_set, text_expansion, weighted_tokens, wildcard, wrapper, type })*: Elasticsearch query DSL for additional filtering.
 ** *`time_zone` (Optional, string)*: ISO-8601 time zone ID for the search.
 
 [discrete]
@@ -5069,7 +5538,7 @@ client.synonyms.getSynonymsSets({ ... })
 
 [discrete]
 ==== put_synonym
-Creates or updates a synonyms set
+Creates or updates a synonym set.
 
 {ref}/put-synonyms-set.html[Endpoint documentation]
 [source,ts]
@@ -5106,7 +5575,8 @@ client.synonyms.putSynonymRule({ set_id, rule_id, synonyms })
 === tasks
 [discrete]
 ==== get
-Returns information about a task.
+Get task information.
+Returns information about the tasks currently executing in the cluster.
 
 {ref}/tasks.html[Endpoint documentation]
 [source,ts]
@@ -5127,7 +5597,8 @@ If no response is received before the timeout expires, the request fails and ret
 === transform
 [discrete]
 ==== delete_transform
-Deletes an existing transform.
+Delete a transform.
+Deletes a transform.
 
 {ref}/delete-transform.html[Endpoint documentation]
 [source,ts]
@@ -5148,6 +5619,7 @@ index will not be deleted
 
 [discrete]
 ==== get_transform
+Get transforms.
 Retrieves configuration information for transforms.
 
 {ref}/get-transform.html[Endpoint documentation]
@@ -5180,6 +5652,7 @@ be retrieved and then added to another cluster.
 
 [discrete]
 ==== get_transform_stats
+Get transform stats.
 Retrieves usage information for transforms.
 
 {ref}/get-transform-stats.html[Endpoint documentation]
@@ -5210,7 +5683,12 @@ there are no matches or only partial matches.
 
 [discrete]
 ==== preview_transform
-Previews a transform.
+Preview a transform.
+Generates a preview of the results that you will get when you create a transform with the same configuration.
+
+It returns a maximum of 100 results. The calculations are based on all the current data in the source index. It also
+generates a list of mappings and settings for the destination index. These values are determined based on the field
+types of the source index and the transform aggregations.
 
 {ref}/preview-transform.html[Endpoint documentation]
 [source,ts]
@@ -5234,7 +5712,7 @@ indexing. The minimum value is 1s and the maximum is 1h.
 These objects define the group by fields and the aggregation to reduce
 the data.
 ** *`source` (Optional, { index, query, remote, size, slice, sort, _source, runtime_mappings })*: The source of the data for the transform.
-** *`settings` (Optional, { align_checkpoints, dates_as_epoch_millis, deduce_mappings, docs_per_second, max_page_search_size })*: Defines optional transform settings.
+** *`settings` (Optional, { align_checkpoints, dates_as_epoch_millis, deduce_mappings, docs_per_second, max_page_search_size, unattended })*: Defines optional transform settings.
 ** *`sync` (Optional, { time })*: Defines the properties transforms require to run continuously.
 ** *`retention_policy` (Optional, { time })*: Defines a retention policy for the transform. Data that meets the defined
 criteria is deleted from the destination index.
@@ -5245,7 +5723,28 @@ timeout expires, the request fails and returns an error.
 
 [discrete]
 ==== put_transform
-Instantiates a transform.
+Create a transform.
+Creates a transform.
+
+A transform copies data from source indices, transforms it, and persists it into an entity-centric destination index. You can also think of the destination index as a two-dimensional tabular data structure (known as
+a data frame). The ID for each document in the data frame is generated from a hash of the entity, so there is a
+unique row per entity.
+
+You must choose either the latest or pivot method for your transform; you cannot use both in a single transform. If
+you choose to use the pivot method for your transform, the entities are defined by the set of `group_by` fields in
+the pivot object. If you choose to use the latest method, the entities are defined by the `unique_key` field values
+in the latest object.
+
+You must have `create_index`, `index`, and `read` privileges on the destination index and `read` and
+`view_index_metadata` privileges on the source indices. When Elasticsearch security features are enabled, the
+transform remembers which roles the user that created it had at the time of creation and uses those same roles. If
+those roles do not have the required privileges on the source and destination indices, the transform fails when it
+attempts unauthorized operations.
+
+NOTE: You must use Kibana or this API to create a transform. Do not add a transform directly into any
+`.transform-internal*` indices using the Elasticsearch index API. If Elasticsearch security features are enabled, do
+not give users any privileges on `.transform-internal*` indices. If you used transforms prior to 7.5, also do not
+give users any privileges on `.data-frame-internal*` indices.
 
 {ref}/put-transform.html[Endpoint documentation]
 [source,ts]
@@ -5271,7 +5770,7 @@ The minimum value is `1s` and the maximum is `1h`.
 and the aggregation to reduce the data.
 ** *`retention_policy` (Optional, { time })*: Defines a retention policy for the transform. Data that meets the defined criteria is deleted from the
 destination index.
-** *`settings` (Optional, { align_checkpoints, dates_as_epoch_millis, deduce_mappings, docs_per_second, max_page_search_size })*: Defines optional transform settings.
+** *`settings` (Optional, { align_checkpoints, dates_as_epoch_millis, deduce_mappings, docs_per_second, max_page_search_size, unattended })*: Defines optional transform settings.
 ** *`sync` (Optional, { time })*: Defines the properties transforms require to run continuously.
 ** *`defer_validation` (Optional, boolean)*: When the transform is created, a series of validations occur to ensure its success. For example, there is a
 check for the existence of the source indices and a check that the destination index is not part of the source
@@ -5282,7 +5781,10 @@ the exception of privilege checks.
 
 [discrete]
 ==== reset_transform
-Resets an existing transform.
+Reset a transform.
+Resets a transform.
+Before you can reset it, you must stop it; alternatively, use the `force` query parameter.
+If the destination index was created by the transform, it is deleted.
 
 {ref}/reset-transform.html[Endpoint documentation]
 [source,ts]
@@ -5301,7 +5803,13 @@ must be stopped before it can be reset.
 
 [discrete]
 ==== schedule_now_transform
-Schedules now a transform.
+Schedule a transform to start now.
+Instantly runs a transform to process data.
+
+If you _schedule_now a transform, it will process the new data instantly,
+without waiting for the configured frequency interval. After _schedule_now API is called,
+the transform will be processed again at now + frequency unless _schedule_now API
+is called again in the meantime.
 
 {ref}/schedule-now-transform.html[Endpoint documentation]
 [source,ts]
@@ -5318,7 +5826,23 @@ client.transform.scheduleNowTransform({ transform_id })
 
 [discrete]
 ==== start_transform
-Starts one or more transforms.
+Start a transform.
+Starts a transform.
+
+When you start a transform, it creates the destination index if it does not already exist. The `number_of_shards` is
+set to `1` and the `auto_expand_replicas` is set to `0-1`. If it is a pivot transform, it deduces the mapping
+definitions for the destination index from the source indices and the transform aggregations. If fields in the
+destination index are derived from scripts (as in the case of `scripted_metric` or `bucket_script` aggregations),
+the transform uses dynamic mappings unless an index template exists. If it is a latest transform, it does not deduce
+mapping definitions; it uses dynamic mappings. To use explicit mappings, create the destination index before you
+start the transform. Alternatively, you can create an index template, though it does not affect the deduced mappings
+in a pivot transform.
+
+When the transform starts, a series of validations occur to ensure its success. If you deferred validation when you
+created the transform, they occur when you start the transform—​with the exception of privilege checks. When
+Elasticsearch security features are enabled, the transform remembers which roles the user that created it had at the
+time of creation and uses those same roles. If those roles do not have the required privileges on the source and
+destination indices, the transform fails when it attempts unauthorized operations.
 
 {ref}/start-transform.html[Endpoint documentation]
 [source,ts]
@@ -5336,6 +5860,7 @@ client.transform.startTransform({ transform_id })
 
 [discrete]
 ==== stop_transform
+Stop transforms.
 Stops one or more transforms.
 
 {ref}/stop-transform.html[Endpoint documentation]
@@ -5369,7 +5894,14 @@ immediately and the indexer is stopped asynchronously in the background.
 
 [discrete]
 ==== update_transform
+Update a transform.
 Updates certain properties of a transform.
+
+All updated properties except `description` do not take effect until after the transform starts the next checkpoint,
+thus there is data consistency in each checkpoint. To use this API, you must have `read` and `view_index_metadata`
+privileges for the source indices. You must also have `index` and `read` privileges for the destination index. When
+Elasticsearch security features are enabled, the transform remembers which roles the user who updated it had at the
+time of update and runs with those privileges.
 
 {ref}/update-transform.html[Endpoint documentation]
 [source,ts]
@@ -5390,7 +5922,7 @@ the event of transient failures while the transform is searching or
 indexing. The minimum value is 1s and the maximum is 1h.
 ** *`_meta` (Optional, Record<string, User-defined value>)*: Defines optional transform metadata.
 ** *`source` (Optional, { index, query, remote, size, slice, sort, _source, runtime_mappings })*: The source of the data for the transform.
-** *`settings` (Optional, { align_checkpoints, dates_as_epoch_millis, deduce_mappings, docs_per_second, max_page_search_size })*: Defines optional transform settings.
+** *`settings` (Optional, { align_checkpoints, dates_as_epoch_millis, deduce_mappings, docs_per_second, max_page_search_size, unattended })*: Defines optional transform settings.
 ** *`sync` (Optional, { time })*: Defines the properties transforms require to run continuously.
 ** *`retention_policy` (Optional, { time } | null)*: Defines a retention policy for the transform. Data that meets the defined
 criteria is deleted from the destination index.

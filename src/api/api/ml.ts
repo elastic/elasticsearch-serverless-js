@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -44,7 +45,7 @@ export default class Ml {
   }
 
   /**
-    * Closes one or more anomaly detection jobs. A job can be opened and closed multiple times throughout its lifecycle.
+    * Close anomaly detection jobs. A job can be opened and closed multiple times throughout its lifecycle. A closed job cannot receive data or perform analysis operations, but you can still explore and navigate results. When you close a job, it runs housekeeping tasks such as pruning the model history, flushing buffers, calculating final results and persisting the model snapshots. Depending upon the size of the job, it could take several minutes to close and the equivalent time to re-open. After it is closed, the job has a minimal overhead on the cluster except for maintaining its meta data. Therefore it is a best practice to close jobs that are no longer required to process data. If you close an anomaly detection job whose datafeed is running, the request first tries to stop the datafeed. This behavior is equivalent to calling stop datafeed API with the same timeout and force parameters as the close job request. When a datafeed that has a specified end date stops, it automatically closes its associated job.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-close-job.html | Elasticsearch API documentation}
     */
   async closeJob (this: That, params: T.MlCloseJobRequest | TB.MlCloseJobRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlCloseJobResponse>
@@ -78,11 +79,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}/_close`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.close_job',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Deletes a calendar.
+    * Removes all scheduled events from a calendar, then deletes it.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-calendar.html | Elasticsearch API documentation}
     */
   async deleteCalendar (this: That, params: T.MlDeleteCalendarRequest | TB.MlDeleteCalendarRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteCalendarResponse>
@@ -104,7 +111,13 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/calendars/${encodeURIComponent(params.calendar_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_calendar',
+      pathParts: {
+        calendar_id: params.calendar_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -130,7 +143,14 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/calendars/${encodeURIComponent(params.calendar_id.toString())}/events/${encodeURIComponent(params.event_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_calendar_event',
+      pathParts: {
+        calendar_id: params.calendar_id,
+        event_id: params.event_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -156,11 +176,18 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/calendars/${encodeURIComponent(params.calendar_id.toString())}/jobs/${encodeURIComponent(params.job_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_calendar_job',
+      pathParts: {
+        calendar_id: params.calendar_id,
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Deletes an existing data frame analytics job.
+    * Deletes a data frame analytics job.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/delete-dfanalytics.html | Elasticsearch API documentation}
     */
   async deleteDataFrameAnalytics (this: That, params: T.MlDeleteDataFrameAnalyticsRequest | TB.MlDeleteDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteDataFrameAnalyticsResponse>
@@ -182,7 +209,13 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/data_frame/analytics/${encodeURIComponent(params.id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -208,11 +241,17 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/datafeeds/${encodeURIComponent(params.datafeed_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_datafeed',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Deletes a filter.
+    * Deletes a filter. If an anomaly detection job references the filter, you cannot delete the filter. You must update or delete the job before you can delete the filter.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-filter.html | Elasticsearch API documentation}
     */
   async deleteFilter (this: That, params: T.MlDeleteFilterRequest | TB.MlDeleteFilterRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteFilterResponse>
@@ -234,11 +273,17 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/filters/${encodeURIComponent(params.filter_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_filter',
+      pathParts: {
+        filter_id: params.filter_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Deletes an existing anomaly detection job.
+    * Delete an anomaly detection job. All job configuration, model state and results are deleted. It is not currently possible to delete multiple jobs using wildcards or a comma separated list. If you delete a job that has a datafeed, the request first tries to delete the datafeed. This behavior is equivalent to calling the delete datafeed API with the same timeout and force parameters as the delete job request.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-job.html | Elasticsearch API documentation}
     */
   async deleteJob (this: That, params: T.MlDeleteJobRequest | TB.MlDeleteJobRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteJobResponse>
@@ -260,7 +305,13 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_job',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -286,11 +337,17 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_trained_model',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Deletes a model alias that refers to the trained model
+    * Deletes a trained model alias. This API deletes an existing model alias that refers to a trained model. If the model alias is missing or refers to a model other than the one identified by the `model_id`, this API returns an error.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/delete-trained-models-aliases.html | Elasticsearch API documentation}
     */
   async deleteTrainedModelAlias (this: That, params: T.MlDeleteTrainedModelAliasRequest | TB.MlDeleteTrainedModelAliasRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteTrainedModelAliasResponse>
@@ -312,11 +369,18 @@ export default class Ml {
 
     const method = 'DELETE'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/model_aliases/${encodeURIComponent(params.model_alias.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.delete_trained_model_alias',
+      pathParts: {
+        model_alias: params.model_alias,
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Estimates the model memory
+    * Makes an estimation of the memory usage for an anomaly detection job model. It is based on analysis configuration details for the job and cardinality estimates for the fields it references.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-apis.html | Elasticsearch API documentation}
     */
   async estimateModelMemory (this: That, params?: T.MlEstimateModelMemoryRequest | TB.MlEstimateModelMemoryRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlEstimateModelMemoryResponse>
@@ -351,11 +415,14 @@ export default class Ml {
 
     const method = 'POST'
     const path = '/_ml/anomaly_detectors/_estimate_model_memory'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.estimate_model_memory'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Evaluates the data frame analytics for an annotated index.
+    * Evaluates the data frame analytics for an annotated index. The API packages together commonly used evaluation metrics for various types of machine learning features. This has been designed for use on indexes created by data frame analytics. Evaluation requires both a ground truth field and an analytics result field to be present.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/evaluate-dfanalytics.html | Elasticsearch API documentation}
     */
   async evaluateDataFrame (this: That, params: T.MlEvaluateDataFrameRequest | TB.MlEvaluateDataFrameRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlEvaluateDataFrameResponse>
@@ -389,11 +456,14 @@ export default class Ml {
 
     const method = 'POST'
     const path = '/_ml/data_frame/_evaluate'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.evaluate_data_frame'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Forces any buffered data to be processed by the job.
+    * Forces any buffered data to be processed by the job. The flush jobs API is only applicable when sending data for analysis using the post data API. Depending on the content of the buffer, then it might additionally calculate new results. Both flush and close operations are similar, however the flush is more efficient if you are expecting to send more data for analysis. When flushing, the job remains open and is available to continue analyzing data. A close operation additionally prunes and persists the model state to disk and the job must be opened again before analyzing further data.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-flush-job.html | Elasticsearch API documentation}
     */
   async flushJob (this: That, params: T.MlFlushJobRequest | TB.MlFlushJobRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlFlushJobResponse>
@@ -427,7 +497,13 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}/_flush`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.flush_job',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -453,7 +529,13 @@ export default class Ml {
 
     const method = 'GET'
     const path = `/_ml/calendars/${encodeURIComponent(params.calendar_id.toString())}/events`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_calendar_events',
+      pathParts: {
+        calendar_id: params.calendar_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -499,11 +581,17 @@ export default class Ml {
       method = body != null ? 'POST' : 'GET'
       path = '/_ml/calendars'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_calendars',
+      pathParts: {
+        calendar_id: params.calendar_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves configuration information for data frame analytics jobs.
+    * Retrieves configuration information for data frame analytics jobs. You can get information for multiple data frame analytics jobs in a single API request by using a comma-separated list of data frame analytics jobs or a wildcard expression.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/get-dfanalytics.html | Elasticsearch API documentation}
     */
   async getDataFrameAnalytics (this: That, params?: T.MlGetDataFrameAnalyticsRequest | TB.MlGetDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetDataFrameAnalyticsResponse>
@@ -533,7 +621,13 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/data_frame/analytics'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -567,11 +661,17 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/data_frame/analytics/_stats'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_data_frame_analytics_stats',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves usage information for datafeeds.
+    * Retrieves usage information for datafeeds. You can get statistics for multiple datafeeds in a single API request by using a comma-separated list of datafeeds or a wildcard expression. You can get statistics for all datafeeds by using `_all`, by specifying `*` as the `<feed_id>`, or by omitting the `<feed_id>`. If the datafeed is stopped, the only information you receive is the `datafeed_id` and the `state`. This API returns a maximum of 10,000 datafeeds.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-get-datafeed-stats.html | Elasticsearch API documentation}
     */
   async getDatafeedStats (this: That, params?: T.MlGetDatafeedStatsRequest | TB.MlGetDatafeedStatsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetDatafeedStatsResponse>
@@ -601,11 +701,17 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/datafeeds/_stats'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_datafeed_stats',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves configuration information for datafeeds.
+    * Retrieves configuration information for datafeeds. You can get information for multiple datafeeds in a single API request by using a comma-separated list of datafeeds or a wildcard expression. You can get information for all datafeeds by using `_all`, by specifying `*` as the `<feed_id>`, or by omitting the `<feed_id>`. This API returns a maximum of 10,000 datafeeds.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-get-datafeed.html | Elasticsearch API documentation}
     */
   async getDatafeeds (this: That, params?: T.MlGetDatafeedsRequest | TB.MlGetDatafeedsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetDatafeedsResponse>
@@ -635,11 +741,17 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/datafeeds'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_datafeeds',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves filters.
+    * Retrieves filters. You can get a single filter or all filters.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-get-filter.html | Elasticsearch API documentation}
     */
   async getFilters (this: That, params?: T.MlGetFiltersRequest | TB.MlGetFiltersRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetFiltersResponse>
@@ -669,7 +781,13 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/filters'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_filters',
+      pathParts: {
+        filter_id: params.filter_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -703,11 +821,17 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/anomaly_detectors/_stats'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_job_stats',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves configuration information for anomaly detection jobs.
+    * Retrieves configuration information for anomaly detection jobs. You can get information for multiple anomaly detection jobs in a single API request by using a group name, a comma-separated list of jobs, or a wildcard expression. You can get information for all anomaly detection jobs by using `_all`, by specifying `*` as the `<job_id>`, or by omitting the `<job_id>`.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-get-job.html | Elasticsearch API documentation}
     */
   async getJobs (this: That, params?: T.MlGetJobsRequest | TB.MlGetJobsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetJobsResponse>
@@ -737,11 +861,17 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/anomaly_detectors'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_jobs',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves overall bucket results that summarize the bucket results of multiple anomaly detection jobs.
+    * Retrieves overall bucket results that summarize the bucket results of multiple anomaly detection jobs. The `overall_score` is calculated by combining the scores of all the buckets within the overall bucket span. First, the maximum `anomaly_score` per anomaly detection job in the overall bucket is calculated. Then the `top_n` of those scores are averaged to result in the `overall_score`. This means that you can fine-tune the `overall_score` so that it is more or less sensitive to the number of jobs that detect an anomaly at the same time. For example, if you set `top_n` to `1`, the `overall_score` is the maximum bucket score in the overall bucket. Alternatively, if you set `top_n` to the number of jobs, the `overall_score` is high only when all jobs detect anomalies in that overall bucket. If you set the `bucket_span` parameter (to a value greater than its default), the `overall_score` is the maximum `overall_score` of the overall buckets that have a span equal to the jobs' largest bucket span.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-get-overall-buckets.html | Elasticsearch API documentation}
     */
   async getOverallBuckets (this: That, params: T.MlGetOverallBucketsRequest | TB.MlGetOverallBucketsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetOverallBucketsResponse>
@@ -775,11 +905,17 @@ export default class Ml {
 
     const method = body != null ? 'POST' : 'GET'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}/results/overall_buckets`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_overall_buckets',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves configuration information for a trained inference model.
+    * Retrieves configuration information for a trained model.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/get-trained-models.html | Elasticsearch API documentation}
     */
   async getTrainedModels (this: That, params?: T.MlGetTrainedModelsRequest | TB.MlGetTrainedModelsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetTrainedModelsResponse>
@@ -809,11 +945,17 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/trained_models'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_trained_models',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves usage information for trained inference models.
+    * Retrieves usage information for trained models. You can get usage information for multiple trained models in a single API request by using a comma-separated list of model IDs or a wildcard expression.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/get-trained-models-stats.html | Elasticsearch API documentation}
     */
   async getTrainedModelsStats (this: That, params?: T.MlGetTrainedModelsStatsRequest | TB.MlGetTrainedModelsStatsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlGetTrainedModelsStatsResponse>
@@ -843,11 +985,17 @@ export default class Ml {
       method = 'GET'
       path = '/_ml/trained_models/_stats'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.get_trained_models_stats',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Evaluate a trained model.
+    * Evaluates a trained model.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/infer-trained-model.html | Elasticsearch API documentation}
     */
   async inferTrainedModel (this: That, params: T.MlInferTrainedModelRequest | TB.MlInferTrainedModelRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlInferTrainedModelResponse>
@@ -881,11 +1029,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/_infer`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.infer_trained_model',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Opens one or more anomaly detection jobs.
+    * Open anomaly detection jobs. An anomaly detection job must be opened in order for it to be ready to receive and analyze data. It can be opened and closed multiple times throughout its lifecycle. When you open a new job, it starts with an empty model. When you open an existing job, the most recent model state is automatically loaded. The job is ready to resume its analysis from where it left off, once new data is received.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-open-job.html | Elasticsearch API documentation}
     */
   async openJob (this: That, params: T.MlOpenJobRequest | TB.MlOpenJobRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlOpenJobResponse>
@@ -919,11 +1073,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}/_open`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.open_job',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Posts scheduled events in a calendar.
+    * Adds scheduled events to a calendar.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-post-calendar-event.html | Elasticsearch API documentation}
     */
   async postCalendarEvents (this: That, params: T.MlPostCalendarEventsRequest | TB.MlPostCalendarEventsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPostCalendarEventsResponse>
@@ -957,11 +1117,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/calendars/${encodeURIComponent(params.calendar_id.toString())}/events`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.post_calendar_events',
+      pathParts: {
+        calendar_id: params.calendar_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Previews that will be analyzed given a data frame analytics config.
+    * Previews the extracted features used by a data frame analytics config.
     * @see {@link http://www.elastic.co/guide/en/elasticsearch/reference/master/preview-dfanalytics.html | Elasticsearch API documentation}
     */
   async previewDataFrameAnalytics (this: That, params?: T.MlPreviewDataFrameAnalyticsRequest | TB.MlPreviewDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPreviewDataFrameAnalyticsResponse>
@@ -1003,11 +1169,17 @@ export default class Ml {
       method = body != null ? 'POST' : 'GET'
       path = '/_ml/data_frame/analytics/_preview'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.preview_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Previews a datafeed.
+    * Previews a datafeed. This API returns the first "page" of search results from a datafeed. You can preview an existing datafeed or provide configuration details for a datafeed and anomaly detection job in the API. The preview shows the structure of the data that will be passed to the anomaly detection engine. IMPORTANT: When Elasticsearch security features are enabled, the preview uses the credentials of the user that called the API. However, when the datafeed starts it uses the roles of the last user that created or updated the datafeed. To get a preview that accurately reflects the behavior of the datafeed, use the appropriate credentials. You can also use secondary authorization headers to supply the credentials.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-preview-datafeed.html | Elasticsearch API documentation}
     */
   async previewDatafeed<TDocument = unknown> (this: That, params?: T.MlPreviewDatafeedRequest | TB.MlPreviewDatafeedRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPreviewDatafeedResponse<TDocument>>
@@ -1049,11 +1221,17 @@ export default class Ml {
       method = body != null ? 'POST' : 'GET'
       path = '/_ml/datafeeds/_preview'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.preview_datafeed',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Instantiates a calendar.
+    * Creates a calendar.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-put-calendar.html | Elasticsearch API documentation}
     */
   async putCalendar (this: That, params: T.MlPutCalendarRequest | TB.MlPutCalendarRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutCalendarResponse>
@@ -1087,7 +1265,13 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/calendars/${encodeURIComponent(params.calendar_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_calendar',
+      pathParts: {
+        calendar_id: params.calendar_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -1113,11 +1297,18 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/calendars/${encodeURIComponent(params.calendar_id.toString())}/jobs/${encodeURIComponent(params.job_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_calendar_job',
+      pathParts: {
+        calendar_id: params.calendar_id,
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Instantiates a data frame analytics job.
+    * Instantiates a data frame analytics job. This API creates a data frame analytics job that performs an analysis on the source indices and stores the outcome in a destination index.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/put-dfanalytics.html | Elasticsearch API documentation}
     */
   async putDataFrameAnalytics (this: That, params: T.MlPutDataFrameAnalyticsRequest | TB.MlPutDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutDataFrameAnalyticsResponse>
@@ -1125,7 +1316,7 @@ export default class Ml {
   async putDataFrameAnalytics (this: That, params: T.MlPutDataFrameAnalyticsRequest | TB.MlPutDataFrameAnalyticsRequest, options?: TransportRequestOptions): Promise<T.MlPutDataFrameAnalyticsResponse>
   async putDataFrameAnalytics (this: That, params: T.MlPutDataFrameAnalyticsRequest | TB.MlPutDataFrameAnalyticsRequest, options?: TransportRequestOptions): Promise<any> {
     const acceptedPath: string[] = ['id']
-    const acceptedBody: string[] = ['allow_lazy_start', 'analysis', 'analyzed_fields', 'description', 'dest', 'max_num_threads', 'model_memory_limit', 'source']
+    const acceptedBody: string[] = ['allow_lazy_start', 'analysis', 'analyzed_fields', 'description', 'dest', 'max_num_threads', 'model_memory_limit', 'source', 'headers', 'version']
     const querystring: Record<string, any> = {}
     // @ts-expect-error
     const userBody: any = params?.body
@@ -1151,11 +1342,17 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/data_frame/analytics/${encodeURIComponent(params.id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Instantiates a datafeed.
+    * Instantiates a datafeed. Datafeeds retrieve data from Elasticsearch for analysis by an anomaly detection job. You can associate only one datafeed with each anomaly detection job. The datafeed contains a query that runs at a defined interval (`frequency`). If you are concerned about delayed data, you can add a delay (`query_delay') at each interval. When Elasticsearch security features are enabled, your datafeed remembers which roles the user who created it had at the time of creation and runs the query using those same roles. If you provide secondary authorization headers, those credentials are used instead. You must use Kibana, this API, or the create anomaly detection jobs API to create a datafeed. Do not add a datafeed directly to the `.ml-config` index. Do not give users `write` privileges on the `.ml-config` index.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-put-datafeed.html | Elasticsearch API documentation}
     */
   async putDatafeed (this: That, params: T.MlPutDatafeedRequest | TB.MlPutDatafeedRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutDatafeedResponse>
@@ -1163,7 +1360,7 @@ export default class Ml {
   async putDatafeed (this: That, params: T.MlPutDatafeedRequest | TB.MlPutDatafeedRequest, options?: TransportRequestOptions): Promise<T.MlPutDatafeedResponse>
   async putDatafeed (this: That, params: T.MlPutDatafeedRequest | TB.MlPutDatafeedRequest, options?: TransportRequestOptions): Promise<any> {
     const acceptedPath: string[] = ['datafeed_id']
-    const acceptedBody: string[] = ['aggregations', 'chunking_config', 'delayed_data_check_config', 'frequency', 'indices', 'indexes', 'indices_options', 'job_id', 'max_empty_searches', 'query', 'query_delay', 'runtime_mappings', 'script_fields', 'scroll_size']
+    const acceptedBody: string[] = ['aggregations', 'chunking_config', 'delayed_data_check_config', 'frequency', 'indices', 'indexes', 'indices_options', 'job_id', 'max_empty_searches', 'query', 'query_delay', 'runtime_mappings', 'script_fields', 'scroll_size', 'headers']
     const querystring: Record<string, any> = {}
     // @ts-expect-error
     const userBody: any = params?.body
@@ -1189,11 +1386,17 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/datafeeds/${encodeURIComponent(params.datafeed_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_datafeed',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Instantiates a filter.
+    * Instantiates a filter. A filter contains a list of strings. It can be used by one or more anomaly detection jobs. Specifically, filters are referenced in the `custom_rules` property of detector configuration objects.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-put-filter.html | Elasticsearch API documentation}
     */
   async putFilter (this: That, params: T.MlPutFilterRequest | TB.MlPutFilterRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutFilterResponse>
@@ -1227,11 +1430,17 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/filters/${encodeURIComponent(params.filter_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_filter',
+      pathParts: {
+        filter_id: params.filter_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Instantiates an anomaly detection job.
+    * Create an anomaly detection job. If you include a `datafeed_config`, you must have read index privileges on the source index.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-put-job.html | Elasticsearch API documentation}
     */
   async putJob (this: That, params: T.MlPutJobRequest | TB.MlPutJobRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutJobResponse>
@@ -1265,11 +1474,17 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_job',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Creates an inference trained model.
+    * Enables you to supply a trained model that is not created by data frame analytics.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/put-trained-models.html | Elasticsearch API documentation}
     */
   async putTrainedModel (this: That, params: T.MlPutTrainedModelRequest | TB.MlPutTrainedModelRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutTrainedModelResponse>
@@ -1277,7 +1492,7 @@ export default class Ml {
   async putTrainedModel (this: That, params: T.MlPutTrainedModelRequest | TB.MlPutTrainedModelRequest, options?: TransportRequestOptions): Promise<T.MlPutTrainedModelResponse>
   async putTrainedModel (this: That, params: T.MlPutTrainedModelRequest | TB.MlPutTrainedModelRequest, options?: TransportRequestOptions): Promise<any> {
     const acceptedPath: string[] = ['model_id']
-    const acceptedBody: string[] = ['compressed_definition', 'definition', 'description', 'inference_config', 'input', 'metadata', 'model_type', 'model_size_bytes', 'platform_architecture', 'tags']
+    const acceptedBody: string[] = ['compressed_definition', 'definition', 'description', 'inference_config', 'input', 'metadata', 'model_type', 'model_size_bytes', 'platform_architecture', 'tags', 'prefix_strings']
     const querystring: Record<string, any> = {}
     // @ts-expect-error
     const userBody: any = params?.body
@@ -1303,11 +1518,17 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_trained_model',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Creates a new model alias (or reassigns an existing one) to refer to the trained model
+    * Creates or updates a trained model alias. A trained model alias is a logical name used to reference a single trained model. You can use aliases instead of trained model identifiers to make it easier to reference your models. For example, you can use aliases in inference aggregations and processors. An alias must be unique and refer to only a single trained model. However, you can have multiple aliases for each trained model. If you use this API to update an alias such that it references a different trained model ID and the model uses a different type of data frame analytics, an error occurs. For example, this situation occurs if you have a trained model for regression analysis and a trained model for classification analysis; you cannot reassign an alias from one type of trained model to another. If you use this API to update an alias and there are very few input fields in common between the old and new trained models for the model alias, the API returns a warning.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/put-trained-models-aliases.html | Elasticsearch API documentation}
     */
   async putTrainedModelAlias (this: That, params: T.MlPutTrainedModelAliasRequest | TB.MlPutTrainedModelAliasRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutTrainedModelAliasResponse>
@@ -1329,11 +1550,18 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/model_aliases/${encodeURIComponent(params.model_alias.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_trained_model_alias',
+      pathParts: {
+        model_alias: params.model_alias,
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Creates part of a trained model definition
+    * Creates part of a trained model definition.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/put-trained-model-definition-part.html | Elasticsearch API documentation}
     */
   async putTrainedModelDefinitionPart (this: That, params: T.MlPutTrainedModelDefinitionPartRequest | TB.MlPutTrainedModelDefinitionPartRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutTrainedModelDefinitionPartResponse>
@@ -1367,11 +1595,18 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/definition/${encodeURIComponent(params.part.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_trained_model_definition_part',
+      pathParts: {
+        model_id: params.model_id,
+        part: params.part
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Creates a trained model vocabulary
+    * Creates a trained model vocabulary. This API is supported only for natural language processing (NLP) models. The vocabulary is stored in the index as described in `inference_config.*.vocabulary` of the trained model definition.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/put-trained-model-vocabulary.html | Elasticsearch API documentation}
     */
   async putTrainedModelVocabulary (this: That, params: T.MlPutTrainedModelVocabularyRequest | TB.MlPutTrainedModelVocabularyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlPutTrainedModelVocabularyResponse>
@@ -1379,7 +1614,7 @@ export default class Ml {
   async putTrainedModelVocabulary (this: That, params: T.MlPutTrainedModelVocabularyRequest | TB.MlPutTrainedModelVocabularyRequest, options?: TransportRequestOptions): Promise<T.MlPutTrainedModelVocabularyResponse>
   async putTrainedModelVocabulary (this: That, params: T.MlPutTrainedModelVocabularyRequest | TB.MlPutTrainedModelVocabularyRequest, options?: TransportRequestOptions): Promise<any> {
     const acceptedPath: string[] = ['model_id']
-    const acceptedBody: string[] = ['vocabulary']
+    const acceptedBody: string[] = ['vocabulary', 'merges', 'scores']
     const querystring: Record<string, any> = {}
     // @ts-expect-error
     const userBody: any = params?.body
@@ -1405,11 +1640,17 @@ export default class Ml {
 
     const method = 'PUT'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/vocabulary`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.put_trained_model_vocabulary',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Resets an existing anomaly detection job.
+    * Resets an anomaly detection job. All model state and results are deleted. The job is ready to start over as if it had just been created. It is not currently possible to reset multiple jobs using wildcards or a comma separated list.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-reset-job.html | Elasticsearch API documentation}
     */
   async resetJob (this: That, params: T.MlResetJobRequest | TB.MlResetJobRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlResetJobResponse>
@@ -1431,11 +1672,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}/_reset`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.reset_job',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Starts a data frame analytics job.
+    * Starts a data frame analytics job. A data frame analytics job can be started and stopped multiple times throughout its lifecycle. If the destination index does not exist, it is created automatically the first time you start the data frame analytics job. The `index.number_of_shards` and `index.number_of_replicas` settings for the destination index are copied from the source index. If there are multiple source indices, the destination index copies the highest setting values. The mappings for the destination index are also copied from the source indices. If there are any mapping conflicts, the job fails to start. If the destination index exists, it is used as is. You can therefore set up the destination index in advance with custom settings and mappings.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/start-dfanalytics.html | Elasticsearch API documentation}
     */
   async startDataFrameAnalytics (this: That, params: T.MlStartDataFrameAnalyticsRequest | TB.MlStartDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlStartDataFrameAnalyticsResponse>
@@ -1457,11 +1704,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/data_frame/analytics/${encodeURIComponent(params.id.toString())}/_start`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.start_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Starts one or more datafeeds.
+    * Starts one or more datafeeds. A datafeed must be started in order to retrieve data from Elasticsearch. A datafeed can be started and stopped multiple times throughout its lifecycle. Before you can start a datafeed, the anomaly detection job must be open. Otherwise, an error occurs. If you restart a stopped datafeed, it continues processing input data from the next millisecond after it was stopped. If new data was indexed for that exact millisecond between stopping and starting, it will be ignored. When Elasticsearch security features are enabled, your datafeed remembers which roles the last user to create or update it had at the time of creation or update and runs the query using those same roles. If you provided secondary authorization headers when you created or updated the datafeed, those credentials are used instead.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-start-datafeed.html | Elasticsearch API documentation}
     */
   async startDatafeed (this: That, params: T.MlStartDatafeedRequest | TB.MlStartDatafeedRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlStartDatafeedResponse>
@@ -1495,11 +1748,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/datafeeds/${encodeURIComponent(params.datafeed_id.toString())}/_start`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.start_datafeed',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Start a trained model deployment.
+    * Starts a trained model deployment, which allocates the model to every machine learning node.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/start-trained-model-deployment.html | Elasticsearch API documentation}
     */
   async startTrainedModelDeployment (this: That, params: T.MlStartTrainedModelDeploymentRequest | TB.MlStartTrainedModelDeploymentRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlStartTrainedModelDeploymentResponse>
@@ -1521,11 +1780,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/deployment/_start`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.start_trained_model_deployment',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Stops one or more data frame analytics jobs.
+    * Stops one or more data frame analytics jobs. A data frame analytics job can be started and stopped multiple times throughout its lifecycle.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/stop-dfanalytics.html | Elasticsearch API documentation}
     */
   async stopDataFrameAnalytics (this: That, params: T.MlStopDataFrameAnalyticsRequest | TB.MlStopDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlStopDataFrameAnalyticsResponse>
@@ -1547,11 +1812,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/data_frame/analytics/${encodeURIComponent(params.id.toString())}/_stop`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.stop_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Stops one or more datafeeds.
+    * Stops one or more datafeeds. A datafeed that is stopped ceases to retrieve data from Elasticsearch. A datafeed can be started and stopped multiple times throughout its lifecycle.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-stop-datafeed.html | Elasticsearch API documentation}
     */
   async stopDatafeed (this: That, params: T.MlStopDatafeedRequest | TB.MlStopDatafeedRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlStopDatafeedResponse>
@@ -1585,11 +1856,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/datafeeds/${encodeURIComponent(params.datafeed_id.toString())}/_stop`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.stop_datafeed',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Stop a trained model deployment.
+    * Stops a trained model deployment.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/stop-trained-model-deployment.html | Elasticsearch API documentation}
     */
   async stopTrainedModelDeployment (this: That, params: T.MlStopTrainedModelDeploymentRequest | TB.MlStopTrainedModelDeploymentRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlStopTrainedModelDeploymentResponse>
@@ -1611,11 +1888,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/deployment/_stop`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.stop_trained_model_deployment',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Updates certain properties of a data frame analytics job.
+    * Updates an existing data frame analytics job.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/update-dfanalytics.html | Elasticsearch API documentation}
     */
   async updateDataFrameAnalytics (this: That, params: T.MlUpdateDataFrameAnalyticsRequest | TB.MlUpdateDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlUpdateDataFrameAnalyticsResponse>
@@ -1649,11 +1932,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/data_frame/analytics/${encodeURIComponent(params.id.toString())}/_update`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.update_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Updates certain properties of a datafeed.
+    * Updates the properties of a datafeed. You must stop and start the datafeed for the changes to be applied. When Elasticsearch security features are enabled, your datafeed remembers which roles the user who updated it had at the time of the update and runs the query using those same roles. If you provide secondary authorization headers, those credentials are used instead.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-update-datafeed.html | Elasticsearch API documentation}
     */
   async updateDatafeed (this: That, params: T.MlUpdateDatafeedRequest | TB.MlUpdateDatafeedRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlUpdateDatafeedResponse>
@@ -1687,11 +1976,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/datafeeds/${encodeURIComponent(params.datafeed_id.toString())}/_update`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.update_datafeed',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Updates the description of a filter, adds items, or removes items.
+    * Updates the description of a filter, adds items, or removes items from the list.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-update-filter.html | Elasticsearch API documentation}
     */
   async updateFilter (this: That, params: T.MlUpdateFilterRequest | TB.MlUpdateFilterRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlUpdateFilterResponse>
@@ -1725,7 +2020,13 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/filters/${encodeURIComponent(params.filter_id.toString())}/_update`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.update_filter',
+      pathParts: {
+        filter_id: params.filter_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -1763,11 +2064,17 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/anomaly_detectors/${encodeURIComponent(params.job_id.toString())}/_update`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.update_job',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Updates certain properties of trained model deployment.
+    * Starts a trained model deployment, which allocates the model to every machine learning node.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/update-trained-model-deployment.html | Elasticsearch API documentation}
     */
   async updateTrainedModelDeployment (this: That, params: T.MlUpdateTrainedModelDeploymentRequest | TB.MlUpdateTrainedModelDeploymentRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlUpdateTrainedModelDeploymentResponse>
@@ -1801,6 +2108,12 @@ export default class Ml {
 
     const method = 'POST'
     const path = `/_ml/trained_models/${encodeURIComponent(params.model_id.toString())}/deployment/_update`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'ml.update_trained_model_deployment',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 }

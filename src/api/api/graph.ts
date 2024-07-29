@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -44,7 +45,7 @@ export default class Graph {
   }
 
   /**
-    * Explore extracted and summarized information about the documents and terms in an index.
+    * Extracts and summarizes information about the documents and terms in an Elasticsearch data stream or index.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/graph-explore-api.html | Elasticsearch API documentation}
     */
   async explore (this: That, params: T.GraphExploreRequest | TB.GraphExploreRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.GraphExploreResponse>
@@ -78,6 +79,12 @@ export default class Graph {
 
     const method = body != null ? 'POST' : 'GET'
     const path = `/${encodeURIComponent(params.index.toString())}/_graph/explore`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'graph.explore',
+      pathParts: {
+        index: params.index
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 }
