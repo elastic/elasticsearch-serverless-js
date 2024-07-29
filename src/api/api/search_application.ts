@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -66,7 +67,13 @@ export default class SearchApplication {
 
     const method = 'DELETE'
     const path = `/_application/search_application/${encodeURIComponent(params.name.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.delete',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -92,11 +99,17 @@ export default class SearchApplication {
 
     const method = 'DELETE'
     const path = `/_application/analytics/${encodeURIComponent(params.name.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.delete_behavioral_analytics',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Returns the details about a search application.
+    * Returns the details about a search application
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/get-search-application.html | Elasticsearch API documentation}
     */
   async get (this: That, params: T.SearchApplicationGetRequest | TB.SearchApplicationGetRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SearchApplicationGetResponse>
@@ -118,7 +131,13 @@ export default class SearchApplication {
 
     const method = 'GET'
     const path = `/_application/search_application/${encodeURIComponent(params.name.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.get',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -152,7 +171,13 @@ export default class SearchApplication {
       method = 'GET'
       path = '/_application/analytics'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.get_behavioral_analytics',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -179,7 +204,10 @@ export default class SearchApplication {
 
     const method = 'GET'
     const path = '/_application/search_application'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.list'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -210,7 +238,13 @@ export default class SearchApplication {
 
     const method = 'PUT'
     const path = `/_application/search_application/${encodeURIComponent(params.name.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.put',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
@@ -236,11 +270,17 @@ export default class SearchApplication {
 
     const method = 'PUT'
     const path = `/_application/analytics/${encodeURIComponent(params.name.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.put_behavioral_analytics',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Perform a search against a search application
+    * Perform a search against a search application.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/search-application-search.html | Elasticsearch API documentation}
     */
   async search<TDocument = unknown, TAggregations = Record<T.AggregateName, T.AggregationsAggregate>> (this: That, params: T.SearchApplicationSearchRequest | TB.SearchApplicationSearchRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SearchApplicationSearchResponse<TDocument, TAggregations>>
@@ -274,6 +314,12 @@ export default class SearchApplication {
 
     const method = body != null ? 'POST' : 'GET'
     const path = `/_application/search_application/${encodeURIComponent(params.name.toString())}/_search`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'search_application.search',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 }

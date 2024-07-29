@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -38,7 +39,7 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Allows to copy documents from one index to another, optionally filtering the source documents by a query, changing the destination index settings, or fetching the documents from a remote cluster.
+  * Reindex documents. Copies documents from a source to a destination. The source can be any existing index, alias, or data stream. The destination must differ from the source. For example, you cannot reindex a data stream into itself.
   * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-reindex.html | Elasticsearch API documentation}
   */
 export default async function ReindexApi (this: That, params: T.ReindexRequest | TB.ReindexRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.ReindexResponse>
@@ -72,5 +73,8 @@ export default async function ReindexApi (this: That, params: T.ReindexRequest |
 
   const method = 'POST'
   const path = '/_reindex'
-  return await this.transport.request({ path, method, querystring, body }, options)
+  const meta: TransportRequestMetadata = {
+    name: 'reindex'
+  }
+  return await this.transport.request({ path, method, querystring, body, meta }, options)
 }

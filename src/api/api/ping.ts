@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -38,7 +39,7 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Returns whether the cluster is running.
+  * Ping the cluster. Returns whether the cluster is running.
   * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/index.html | Elasticsearch API documentation}
   */
 export default async function PingApi (this: That, params?: T.PingRequest | TB.PingRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.PingResponse>
@@ -61,5 +62,8 @@ export default async function PingApi (this: That, params?: T.PingRequest | TB.P
 
   const method = 'HEAD'
   const path = '/'
-  return await this.transport.request({ path, method, querystring, body }, options)
+  const meta: TransportRequestMetadata = {
+    name: 'ping'
+  }
+  return await this.transport.request({ path, method, querystring, body, meta }, options)
 }

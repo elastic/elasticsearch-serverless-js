@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -44,7 +45,7 @@ export default class Security {
   }
 
   /**
-    * Enables authentication as a user and retrieve information about the authenticated user.
+    * Authenticate a user. Authenticates a user and returns information about the authenticated user. Include the user information in a [basic auth header](https://en.wikipedia.org/wiki/Basic_access_authentication). A successful call returns a JSON structure that shows user information such as their username, the roles that are assigned to the user, any assigned metadata, and information about the realms that authenticated and authorized the user. If the user cannot be authenticated, this API returns a 401 status code.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-authenticate.html | Elasticsearch API documentation}
     */
   async authenticate (this: That, params?: T.SecurityAuthenticateRequest | TB.SecurityAuthenticateRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityAuthenticateResponse>
@@ -67,11 +68,14 @@ export default class Security {
 
     const method = 'GET'
     const path = '/_security/_authenticate'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'security.authenticate'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Creates an API key for access without requiring basic authentication.
+    * Create an API key. Creates an API key for access without requiring basic authentication. A successful request returns a JSON structure that contains the API key, its unique id, and its name. If applicable, it also returns expiration information for the API key in milliseconds. NOTE: By default, API keys never expire. You can specify expiration information when you create the API keys.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-create-api-key.html | Elasticsearch API documentation}
     */
   async createApiKey (this: That, params?: T.SecurityCreateApiKeyRequest | TB.SecurityCreateApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityCreateApiKeyResponse>
@@ -79,7 +83,7 @@ export default class Security {
   async createApiKey (this: That, params?: T.SecurityCreateApiKeyRequest | TB.SecurityCreateApiKeyRequest, options?: TransportRequestOptions): Promise<T.SecurityCreateApiKeyResponse>
   async createApiKey (this: That, params?: T.SecurityCreateApiKeyRequest | TB.SecurityCreateApiKeyRequest, options?: TransportRequestOptions): Promise<any> {
     const acceptedPath: string[] = []
-    const acceptedBody: string[] = ['expiration', 'name', 'role_descriptors']
+    const acceptedBody: string[] = ['expiration', 'name', 'role_descriptors', 'metadata']
     const querystring: Record<string, any> = {}
     // @ts-expect-error
     const userBody: any = params?.body
@@ -106,11 +110,14 @@ export default class Security {
 
     const method = 'PUT'
     const path = '/_security/api_key'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'security.create_api_key'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves information for one or more API keys.
+    * Get API key information. Retrieves information for one or more API keys. NOTE: If you have only the `manage_own_api_key` privilege, this API returns only the API keys that you own. If you have `read_security`, `manage_api_key` or greater privileges (including `manage_security`), this API returns all API keys regardless of ownership.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-get-api-key.html | Elasticsearch API documentation}
     */
   async getApiKey (this: That, params?: T.SecurityGetApiKeyRequest | TB.SecurityGetApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityGetApiKeyResponse>
@@ -133,11 +140,14 @@ export default class Security {
 
     const method = 'GET'
     const path = '/_security/api_key'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'security.get_api_key'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Determines whether the specified user has a specified list of privileges.
+    * Check user privileges. Determines whether the specified user has a specified list of privileges.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-has-privileges.html | Elasticsearch API documentation}
     */
   async hasPrivileges (this: That, params?: T.SecurityHasPrivilegesRequest | TB.SecurityHasPrivilegesRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityHasPrivilegesResponse>
@@ -179,11 +189,17 @@ export default class Security {
       method = body != null ? 'POST' : 'GET'
       path = '/_security/user/_has_privileges'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'security.has_privileges',
+      pathParts: {
+        user: params.user
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Invalidates one or more API keys.
+    * Invalidate API keys. Invalidates one or more API keys. The `manage_api_key` privilege allows deleting any API keys. The `manage_own_api_key` only allows deleting API keys that are owned by the user. In addition, with the `manage_own_api_key` privilege, an invalidation request must be issued in one of the three formats: - Set the parameter `owner=true`. - Or, set both `username` and `realm_name` to match the user’s identity. - Or, if the request is issued by an API key, i.e. an API key invalidates itself, specify its ID in the `ids` field.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-invalidate-api-key.html | Elasticsearch API documentation}
     */
   async invalidateApiKey (this: That, params?: T.SecurityInvalidateApiKeyRequest | TB.SecurityInvalidateApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityInvalidateApiKeyResponse>
@@ -218,11 +234,14 @@ export default class Security {
 
     const method = 'DELETE'
     const path = '/_security/api_key'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'security.invalidate_api_key'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Retrieves information for API keys using a subset of query DSL
+    * Query API keys. Retrieves a paginated list of API keys and their information. You can optionally filter the results with a query.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-query-api-key.html | Elasticsearch API documentation}
     */
   async queryApiKeys (this: That, params?: T.SecurityQueryApiKeysRequest | TB.SecurityQueryApiKeysRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityQueryApiKeysResponse>
@@ -257,11 +276,14 @@ export default class Security {
 
     const method = body != null ? 'POST' : 'GET'
     const path = '/_security/_query/api_key'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'security.query_api_keys'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Updates attributes of an existing API key.
+    * Update an API key. Updates attributes of an existing API key. Users can only update API keys that they created or that were granted to them. Use this API to update API keys created by the create API Key or grant API Key APIs. If you need to apply the same update to many API keys, you can use bulk update API Keys to reduce overhead. It’s not possible to update expired API keys, or API keys that have been invalidated by invalidate API Key. This API supports updates to an API key’s access scope and metadata. The access scope of an API key is derived from the `role_descriptors` you specify in the request, and a snapshot of the owner user’s permissions at the time of the request. The snapshot of the owner’s permissions is updated automatically on every call. If you don’t specify `role_descriptors` in the request, a call to this API might still change the API key’s access scope. This change can occur if the owner user’s permissions have changed since the API key was created or last modified. To update another user’s API key, use the `run_as` feature to submit a request on behalf of another user. IMPORTANT: It’s not possible to use an API key as the authentication credential for this API. To update an API key, the owner user’s credentials are required.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/security-api-update-api-key.html | Elasticsearch API documentation}
     */
   async updateApiKey (this: That, params: T.SecurityUpdateApiKeyRequest | TB.SecurityUpdateApiKeyRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.SecurityUpdateApiKeyResponse>
@@ -295,6 +317,12 @@ export default class Security {
 
     const method = 'PUT'
     const path = `/_security/api_key/${encodeURIComponent(params.id.toString())}`
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'security.update_api_key',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 }

@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -44,7 +45,7 @@ export default class Cat {
   }
 
   /**
-    * Shows information about currently configured aliases to indices including filter and routing infos.
+    * Get aliases. Retrieves the cluster’s index aliases, including filter and routing information. The API does not return data stream aliases. > info > CAT APIs are only intended for human consumption using the command line or the Kibana console. They are not intended for use by applications. For application consumption, use [the /_alias endpoints](#endpoint-alias).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-alias.html | Elasticsearch API documentation}
     */
   async aliases (this: That, params?: T.CatAliasesRequest | TB.CatAliasesRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatAliasesResponse>
@@ -74,11 +75,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/aliases'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.aliases',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Returns information about existing component_templates templates.
+    * Get component templates. Returns information about component templates in a cluster. Component templates are building blocks for constructing index templates that specify index mappings, settings, and aliases. > info > CAT APIs are only intended for human consumption using the command line or Kibana console. They are not intended for use by applications. For application consumption, use [the /_component_template endpoints](#endpoint-component-template).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-component-templates.html | Elasticsearch API documentation}
     */
   async componentTemplates (this: That, params?: T.CatComponentTemplatesRequest | TB.CatComponentTemplatesRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatComponentTemplatesResponse>
@@ -108,11 +115,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/component_templates'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.component_templates',
+      pathParts: {
+        name: params.name
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Provides quick access to the document count of the entire cluster, or individual indices.
+    * Get a document count. Provides quick access to a document count for a data stream, an index, or an entire cluster.n/ The document count only includes live documents, not deleted documents which have not yet been removed by the merge process. > info > CAT APIs are only intended for human consumption using the command line or Kibana console. They are not intended for use by applications. For application consumption, use [the /_count endpoints](#endpoint-count).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-count.html | Elasticsearch API documentation}
     */
   async count (this: That, params?: T.CatCountRequest | TB.CatCountRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatCountResponse>
@@ -142,11 +155,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/count'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.count',
+      pathParts: {
+        index: params.index
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Returns help for the Cat APIs.
+    * Get CAT help. Returns help for the CAT APIs.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat.html | Elasticsearch API documentation}
     */
   async help (this: That, params?: T.CatHelpRequest | TB.CatHelpRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatHelpResponse>
@@ -169,11 +188,14 @@ export default class Cat {
 
     const method = 'GET'
     const path = '/_cat'
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.help'
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Returns information about indices: number of primaries and replicas, document counts, disk size, ...
+    * Get index information. Returns high-level information about indices in a cluster, including backing indices for data streams. > info > CAT APIs are only intended for human consumption using the command line or Kibana console. They are not intended for use by applications. For application consumption, use an index endpoint. Use this request to get the following information for each index in a cluster: - shard count - document count - deleted document count - primary store size - total store size of all shards, including shard replicas These metrics are retrieved directly from Lucene, which Elasticsearch uses internally to power indexing and search. As a result, all document counts include hidden nested documents. To get an accurate count of Elasticsearch documents, use the [/_cat/count](#operation-cat-count) or [count](#endpoint-count) endpoints.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-indices.html | Elasticsearch API documentation}
     */
   async indices (this: That, params?: T.CatIndicesRequest | TB.CatIndicesRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatIndicesResponse>
@@ -203,11 +225,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/indices'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.indices',
+      pathParts: {
+        index: params.index
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Gets configuration and usage information about data frame analytics jobs.
+    * Get data frame analytics jobs. Returns configuration and usage information about data frame analytics jobs. > info > CAT APIs are only intended for human consumption using the Kibana console or command line. They are not intended for use by applications. For application consumption, use [the /_ml/data_frame/analytics endpoints](#endpoint-ml).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-dfanalytics.html | Elasticsearch API documentation}
     */
   async mlDataFrameAnalytics (this: That, params?: T.CatMlDataFrameAnalyticsRequest | TB.CatMlDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatMlDataFrameAnalyticsResponse>
@@ -237,11 +265,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/ml/data_frame/analytics'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.ml_data_frame_analytics',
+      pathParts: {
+        id: params.id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Gets configuration and usage information about datafeeds.
+    * Get datafeeds. Returns configuration and usage information about datafeeds. This API returns a maximum of 10,000 datafeeds. If the Elasticsearch security features are enabled, you must have `monitor_ml`, `monitor`, `manage_ml`, or `manage` cluster privileges to use this API. > info > CAT APIs are only intended for human consumption using the Kibana console or command line. They are not intended for use by applications. For application consumption, use [the /_ml/datafeeds endpoints](#endpoint-ml).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-datafeeds.html | Elasticsearch API documentation}
     */
   async mlDatafeeds (this: That, params?: T.CatMlDatafeedsRequest | TB.CatMlDatafeedsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatMlDatafeedsResponse>
@@ -271,11 +305,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/ml/datafeeds'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.ml_datafeeds',
+      pathParts: {
+        datafeed_id: params.datafeed_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Gets configuration and usage information about anomaly detection jobs.
+    * Get anomaly detection jobs. Returns configuration and usage information for anomaly detection jobs. This API returns a maximum of 10,000 jobs. If the Elasticsearch security features are enabled, you must have `monitor_ml`, `monitor`, `manage_ml`, or `manage` cluster privileges to use this API. > info > CAT APIs are only intended for human consumption using the Kibana console or command line. They are not intended for use by applications. For application consumption, use [the /_ml/anomaly_detectors endpoints](#endpoint-ml).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-anomaly-detectors.html | Elasticsearch API documentation}
     */
   async mlJobs (this: That, params?: T.CatMlJobsRequest | TB.CatMlJobsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatMlJobsResponse>
@@ -305,11 +345,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/ml/anomaly_detectors'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.ml_jobs',
+      pathParts: {
+        job_id: params.job_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Gets configuration and usage information about inference trained models.
+    * Get trained models. Returns configuration and usage information about inference trained models. > info > CAT APIs are only intended for human consumption using the Kibana console or command line. They are not intended for use by applications. For application consumption, use [the /_ml/trained_models endpoints](#endpoint-ml).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-trained-model.html | Elasticsearch API documentation}
     */
   async mlTrainedModels (this: That, params?: T.CatMlTrainedModelsRequest | TB.CatMlTrainedModelsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatMlTrainedModelsResponse>
@@ -339,11 +385,17 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/ml/trained_models'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.ml_trained_models',
+      pathParts: {
+        model_id: params.model_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 
   /**
-    * Gets configuration and usage information about transforms.
+    * Get transforms. Returns configuration and usage information about transforms. > info > CAT APIs are only intended for human consumption using the Kibana console or command line. They are not intended for use by applications. For application consumption, use [the /_transform endpoints](#endpoint-transform).
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/cat-transforms.html | Elasticsearch API documentation}
     */
   async transforms (this: That, params?: T.CatTransformsRequest | TB.CatTransformsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.CatTransformsResponse>
@@ -373,6 +425,12 @@ export default class Cat {
       method = 'GET'
       path = '/_cat/transforms'
     }
-    return await this.transport.request({ path, method, querystring, body }, options)
+    const meta: TransportRequestMetadata = {
+      name: 'cat.transforms',
+      pathParts: {
+        transform_id: params.transform_id
+      }
+    }
+    return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
 }

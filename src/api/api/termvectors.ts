@@ -28,6 +28,7 @@
 
 import {
   Transport,
+  TransportRequestMetadata,
   TransportRequestOptions,
   TransportRequestOptionsWithMeta,
   TransportRequestOptionsWithOutMeta,
@@ -38,7 +39,7 @@ import * as TB from '../typesWithBodyKey'
 interface That { transport: Transport }
 
 /**
-  * Returns information and statistics about terms in the fields of a particular document.
+  * Get term vector information. Returns information and statistics about terms in the fields of a particular document.
   * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-termvectors.html | Elasticsearch API documentation}
   */
 export default async function TermvectorsApi<TDocument = unknown> (this: That, params: T.TermvectorsRequest<TDocument> | TB.TermvectorsRequest<TDocument>, options?: TransportRequestOptionsWithOutMeta): Promise<T.TermvectorsResponse>
@@ -79,5 +80,12 @@ export default async function TermvectorsApi<TDocument = unknown> (this: That, p
     method = body != null ? 'POST' : 'GET'
     path = `/${encodeURIComponent(params.index.toString())}/_termvectors`
   }
-  return await this.transport.request({ path, method, querystring, body }, options)
+  const meta: TransportRequestMetadata = {
+    name: 'termvectors',
+    pathParts: {
+      index: params.index,
+      id: params.id
+    }
+  }
+  return await this.transport.request({ path, method, querystring, body, meta }, options)
 }

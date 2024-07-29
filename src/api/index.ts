@@ -63,7 +63,7 @@ import mtermvectorsApi from './api/mtermvectors'
 import openPointInTimeApi from './api/open_point_in_time'
 import pingApi from './api/ping'
 import putScriptApi from './api/put_script'
-import QueryRulesetApi from './api/query_ruleset'
+import QueryRulesApi from './api/query_rules'
 import rankEvalApi from './api/rank_eval'
 import reindexApi from './api/reindex'
 import renderSearchTemplateApi from './api/render_search_template'
@@ -122,7 +122,7 @@ export default interface API {
   openPointInTime: typeof openPointInTimeApi
   ping: typeof pingApi
   putScript: typeof putScriptApi
-  queryRuleset: QueryRulesetApi
+  queryRules: QueryRulesApi
   rankEval: typeof rankEvalApi
   reindex: typeof reindexApi
   renderSearchTemplate: typeof renderSearchTemplateApi
@@ -156,7 +156,7 @@ const kIngest = Symbol('Ingest')
 const kLicense = Symbol('License')
 const kLogstash = Symbol('Logstash')
 const kMl = Symbol('Ml')
-const kQueryRuleset = Symbol('QueryRuleset')
+const kQueryRules = Symbol('QueryRules')
 const kSearchApplication = Symbol('SearchApplication')
 const kSecurity = Symbol('Security')
 const kSql = Symbol('Sql')
@@ -178,7 +178,7 @@ export default class API {
   [kLicense]: symbol | null
   [kLogstash]: symbol | null
   [kMl]: symbol | null
-  [kQueryRuleset]: symbol | null
+  [kQueryRules]: symbol | null
   [kSearchApplication]: symbol | null
   [kSecurity]: symbol | null
   [kSql]: symbol | null
@@ -199,7 +199,7 @@ export default class API {
     this[kLicense] = null
     this[kLogstash] = null
     this[kMl] = null
-    this[kQueryRuleset] = null
+    this[kQueryRules] = null
     this[kSearchApplication] = null
     this[kSecurity] = null
     this[kSql] = null
@@ -286,8 +286,8 @@ Object.defineProperties(API.prototype, {
   ml: {
     get () { return this[kMl] === null ? (this[kMl] = new MlApi(this.transport)) : this[kMl] }
   },
-  queryRuleset: {
-    get () { return this[kQueryRuleset] === null ? (this[kQueryRuleset] = new QueryRulesetApi(this.transport)) : this[kQueryRuleset] }
+  queryRules: {
+    get () { return this[kQueryRules] === null ? (this[kQueryRules] = new QueryRulesApi(this.transport)) : this[kQueryRules] }
   },
   searchApplication: {
     get () { return this[kSearchApplication] === null ? (this[kSearchApplication] = new SearchApplicationApi(this.transport)) : this[kSearchApplication] }
