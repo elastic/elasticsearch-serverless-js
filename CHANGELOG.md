@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.4.0+20231031...v0.5.0+20231031) (2024-07-29)
+
+
+### Features
+
+* Latest serverless specification changes ([#77](https://github.com/elastic/elasticsearch-serverless-js/issues/77)) ([e47967a](https://github.com/elastic/elasticsearch-serverless-js/commit/e47967a27f61a4a5c3bd2c8d55c0f0af005fdcf5))
+* OpenTelemetry support ([#80](https://github.com/elastic/elasticsearch-serverless-js/issues/80)) ([8b9e7d3](https://github.com/elastic/elasticsearch-serverless-js/commit/8b9e7d325ec29f5090bf266ff486c5513f8ae39b))
+
 ## [0.4.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.3.0+20231031...v0.4.0+20231031) (2024-06-25)
 
 
