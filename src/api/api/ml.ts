@@ -89,7 +89,7 @@ export default class Ml {
   }
 
   /**
-    * Removes all scheduled events from a calendar, then deletes it.
+    * Delete a calendar. Removes all scheduled events from a calendar, then deletes it.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-calendar.html | Elasticsearch API documentation}
     */
   async deleteCalendar (this: That, params: T.MlDeleteCalendarRequest | TB.MlDeleteCalendarRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteCalendarResponse>
@@ -121,7 +121,7 @@ export default class Ml {
   }
 
   /**
-    * Deletes scheduled events from a calendar.
+    * Delete events from a calendar.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-calendar-event.html | Elasticsearch API documentation}
     */
   async deleteCalendarEvent (this: That, params: T.MlDeleteCalendarEventRequest | TB.MlDeleteCalendarEventRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteCalendarEventResponse>
@@ -154,7 +154,7 @@ export default class Ml {
   }
 
   /**
-    * Deletes anomaly detection jobs from a calendar.
+    * Delete anomaly jobs from a calendar.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-calendar-job.html | Elasticsearch API documentation}
     */
   async deleteCalendarJob (this: That, params: T.MlDeleteCalendarJobRequest | TB.MlDeleteCalendarJobRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteCalendarJobResponse>
@@ -187,7 +187,7 @@ export default class Ml {
   }
 
   /**
-    * Deletes a data frame analytics job.
+    * Delete a data frame analytics job.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/delete-dfanalytics.html | Elasticsearch API documentation}
     */
   async deleteDataFrameAnalytics (this: That, params: T.MlDeleteDataFrameAnalyticsRequest | TB.MlDeleteDataFrameAnalyticsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteDataFrameAnalyticsResponse>
@@ -219,7 +219,7 @@ export default class Ml {
   }
 
   /**
-    * Deletes an existing datafeed.
+    * Delete a datafeed.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-datafeed.html | Elasticsearch API documentation}
     */
   async deleteDatafeed (this: That, params: T.MlDeleteDatafeedRequest | TB.MlDeleteDatafeedRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteDatafeedResponse>
@@ -251,7 +251,7 @@ export default class Ml {
   }
 
   /**
-    * Deletes a filter. If an anomaly detection job references the filter, you cannot delete the filter. You must update or delete the job before you can delete the filter.
+    * Delete a filter. If an anomaly detection job references the filter, you cannot delete the filter. You must update or delete the job before you can delete the filter.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-delete-filter.html | Elasticsearch API documentation}
     */
   async deleteFilter (this: That, params: T.MlDeleteFilterRequest | TB.MlDeleteFilterRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteFilterResponse>
@@ -315,7 +315,7 @@ export default class Ml {
   }
 
   /**
-    * Deletes an existing trained inference model that is currently not referenced by an ingest pipeline.
+    * Delete an unreferenced trained model. The request deletes a trained inference model that is not referenced by an ingest pipeline.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/delete-trained-models.html | Elasticsearch API documentation}
     */
   async deleteTrainedModel (this: That, params: T.MlDeleteTrainedModelRequest | TB.MlDeleteTrainedModelRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteTrainedModelResponse>
@@ -347,7 +347,7 @@ export default class Ml {
   }
 
   /**
-    * Deletes a trained model alias. This API deletes an existing model alias that refers to a trained model. If the model alias is missing or refers to a model other than the one identified by the `model_id`, this API returns an error.
+    * Delete a trained model alias. This API deletes an existing model alias that refers to a trained model. If the model alias is missing or refers to a model other than the one identified by the `model_id`, this API returns an error.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/delete-trained-models-aliases.html | Elasticsearch API documentation}
     */
   async deleteTrainedModelAlias (this: That, params: T.MlDeleteTrainedModelAliasRequest | TB.MlDeleteTrainedModelAliasRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlDeleteTrainedModelAliasResponse>
@@ -380,7 +380,7 @@ export default class Ml {
   }
 
   /**
-    * Makes an estimation of the memory usage for an anomaly detection job model. It is based on analysis configuration details for the job and cardinality estimates for the fields it references.
+    * Estimate job model memory usage. Makes an estimation of the memory usage for an anomaly detection job model. It is based on analysis configuration details for the job and cardinality estimates for the fields it references.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/ml-apis.html | Elasticsearch API documentation}
     */
   async estimateModelMemory (this: That, params?: T.MlEstimateModelMemoryRequest | TB.MlEstimateModelMemoryRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlEstimateModelMemoryResponse>
@@ -422,7 +422,7 @@ export default class Ml {
   }
 
   /**
-    * Evaluates the data frame analytics for an annotated index. The API packages together commonly used evaluation metrics for various types of machine learning features. This has been designed for use on indexes created by data frame analytics. Evaluation requires both a ground truth field and an analytics result field to be present.
+    * Evaluate data frame analytics. The API packages together commonly used evaluation metrics for various types of machine learning features. This has been designed for use on indexes created by data frame analytics. Evaluation requires both a ground truth field and an analytics result field to be present.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/evaluate-dfanalytics.html | Elasticsearch API documentation}
     */
   async evaluateDataFrame (this: That, params: T.MlEvaluateDataFrameRequest | TB.MlEvaluateDataFrameRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.MlEvaluateDataFrameResponse>
