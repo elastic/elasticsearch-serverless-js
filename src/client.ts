@@ -164,7 +164,7 @@ export default class Client extends API {
       caFingerprint: null,
       agent: null,
       headers: {
-        'user-agent': `elasticsearch-js/${clientVersion} Node.js ${nodeVersion}; Transport ${transportVersion}; (${os.platform()} ${os.release()} ${os.arch()})`,
+        'user-agent': `elasticsearch-serverless-js/${clientVersion} Node.js ${nodeVersion}; Transport ${transportVersion}; (${os.platform()} ${os.release()} ${os.arch()})`,
         'elastic-api-version': `${apiVersion.slice(0, 4)}-${apiVersion.slice(4, 6)}-${apiVersion.slice(6, 8)}`
       },
       generateRequestId: null,
