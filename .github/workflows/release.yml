@@ -20,3 +20,24 @@ jobs:
           package-name: "@elastic/elasticsearch-serverless"
           bootstrap-sha: "e71b2ff05abf70702e9342378da571032e670c8c"
           token: ${{ secrets.TOKEN_RELEASE_PLEASE }}
+
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    needs: [release-please]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install -g npm
+      - run: npm install
+      - run: npm test
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
