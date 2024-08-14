@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.5.0+20231031...v0.5.1+20231031) (2024-08-14)
+
+
+### Bug Fixes
+
+* Update user-agent to clarify serverless ([#85](https://github.com/elastic/elasticsearch-serverless-js/issues/85)) ([6979b17](https://github.com/elastic/elasticsearch-serverless-js/commit/6979b17236466075cb7dc22453c606cc8d0f809d))
+
 ## [0.5.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.4.0+20231031...v0.5.0+20231031) (2024-07-29)
 
 
