@@ -32,6 +32,7 @@ import CatApi from './api/cat'
 import clearScrollApi from './api/clear_scroll'
 import closePointInTimeApi from './api/close_point_in_time'
 import ClusterApi from './api/cluster'
+import ConnectorApi from './api/connector'
 import countApi from './api/count'
 import createApi from './api/create'
 import deleteApi from './api/delete'
@@ -91,6 +92,7 @@ export default interface API {
   clearScroll: typeof clearScrollApi
   closePointInTime: typeof closePointInTimeApi
   cluster: ClusterApi
+  connector: ConnectorApi
   count: typeof countApi
   create: typeof createApi
   delete: typeof deleteApi
@@ -146,6 +148,7 @@ export default interface API {
 const kAsyncSearch = Symbol('AsyncSearch')
 const kCat = Symbol('Cat')
 const kCluster = Symbol('Cluster')
+const kConnector = Symbol('Connector')
 const kEnrich = Symbol('Enrich')
 const kEql = Symbol('Eql')
 const kEsql = Symbol('Esql')
@@ -168,6 +171,7 @@ export default class API {
   [kAsyncSearch]: symbol | null
   [kCat]: symbol | null
   [kCluster]: symbol | null
+  [kConnector]: symbol | null
   [kEnrich]: symbol | null
   [kEql]: symbol | null
   [kEsql]: symbol | null
@@ -189,6 +193,7 @@ export default class API {
     this[kAsyncSearch] = null
     this[kCat] = null
     this[kCluster] = null
+    this[kConnector] = null
     this[kEnrich] = null
     this[kEql] = null
     this[kEsql] = null
@@ -255,6 +260,9 @@ Object.defineProperties(API.prototype, {
   },
   cluster: {
     get () { return this[kCluster] === null ? (this[kCluster] = new ClusterApi(this.transport)) : this[kCluster] }
+  },
+  connector: {
+    get () { return this[kConnector] === null ? (this[kConnector] = new ConnectorApi(this.transport)) : this[kConnector] }
   },
   enrich: {
     get () { return this[kEnrich] === null ? (this[kEnrich] = new EnrichApi(this.transport)) : this[kEnrich] }
