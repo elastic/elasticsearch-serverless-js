@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.5.1+20231031...v0.6.0+20231031) (2024-08-28)
+
+
+### Features
+
+* Latest serverless specification changes ([#83](https://github.com/elastic/elasticsearch-serverless-js/issues/83)) ([a187581](https://github.com/elastic/elasticsearch-serverless-js/commit/a187581b485a9eb74a24ea26d75babb0344c5778))
+
 ## [0.5.1+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.5.0+20231031...v0.5.1+20231031) (2024-08-14)
 
 
