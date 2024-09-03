@@ -211,7 +211,7 @@ test('With generic document', async t => {
   }
 
   const Connection = connection.buildMockConnection({
-    onRequest (opts) {
+    onRequest (_opts) {
       return {
         statusCode: 200,
         body: {
