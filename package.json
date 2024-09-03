@@ -20,7 +20,8 @@
     "test:coverage-report": "npm run build && tap test/unit/{*,**/*}.test.ts --coverage && nyc report --reporter=text-lcov > coverage.lcov",
     "test:coverage-ui": "npm run build && tap test/unit/{*,**/*}.test.ts --coverage --coverage-report=html",
     "test:integration": "npm run build && node ./test/integration/index.js",
-    "test:unit": "npm run build && tap test/unit/{*,**/*}.test.ts"
+    "test:unit": "npm run build && tap test/unit/{*,**/*}.test.ts",
+    "test:unit-bun": "bun run build && bunx tap"
   },
   "keywords": [
     "elasticsearch",
@@ -87,6 +88,7 @@
     "jsx": false,
     "flow": false,
     "coverage": false,
-    "check-coverage": false
+    "check-coverage": false,
+    "files": "test/unit/{*,**/*}.test.ts"
   }
 }

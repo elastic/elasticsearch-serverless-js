@@ -66,4 +66,5 @@ lib
 yaml-rest-tests
 cloud.json
 junit-output
+bun.lockb
 rest-api-spec
