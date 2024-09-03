@@ -17,10 +17,11 @@
  * under the License.
  */
 
-import { ConnectionOptions as TlsConnectionOptions } from 'tls'
-import { URL } from 'url'
-import buffer from 'buffer'
-import os from 'os'
+import process from 'node:process'
+import { ConnectionOptions as TlsConnectionOptions } from 'node:tls'
+import { URL } from 'node:url'
+import buffer from 'node:buffer'
+import os from 'node:os'
 import {
   Transport,
   UndiciConnection,
@@ -44,17 +45,19 @@ import { RedactionOptions } from '@elastic/transport/lib/Transport'
 import BaseConnection, { prepareHeaders } from '@elastic/transport/lib/connection/BaseConnection'
 import Helpers from './helpers'
 import API from './api'
+import packageJson from '../package.json'
+import transportPackageJson from '@elastic/transport/package.json'
 
 const kChild = Symbol('elasticsearchjs-child')
 const kInitialOptions = Symbol('elasticsearchjs-initial-options')
-let clientVersion: string = require('../package.json').version // eslint-disable-line
+let clientVersion: string = packageJson.version
 /* istanbul ignore next */
 if (clientVersion.includes('-')) {
   // clean prerelease
   clientVersion = clientVersion.slice(0, clientVersion.indexOf('-')) + 'p'
 }
 const [clientVersionNoMeta, apiVersion] = clientVersion.split('+')
-let transportVersion: string = require('@elastic/transport/package.json').version // eslint-disable-line
+let transportVersion: string = transportPackageJson.version
 /* istanbul ignore next */
 if (transportVersion.includes('-')) {
   // clean prerelease
