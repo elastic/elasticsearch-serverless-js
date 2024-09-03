@@ -2,15 +2,17 @@
   "name": "@elastic/elasticsearch-serverless",
   "version": "0.6.0+20231031",
   "description": "The official Node.js Elastic client for the Elasticsearch Serverless service.",
-  "main": "index.js",
+  "main": "./index.js",
   "types": "index.d.ts",
-  "type": "commonjs",
+  "exports": {
+    "require": "./index.js"
+  },
   "scripts": {
     "lint": "ts-standard src",
     "lint:fix": "ts-standard --fix src",
     "license-checker": "license-checker --production --onlyAllow='MIT;Apache-2.0;Apache1.1;ISC;BSD-3-Clause;BSD-2-Clause;0BSD'",
     "prebuild": "npm run clean-build && npm run lint",
-    "build": "tsc",
+    "build": "tsc && rm lib/package.json && mv lib/src/* lib/ && rm -rf lib/src",
     "clean-build": "rimraf ./lib && mkdir lib",
     "prepublishOnly": "npm run build",
     "test": "npm run build && npm run lint && tap test/unit/{*,**/*}.test.ts",
