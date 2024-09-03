@@ -37,7 +37,7 @@ product="elastic/elasticsearch-serverless-js"
 output_folder=".buildkite/output"
 codegen_folder=".buildkite/output"
 OUTPUT_DIR="$repo/${output_folder}"
-NODE_VERSION=18
+NODE_VERSION=22
 WORKFLOW=${WORKFLOW-staging}
 mkdir -p "$OUTPUT_DIR"
 
