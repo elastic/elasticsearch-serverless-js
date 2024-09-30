@@ -206,46 +206,6 @@ export default class Indices {
   }
 
   /**
-    * Get data stream stats. Retrieves statistics for one or more data streams.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/data-streams.html | Elasticsearch API documentation}
-    */
-  async dataStreamsStats (this: That, params?: T.IndicesDataStreamsStatsRequest | TB.IndicesDataStreamsStatsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.IndicesDataStreamsStatsResponse>
-  async dataStreamsStats (this: That, params?: T.IndicesDataStreamsStatsRequest | TB.IndicesDataStreamsStatsRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.IndicesDataStreamsStatsResponse, unknown>>
-  async dataStreamsStats (this: That, params?: T.IndicesDataStreamsStatsRequest | TB.IndicesDataStreamsStatsRequest, options?: TransportRequestOptions): Promise<T.IndicesDataStreamsStatsResponse>
-  async dataStreamsStats (this: That, params?: T.IndicesDataStreamsStatsRequest | TB.IndicesDataStreamsStatsRequest, options?: TransportRequestOptions): Promise<any> {
-    const acceptedPath: string[] = ['name']
-    const querystring: Record<string, any> = {}
-    const body = undefined
-
-    params = params ?? {}
-    for (const key in params) {
-      if (acceptedPath.includes(key)) {
-        continue
-      } else if (key !== 'body') {
-        // @ts-expect-error
-        querystring[key] = params[key]
-      }
-    }
-
-    let method = ''
-    let path = ''
-    if (params.name != null) {
-      method = 'GET'
-      path = `/_data_stream/${encodeURIComponent(params.name.toString())}/_stats`
-    } else {
-      method = 'GET'
-      path = '/_data_stream/_stats'
-    }
-    const meta: TransportRequestMetadata = {
-      name: 'indices.data_streams_stats',
-      pathParts: {
-        name: params.name
-      }
-    }
-    return await this.transport.request({ path, method, querystring, body, meta }, options)
-  }
-
-  /**
     * Delete indices. Deletes one or more indices.
     * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-delete-index.html | Elasticsearch API documentation}
     */
