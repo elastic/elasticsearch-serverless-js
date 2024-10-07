@@ -3129,7 +3129,7 @@ client.indices.putIndexTemplate({ name })
 Component templates are merged in the order specified, meaning that the last component template specified has the highest precedence.
 ** *`template` (Optional, { aliases, mappings, settings, lifecycle })*: Template to be applied.
 It may optionally include an `aliases`, `mappings`, or `settings` configuration.
-** *`data_stream` (Optional, { hidden })*: If this object is included, the template is used to create data streams and their backing indices.
+** *`data_stream` (Optional, { hidden, allow_custom_routing })*: If this object is included, the template is used to create data streams and their backing indices.
 Supports an empty object.
 Data streams require a matching index template with a `data_stream` object.
 ** *`priority` (Optional, number)*: Priority to determine index template precedence when a new data stream or index is created.
@@ -3409,7 +3409,7 @@ If set to `false`, then indices or data streams matching the template must alway
 Component templates are merged in the order specified, meaning that the last component template specified has the highest precedence.
 ** *`template` (Optional, { aliases, mappings, settings, lifecycle })*: Template to be applied.
 It may optionally include an `aliases`, `mappings`, or `settings` configuration.
-** *`data_stream` (Optional, { hidden })*: If this object is included, the template is used to create data streams and their backing indices.
+** *`data_stream` (Optional, { hidden, allow_custom_routing })*: If this object is included, the template is used to create data streams and their backing indices.
 Supports an empty object.
 Data streams require a matching index template with a `data_stream` object.
 ** *`priority` (Optional, number)*: Priority to determine index template precedence when a new data stream or index is created.
