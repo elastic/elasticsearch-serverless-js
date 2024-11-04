@@ -2624,12 +2624,14 @@ export interface Retries {
 
 export interface RetrieverBase {
   filter?: QueryDslQueryContainer | QueryDslQueryContainer[]
+  min_score?: float
 }
 
 export interface RetrieverContainer {
   standard?: StandardRetriever
   knn?: KnnRetriever
   rrf?: RRFRetriever
+  text_similarity_reranker?: TextSimilarityReranker
 }
 
 export type Routing = string
@@ -2757,7 +2759,7 @@ export interface ShardStatistics {
 }
 
 export interface ShardsOperationResponseBase {
-  _shards: ShardStatistics
+  _shards?: ShardStatistics
 }
 
 export interface SlicedScroll {
@@ -2794,7 +2796,6 @@ export interface StandardRetriever extends RetrieverBase {
   search_after?: SortResults
   terminate_after?: integer
   sort?: Sort
-  min_score?: float
   collapse?: SearchFieldCollapse
 }
 
@@ -2829,6 +2830,14 @@ export type TaskId = string | integer
 export interface TextEmbedding {
   model_id: string
   model_text: string
+}
+
+export interface TextSimilarityReranker extends RetrieverBase {
+  retriever: RetrieverContainer
+  rank_window_size?: integer
+  inference_id?: string
+  inference_text?: string
+  field?: string
 }
 
 export type ThreadType = 'cpu' | 'wait' | 'block' | 'gpu' | 'mem'
@@ -4513,8 +4522,8 @@ export interface AnalysisEdgeNGramTokenFilter extends AnalysisTokenFilterBase {
 export interface AnalysisEdgeNGramTokenizer extends AnalysisTokenizerBase {
   type: 'edge_ngram'
   custom_token_chars?: string
-  max_gram: integer
-  min_gram: integer
+  max_gram?: integer
+  min_gram?: integer
   token_chars?: AnalysisTokenChar[]
 }
 
@@ -4856,8 +4865,8 @@ export interface AnalysisNGramTokenFilter extends AnalysisTokenFilterBase {
 export interface AnalysisNGramTokenizer extends AnalysisTokenizerBase {
   type: 'ngram'
   custom_token_chars?: string
-  max_gram: integer
-  min_gram: integer
+  max_gram?: integer
+  min_gram?: integer
   token_chars?: AnalysisTokenChar[]
 }
 
@@ -5330,21 +5339,27 @@ export interface MappingDateRangeProperty extends MappingRangePropertyBase {
   type: 'date_range'
 }
 
+export type MappingDenseVectorElementType = 'bit' | 'byte' | 'float'
+
 export interface MappingDenseVectorIndexOptions {
-  type: string
-  m?: integer
-  ef_construction?: integer
   confidence_interval?: float
+  ef_construction?: integer
+  m?: integer
+  type: MappingDenseVectorIndexOptionsType
 }
+
+export type MappingDenseVectorIndexOptionsType = 'flat' | 'hnsw' | 'int4_flat' | 'int4_hnsw' | 'int8_flat' | 'int8_hnsw'
 
 export interface MappingDenseVectorProperty extends MappingPropertyBase {
   type: 'dense_vector'
-  element_type?: string
   dims?: integer
-  similarity?: string
+  element_type?: MappingDenseVectorElementType
   index?: boolean
   index_options?: MappingDenseVectorIndexOptions
+  similarity?: MappingDenseVectorSimilarity
 }
+
+export type MappingDenseVectorSimilarity = 'cosine' | 'dot_product' | 'l2_norm' | 'max_inner_product'
 
 export interface MappingDocValuesPropertyBase extends MappingCorePropertyBase {
   doc_values?: boolean
@@ -8637,18 +8652,20 @@ export type CcrDeleteAutoFollowPatternResponse = AcknowledgedResponseBase
 export interface CcrFollowRequest extends RequestBase {
   index: IndexName
   wait_for_active_shards?: WaitForActiveShards
-  leader_index?: IndexName
+  data_stream_name?: string
+  leader_index: IndexName
   max_outstanding_read_requests?: long
-  max_outstanding_write_requests?: long
-  max_read_request_operation_count?: long
-  max_read_request_size?: string
+  max_outstanding_write_requests?: integer
+  max_read_request_operation_count?: integer
+  max_read_request_size?: ByteSize
   max_retry_delay?: Duration
-  max_write_buffer_count?: long
-  max_write_buffer_size?: string
-  max_write_request_operation_count?: long
-  max_write_request_size?: string
+  max_write_buffer_count?: integer
+  max_write_buffer_size?: ByteSize
+  max_write_request_operation_count?: integer
+  max_write_request_size?: ByteSize
   read_poll_timeout?: Duration
-  remote_cluster?: string
+  remote_cluster: string
+  settings?: IndicesIndexSettings
 }
 
 export interface CcrFollowResponse {
@@ -8666,16 +8683,16 @@ export interface CcrFollowInfoFollowerIndex {
 }
 
 export interface CcrFollowInfoFollowerIndexParameters {
-  max_outstanding_read_requests: integer
-  max_outstanding_write_requests: integer
-  max_read_request_operation_count: integer
-  max_read_request_size: string
-  max_retry_delay: Duration
-  max_write_buffer_count: integer
-  max_write_buffer_size: string
-  max_write_request_operation_count: integer
-  max_write_request_size: string
-  read_poll_timeout: Duration
+  max_outstanding_read_requests?: long
+  max_outstanding_write_requests?: integer
+  max_read_request_operation_count?: integer
+  max_read_request_size?: ByteSize
+  max_retry_delay?: Duration
+  max_write_buffer_count?: integer
+  max_write_buffer_size?: ByteSize
+  max_write_request_operation_count?: integer
+  max_write_request_size?: ByteSize
+  read_poll_timeout?: Duration
 }
 
 export type CcrFollowInfoFollowerIndexStatus = 'active' | 'paused'
@@ -9468,7 +9485,7 @@ export interface ClusterStatsOperatingSystemMemoryInfo {
 
 export interface ClusterStatsRequest extends RequestBase {
   node_id?: NodeIds
-  flat_settings?: boolean
+  include_remotes?: boolean
   timeout?: Duration
 }
 
@@ -9622,7 +9639,7 @@ export interface ConnectorFeatureEnabled {
 export interface ConnectorFilteringAdvancedSnippet {
   created_at?: DateTime
   updated_at?: DateTime
-  value: Record<string, any>
+  value: any
 }
 
 export interface ConnectorFilteringConfig {
@@ -10172,6 +10189,7 @@ export interface EqlSearchRequest extends RequestBase {
   fields?: QueryDslFieldAndFormat | Field | (QueryDslFieldAndFormat | Field)[]
   result_position?: EqlSearchResultPosition
   runtime_mappings?: MappingRuntimeFields
+  max_samples_per_key?: integer
 }
 
 export type EqlSearchResponse<TEvent = unknown> = EqlEqlSearchResponseBase<TEvent>
@@ -10604,15 +10622,15 @@ export interface IlmMigrateToDataTiersResponse {
 
 export interface IlmMoveToStepRequest extends RequestBase {
   index: IndexName
-  current_step?: IlmMoveToStepStepKey
-  next_step?: IlmMoveToStepStepKey
+  current_step: IlmMoveToStepStepKey
+  next_step: IlmMoveToStepStepKey
 }
 
 export type IlmMoveToStepResponse = AcknowledgedResponseBase
 
 export interface IlmMoveToStepStepKey {
-  action: string
-  name: string
+  action?: string
+  name?: string
   phase: string
 }
 
@@ -10707,6 +10725,7 @@ export interface IndicesDataStreamIndex {
 export interface IndicesDataStreamLifecycle {
   data_retention?: Duration
   downsampling?: IndicesDataStreamLifecycleDownsampling
+  enabled?: boolean
 }
 
 export interface IndicesDataStreamLifecycleDownsampling {
@@ -10726,9 +10745,7 @@ export interface IndicesDataStreamLifecycleRolloverConditions {
   max_primary_shard_docs?: long
 }
 
-export interface IndicesDataStreamLifecycleWithRollover {
-  data_retention?: Duration
-  downsampling?: IndicesDataStreamLifecycleDownsampling
+export interface IndicesDataStreamLifecycleWithRollover extends IndicesDataStreamLifecycle {
   rollover?: IndicesDataStreamLifecycleRolloverConditions
 }
 
@@ -10738,6 +10755,7 @@ export interface IndicesDataStreamTimestampField {
 
 export interface IndicesDataStreamVisibility {
   hidden?: boolean
+  allow_custom_routing?: boolean
 }
 
 export interface IndicesDownsampleConfig {
@@ -11585,7 +11603,7 @@ export type IndicesGetAliasResponse = Record<IndexName, IndicesGetAliasIndexAlia
 
 export interface IndicesGetDataLifecycleDataStreamWithLifecycle {
   name: DataStreamName
-  lifecycle?: IndicesDataStreamLifecycle
+  lifecycle?: IndicesDataStreamLifecycleWithRollover
 }
 
 export interface IndicesGetDataLifecycleRequest extends RequestBase {
@@ -11748,8 +11766,7 @@ export interface IndicesPutDataLifecycleRequest extends RequestBase {
   expand_wildcards?: ExpandWildcards
   master_timeout?: Duration
   timeout?: Duration
-  data_retention?: Duration
-  downsampling?: IndicesDataStreamLifecycleDownsampling
+  lifecycle?: IndicesDataStreamLifecycle
 }
 
 export type IndicesPutDataLifecycleResponse = AcknowledgedResponseBase
@@ -12477,7 +12494,7 @@ export type InferenceDenseVector = float[]
 export interface InferenceInferenceEndpoint {
   service: string
   service_settings: InferenceServiceSettings
-  task_settings: InferenceTaskSettings
+  task_settings?: InferenceTaskSettings
 }
 
 export interface InferenceInferenceEndpointInfo extends InferenceInferenceEndpoint {
@@ -12587,6 +12604,20 @@ export interface IngestCircleProcessor extends IngestProcessorBase {
   target_field?: Field
 }
 
+export interface IngestCommunityIDProcessor extends IngestProcessorBase {
+  source_ip?: Field
+  source_port?: Field
+  destination_ip?: Field
+  destination_port?: Field
+  iana_number?: Field
+  icmp_type?: Field
+  icmp_code?: Field
+  transport?: Field
+  target_field?: Field
+  seed?: integer
+  ignore_missing?: boolean
+}
+
 export interface IngestConvertProcessor extends IngestProcessorBase {
   field: Field
   ignore_missing?: boolean
@@ -12594,7 +12625,7 @@ export interface IngestConvertProcessor extends IngestProcessorBase {
   type: IngestConvertType
 }
 
-export type IngestConvertType = 'integer' | 'long' | 'float' | 'double' | 'string' | 'boolean' | 'auto'
+export type IngestConvertType = 'integer' | 'long' | 'double' | 'float' | 'boolean' | 'ip' | 'string' | 'auto'
 
 export interface IngestCsvProcessor extends IngestProcessorBase {
   empty_value?: any
@@ -12627,6 +12658,7 @@ export interface IngestDateProcessor extends IngestProcessorBase {
   locale?: string
   target_field?: Field
   timezone?: string
+  output_format?: string
 }
 
 export interface IngestDissectProcessor extends IngestProcessorBase {
@@ -12657,6 +12689,16 @@ export interface IngestEnrichProcessor extends IngestProcessorBase {
 
 export interface IngestFailProcessor extends IngestProcessorBase {
   message: string
+}
+
+export type IngestFingerprintDigest = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-512' | 'MurmurHash3'
+
+export interface IngestFingerprintProcessor extends IngestProcessorBase {
+  fields: Fields
+  target_field?: Field
+  salt?: string
+  method?: IngestFingerprintDigest
+  ignore_missing?: boolean
 }
 
 export interface IngestForeachProcessor extends IngestProcessorBase {
@@ -12692,6 +12734,7 @@ export interface IngestGeoIpProcessor extends IngestProcessorBase {
 }
 
 export interface IngestGrokProcessor extends IngestProcessorBase {
+  ecs_compatibility?: string
   field: Field
   ignore_missing?: boolean
   pattern_definitions?: Record<string, string>
@@ -12778,6 +12821,15 @@ export interface IngestMaxmind {
   account_id: Id
 }
 
+export interface IngestNetworkDirectionProcessor extends IngestProcessorBase {
+  source_ip?: Field
+  destination_ip?: Field
+  target_field?: Field
+  internal_networks?: string[]
+  internal_networks_field?: Field
+  ignore_missing?: boolean
+}
+
 export interface IngestPipeline {
   description?: string
   on_failure?: IngestProcessorContainer[]
@@ -12811,6 +12863,7 @@ export interface IngestProcessorContainer {
   attachment?: IngestAttachmentProcessor
   bytes?: IngestBytesProcessor
   circle?: IngestCircleProcessor
+  community_id?: IngestCommunityIDProcessor
   convert?: IngestConvertProcessor
   csv?: IngestCsvProcessor
   date?: IngestDateProcessor
@@ -12820,6 +12873,7 @@ export interface IngestProcessorContainer {
   drop?: IngestDropProcessor
   enrich?: IngestEnrichProcessor
   fail?: IngestFailProcessor
+  fingerprint?: IngestFingerprintProcessor
   foreach?: IngestForeachProcessor
   geo_grid?: IngestGeoGridProcessor
   geoip?: IngestGeoIpProcessor
@@ -12831,8 +12885,10 @@ export interface IngestProcessorContainer {
   json?: IngestJsonProcessor
   kv?: IngestKeyValueProcessor
   lowercase?: IngestLowercaseProcessor
+  network_direction?: IngestNetworkDirectionProcessor
   pipeline?: IngestPipelineProcessor
   redact?: IngestRedactProcessor
+  registered_domain?: IngestRegisteredDomainProcessor
   remove?: IngestRemoveProcessor
   rename?: IngestRenameProcessor
   reroute?: IngestRerouteProcessor
@@ -12841,6 +12897,7 @@ export interface IngestProcessorContainer {
   set_security_user?: IngestSetSecurityUserProcessor
   sort?: IngestSortProcessor
   split?: IngestSplitProcessor
+  terminate?: IngestTerminateProcessor
   trim?: IngestTrimProcessor
   uppercase?: IngestUppercaseProcessor
   urldecode?: IngestUrlDecodeProcessor
@@ -12856,6 +12913,13 @@ export interface IngestRedactProcessor extends IngestProcessorBase {
   suffix?: string
   ignore_missing?: boolean
   skip_if_unlicensed?: boolean
+  trace_redact?: boolean
+}
+
+export interface IngestRegisteredDomainProcessor extends IngestProcessorBase {
+  field: Field
+  target_field?: Field
+  ignore_missing?: boolean
 }
 
 export interface IngestRemoveProcessor extends IngestProcessorBase {
@@ -12911,6 +12975,9 @@ export interface IngestSplitProcessor extends IngestProcessorBase {
   preserve_trailing?: boolean
   separator: string
   target_field?: Field
+}
+
+export interface IngestTerminateProcessor extends IngestProcessorBase {
 }
 
 export interface IngestTrimProcessor extends IngestProcessorBase {
@@ -13067,6 +13134,7 @@ export type IngestSimulateDocumentSimulation = IngestSimulateDocumentSimulationK
 & { [property: string]: string | Id | IndexName | IngestSimulateIngest | Record<string, any> | SpecUtilsStringified<VersionNumber> | VersionType }
 
 export interface IngestSimulateIngest {
+  _redact?: IngestSimulateRedact
   timestamp: DateTime
   pipeline?: Name
 }
@@ -13079,6 +13147,10 @@ export interface IngestSimulatePipelineSimulation {
   description?: string
   ignored_error?: ErrorCause
   error?: ErrorCause
+}
+
+export interface IngestSimulateRedact {
+  _is_redacted: boolean
 }
 
 export interface IngestSimulateRequest extends RequestBase {
@@ -16508,7 +16580,7 @@ export interface NodesInfoNodeInfoSettingsIngest {
 }
 
 export interface NodesInfoNodeInfoSettingsNetwork {
-  host?: Host
+  host?: Host | Host[]
 }
 
 export interface NodesInfoNodeInfoSettingsNode {
@@ -16541,6 +16613,7 @@ export interface NodesInfoNodeInfoXpack {
   license?: NodesInfoNodeInfoXpackLicense
   security: NodesInfoNodeInfoXpackSecurity
   notification?: Record<string, any>
+  ml?: NodesInfoNodeInfoXpackMl
 }
 
 export interface NodesInfoNodeInfoXpackLicense {
@@ -16551,16 +16624,20 @@ export interface NodesInfoNodeInfoXpackLicenseType {
   type: string
 }
 
+export interface NodesInfoNodeInfoXpackMl {
+  use_auto_machine_memory_percent?: boolean
+}
+
 export interface NodesInfoNodeInfoXpackSecurity {
-  http: NodesInfoNodeInfoXpackSecuritySsl
+  http?: NodesInfoNodeInfoXpackSecuritySsl
   enabled: string
   transport?: NodesInfoNodeInfoXpackSecuritySsl
   authc?: NodesInfoNodeInfoXpackSecurityAuthc
 }
 
 export interface NodesInfoNodeInfoXpackSecurityAuthc {
-  realms: NodesInfoNodeInfoXpackSecurityAuthcRealms
-  token: NodesInfoNodeInfoXpackSecurityAuthcToken
+  realms?: NodesInfoNodeInfoXpackSecurityAuthcRealms
+  token?: NodesInfoNodeInfoXpackSecurityAuthcToken
 }
 
 export interface NodesInfoNodeInfoXpackSecurityAuthcRealms {
@@ -16789,6 +16866,21 @@ export interface QueryRulesPutRulesetResponse {
   result: Result
 }
 
+export interface QueryRulesTestQueryRulesetMatchedRule {
+  ruleset_id: Id
+  rule_id: Id
+}
+
+export interface QueryRulesTestRequest extends RequestBase {
+  ruleset_id: Id
+  match_criteria: Record<string, any>
+}
+
+export interface QueryRulesTestResponse {
+  total_matched_rules: integer
+  matched_rules: QueryRulesTestQueryRulesetMatchedRule[]
+}
+
 export interface RollupDateHistogramGrouping {
   delay?: Duration
   field: Field
@@ -16984,10 +17076,13 @@ export interface SearchApplicationEventDataStream {
   name: IndexName
 }
 
-export interface SearchApplicationSearchApplication {
+export interface SearchApplicationSearchApplication extends SearchApplicationSearchApplicationParameters {
   name: Name
-  indices: IndexName[]
   updated_at_millis: EpochTime<UnitMillis>
+}
+
+export interface SearchApplicationSearchApplicationParameters {
+  indices: IndexName[]
   analytics_collection_name?: Name
   template?: SearchApplicationSearchApplicationTemplate
 }
@@ -17028,20 +17123,13 @@ export interface SearchApplicationListRequest extends RequestBase {
 
 export interface SearchApplicationListResponse {
   count: long
-  results: SearchApplicationListSearchApplicationListItem[]
-}
-
-export interface SearchApplicationListSearchApplicationListItem {
-  name: Name
-  indices: IndexName[]
-  updated_at_millis: EpochTime<UnitMillis>
-  analytics_collection_name?: Name
+  results: SearchApplicationSearchApplication[]
 }
 
 export interface SearchApplicationPutRequest extends RequestBase {
   name: Name
   create?: boolean
-  search_application?: SearchApplicationSearchApplication
+  search_application?: SearchApplicationSearchApplicationParameters
 }
 
 export interface SearchApplicationPutResponse {
@@ -17197,7 +17285,7 @@ export type SecurityIndexPrivilege = 'all' | 'auto_configure' | 'create' | 'crea
 
 export interface SecurityIndicesPrivileges {
   field_security?: SecurityFieldSecurity
-  names: Indices
+  names: IndexName[]
   privileges: SecurityIndexPrivilege[]
   query?: SecurityIndicesPrivilegesQuery
 }
@@ -17216,7 +17304,7 @@ export interface SecurityRealmInfo {
 export interface SecurityRemoteIndicesPrivileges {
   clusters: Names
   field_security?: SecurityFieldSecurity
-  names: Indices
+  names: IndexName[]
   privileges: SecurityIndexPrivilege[]
   query?: SecurityIndicesPrivilegesQuery
 }
@@ -17291,7 +17379,7 @@ export interface SecurityUser {
 
 export interface SecurityUserIndicesPrivileges {
   field_security?: SecurityFieldSecurity[]
-  names: Indices
+  names: IndexName[]
   privileges: SecurityIndexPrivilege[]
   query?: SecurityIndicesPrivilegesQuery[]
   allow_restricted_indices: boolean
@@ -17601,7 +17689,7 @@ export interface SecurityGetBuiltinPrivilegesRequest extends RequestBase {
 
 export interface SecurityGetBuiltinPrivilegesResponse {
   cluster: string[]
-  index: Indices
+  index: IndexName[]
 }
 
 export interface SecurityGetPrivilegesRequest extends RequestBase {
@@ -18678,7 +18766,8 @@ export interface SnapshotRestoreRequest extends RequestBase {
 }
 
 export interface SnapshotRestoreResponse {
-  snapshot: SnapshotRestoreSnapshotRestore
+  accepted?: boolean
+  snapshot?: SnapshotRestoreSnapshotRestore
 }
 
 export interface SnapshotRestoreSnapshotRestore {
@@ -20039,13 +20128,10 @@ export interface XpackInfoFeatures {
   aggregate_metric: XpackInfoFeature
   analytics: XpackInfoFeature
   ccr: XpackInfoFeature
-  data_frame?: XpackInfoFeature
-  data_science?: XpackInfoFeature
   data_streams: XpackInfoFeature
   data_tiers: XpackInfoFeature
   enrich: XpackInfoFeature
   eql: XpackInfoFeature
-  flattened?: XpackInfoFeature
   frozen_indices: XpackInfoFeature
   graph: XpackInfoFeature
   ilm: XpackInfoFeature
@@ -20060,10 +20146,8 @@ export interface XpackInfoFeatures {
   spatial: XpackInfoFeature
   sql: XpackInfoFeature
   transform: XpackInfoFeature
-  vectors?: XpackInfoFeature
   voting_only: XpackInfoFeature
   watcher: XpackInfoFeature
-  archive: XpackInfoFeature
 }
 
 export interface XpackInfoMinimalLicenseInformation {
