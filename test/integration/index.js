@@ -70,6 +70,9 @@ const skips = {
   'inference/10_basic.yml': ['*'],
   // TODO: Fix: "Trained model deployment [test_model] is not allocated to any nodes"
   'machine_learning/20_trained_model_serverless.yml': ['*'],
+  // TODO: query_rules api not available yet
+  'query_rules/10_query_rules.yml': ['*'],
+  'query_rules/20_rulesets.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
