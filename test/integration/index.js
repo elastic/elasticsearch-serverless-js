@@ -58,11 +58,6 @@ const skips = {
   // TODO: expects {"outlier_detection.auc_roc.value":0.99995}, gets {"outlier_detection.auc_roc.value":0.5}
   // remove if/when https://github.com/elastic/elasticsearch-clients-tests/issues/37 is resolved
   'machine_learning/data_frame_evaluate.yml': ['*'],
-  // TODO: wait_for_active_shards and rollover with conditions are not supported on serverless
-  // see https://github.com/elastic/elasticsearch-clients-tests/issues/55
-  'indices/rollover.yml': ['*'],
-  // TODO: test runner needs to support ignoring 410 errors
-  'indices/data_lifecycle.yml': ['*'],
   // TODO: test runner needs to support ignoring 410 errors
   'enrich/10_basic.yml': ['*'],
   // TODO: parameter `enabled` is not allowed in source
@@ -71,18 +66,10 @@ const skips = {
   // TODO: expecting `ct_field` field mapping to be returned, but instead only finds `field`
   'indices/simulate_template.yml': ['*'],
   'indices/simulate_index_template.yml': ['*'],
-  // TODO: enable this test after connector API is included in client generation
-  'entsearch/20_connector.yml': ['*'],
-  'entsearch/30_sync_jobs_serverless.yml': ['*'],
-  'entsearch/30_sync_jobs_stack.yml': ['*'],
-  'entsearch/40_connector_secret.yml': ['*'],
-  'entsearch/50_connector_updates.yml': ['*'],
-  'entsearch/60_connector_updates_stack.yml': ['*'],
   // TODO: test currently times out
   'inference/10_basic.yml': ['*'],
-  // TODO: query_rules api not available yet
-  'query_rules/10_query_rules.yml': ['*'],
-  'query_rules/20_rulesets.yml': ['*'],
+  // TODO: Fix: "Trained model deployment [test_model] is not allocated to any nodes"
+  'machine_learning/20_trained_model_serverless.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
