@@ -191,34 +191,4 @@ export default class Enrich {
     }
     return await this.transport.request({ path, method, querystring, body, meta }, options)
   }
-
-  /**
-    * Get enrich stats. Returns enrich coordinator statistics and information about enrich policies that are currently executing.
-    * @see {@link https://www.elastic.co/guide/en/elasticsearch/reference/master/enrich-stats-api.html | Elasticsearch API documentation}
-    */
-  async stats (this: That, params?: T.EnrichStatsRequest | TB.EnrichStatsRequest, options?: TransportRequestOptionsWithOutMeta): Promise<T.EnrichStatsResponse>
-  async stats (this: That, params?: T.EnrichStatsRequest | TB.EnrichStatsRequest, options?: TransportRequestOptionsWithMeta): Promise<TransportResult<T.EnrichStatsResponse, unknown>>
-  async stats (this: That, params?: T.EnrichStatsRequest | TB.EnrichStatsRequest, options?: TransportRequestOptions): Promise<T.EnrichStatsResponse>
-  async stats (this: That, params?: T.EnrichStatsRequest | TB.EnrichStatsRequest, options?: TransportRequestOptions): Promise<any> {
-    const acceptedPath: string[] = []
-    const querystring: Record<string, any> = {}
-    const body = undefined
-
-    params = params ?? {}
-    for (const key in params) {
-      if (acceptedPath.includes(key)) {
-        continue
-      } else if (key !== 'body') {
-        // @ts-expect-error
-        querystring[key] = params[key]
-      }
-    }
-
-    const method = 'GET'
-    const path = '/_enrich/_stats'
-    const meta: TransportRequestMetadata = {
-      name: 'enrich.stats'
-    }
-    return await this.transport.request({ path, method, querystring, body, meta }, options)
-  }
 }
