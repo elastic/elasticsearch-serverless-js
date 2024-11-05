@@ -74,6 +74,8 @@ const skips = {
   'query_rules/10_query_rules.yml': ['*'],
   'query_rules/20_rulesets.yml': ['*'],
   'query_rules/30_test.yml': ['*'],
+  // TODO: security.putRole API not available
+  'security/50_roles_serverless.yml': ['*'],
 }
 
 const shouldSkip = (file, name) => {
