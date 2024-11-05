@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.8.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.7.0+20231031...v0.8.0+20231031) (2024-11-05)
+
+
+### Features
+
+* Apache Arrow support ([#98](https://github.com/elastic/elasticsearch-serverless-js/issues/98)) ([490538c](https://github.com/elastic/elasticsearch-serverless-js/commit/490538c5b491135617390493bd945819000aa49f))
+* Latest serverless specification changes ([#95](https://github.com/elastic/elasticsearch-serverless-js/issues/95)) ([8ed1f3e](https://github.com/elastic/elasticsearch-serverless-js/commit/8ed1f3ed367964c4ee7ccd1e0b1d993a0dd00190))
+* Respect disablePrototypePoisoningProtection option ([#99](https://github.com/elastic/elasticsearch-serverless-js/issues/99)) ([d28ebfb](https://github.com/elastic/elasticsearch-serverless-js/commit/d28ebfbb17f612120e5ddf11b24fdf6408887102))
+
 ## [0.7.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.6.0+20231031...v0.7.0+20231031) (2024-09-30)
 
 
