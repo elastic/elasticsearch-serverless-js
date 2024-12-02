@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.8.0+20231031...v0.9.0+20231031) (2024-12-02)
+
+
+### Features
+
+* Add _id to result of helpers.search ([#102](https://github.com/elastic/elasticsearch-serverless-js/issues/102)) ([1359f6e](https://github.com/elastic/elasticsearch-serverless-js/commit/1359f6e49e8dee5a06668d96ea4f15f66d0bb70a))
+* Latest serverless specification changes ([#104](https://github.com/elastic/elasticsearch-serverless-js/issues/104)) ([7501ca0](https://github.com/elastic/elasticsearch-serverless-js/commit/7501ca0e793c5c0ec30d4233401c898a0ebc4059))
+
 ## [0.8.0+20231031](https://github.com/elastic/elasticsearch-serverless-js/compare/v0.7.0+20231031...v0.8.0+20231031) (2024-11-05)
 
 
