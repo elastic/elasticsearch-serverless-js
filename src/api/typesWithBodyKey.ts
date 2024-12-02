@@ -518,6 +518,15 @@ export interface HealthReportDiskIndicatorDetails {
   nodes_with_unknown_disk_status: long
 }
 
+export interface HealthReportFileSettingsIndicator extends HealthReportBaseIndicator {
+  details?: HealthReportFileSettingsIndicatorDetails
+}
+
+export interface HealthReportFileSettingsIndicatorDetails {
+  failure_streak: long
+  most_recent_failure: string
+}
+
 export interface HealthReportIlmIndicator extends HealthReportBaseIndicator {
   details?: HealthReportIlmIndicatorDetails
 }
@@ -553,6 +562,7 @@ export interface HealthReportIndicators {
   ilm?: HealthReportIlmIndicator
   slm?: HealthReportSlmIndicator
   shards_capacity?: HealthReportShardsCapacityIndicator
+  file_settings?: HealthReportFileSettingsIndicator
 }
 
 export interface HealthReportMasterIsStableIndicator extends HealthReportBaseIndicator {
@@ -915,6 +925,7 @@ export interface OpenPointInTimeRequest extends RequestBase {
   preference?: string
   routing?: Routing
   expand_wildcards?: ExpandWildcards
+  allow_partial_search_results?: boolean
   /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
   body?: {
     index_filter?: QueryDslQueryContainer
@@ -1209,7 +1220,6 @@ export interface SearchRequest extends RequestBase {
   include_named_queries_score?: boolean
   lenient?: boolean
   max_concurrent_shard_requests?: long
-  min_compatible_shard_node?: VersionString
   preference?: string
   pre_filter_shard_size?: long
   request_cache?: boolean
@@ -2708,6 +2718,7 @@ export interface RetrieverContainer {
   knn?: KnnRetriever
   rrf?: RRFRetriever
   text_similarity_reranker?: TextSimilarityReranker
+  rule?: RuleRetriever
 }
 
 export type Routing = string
@@ -2715,6 +2726,13 @@ export type Routing = string
 export interface RrfRank {
   rank_constant?: long
   rank_window_size?: long
+}
+
+export interface RuleRetriever extends RetrieverBase {
+  ruleset_ids: Id[]
+  match_criteria: any
+  retriever: RetrieverContainer
+  rank_window_size?: integer
 }
 
 export type ScalarValue = long | double | string | boolean | null
@@ -6726,6 +6744,7 @@ export type AsyncSearchGetResponse<TDocument = unknown, TAggregations = Record<A
 
 export interface AsyncSearchStatusRequest extends RequestBase {
   id: Id
+  keep_alive?: Duration
 }
 
 export type AsyncSearchStatusResponse = AsyncSearchStatusStatusResponseBase
@@ -6754,12 +6773,10 @@ export interface AsyncSearchSubmitRequest extends RequestBase {
   ignore_unavailable?: boolean
   lenient?: boolean
   max_concurrent_shard_requests?: long
-  min_compatible_shard_node?: VersionString
   preference?: string
   pre_filter_shard_size?: long
   request_cache?: boolean
   routing?: Routing
-  scroll?: Duration
   search_type?: SearchType
   suggest_field?: Field
   suggest_mode?: SuggestMode
@@ -6818,6 +6835,8 @@ export interface AutoscalingAutoscalingPolicy {
 
 export interface AutoscalingDeleteAutoscalingPolicyRequest extends RequestBase {
   name: Name
+  master_timeout?: Duration
+  timeout?: Duration
 }
 
 export type AutoscalingDeleteAutoscalingPolicyResponse = AcknowledgedResponseBase
@@ -6850,6 +6869,7 @@ export interface AutoscalingGetAutoscalingCapacityAutoscalingResources {
 }
 
 export interface AutoscalingGetAutoscalingCapacityRequest extends RequestBase {
+  master_timeout?: Duration
 }
 
 export interface AutoscalingGetAutoscalingCapacityResponse {
@@ -6858,12 +6878,15 @@ export interface AutoscalingGetAutoscalingCapacityResponse {
 
 export interface AutoscalingGetAutoscalingPolicyRequest extends RequestBase {
   name: Name
+  master_timeout?: Duration
 }
 
 export type AutoscalingGetAutoscalingPolicyResponse = AutoscalingAutoscalingPolicy
 
 export interface AutoscalingPutAutoscalingPolicyRequest extends RequestBase {
   name: Name
+  master_timeout?: Duration
+  timeout?: Duration
   /** @deprecated The use of the 'body' key has been deprecated, use 'policy' instead. */
   body?: AutoscalingAutoscalingPolicy
 }
@@ -6959,6 +6982,7 @@ export interface CatAllocationAllocationRecord {
 export interface CatAllocationRequest extends CatCatRequestBase {
   node_id?: NodeIds
   bytes?: Bytes
+  local?: boolean
 }
 
 export type CatAllocationResponse = CatAllocationAllocationRecord[]
@@ -6975,6 +6999,7 @@ export interface CatComponentTemplatesComponentTemplate {
 
 export interface CatComponentTemplatesRequest extends CatCatRequestBase {
   name?: string
+  local?: boolean
 }
 
 export type CatComponentTemplatesResponse = CatComponentTemplatesComponentTemplate[]
@@ -7400,6 +7425,7 @@ export interface CatMasterMasterRecord {
 }
 
 export interface CatMasterRequest extends CatCatRequestBase {
+  local?: boolean
 }
 
 export type CatMasterResponse = CatMasterMasterRecord[]
@@ -7767,6 +7793,7 @@ export interface CatNodeattrsNodeAttributesRecord {
 }
 
 export interface CatNodeattrsRequest extends CatCatRequestBase {
+  local?: boolean
 }
 
 export type CatNodeattrsResponse = CatNodeattrsNodeAttributesRecord[]
@@ -8061,6 +8088,7 @@ export interface CatPendingTasksPendingTasksRecord {
 }
 
 export interface CatPendingTasksRequest extends CatCatRequestBase {
+  local?: boolean
 }
 
 export type CatPendingTasksResponse = CatPendingTasksPendingTasksRecord[]
@@ -8080,6 +8108,7 @@ export interface CatPluginsPluginsRecord {
 }
 
 export interface CatPluginsRequest extends CatCatRequestBase {
+  local?: boolean
 }
 
 export type CatPluginsResponse = CatPluginsPluginsRecord[]
@@ -8166,6 +8195,7 @@ export type CatRepositoriesResponse = CatRepositoriesRepositoriesRecord[]
 export interface CatSegmentsRequest extends CatCatRequestBase {
   index?: Indices
   bytes?: Bytes
+  local?: boolean
 }
 
 export type CatSegmentsResponse = CatSegmentsSegmentsRecord[]
@@ -8521,6 +8551,7 @@ export interface CatTasksTasksRecord {
 
 export interface CatTemplatesRequest extends CatCatRequestBase {
   name?: Name
+  local?: boolean
 }
 
 export type CatTemplatesResponse = CatTemplatesTemplatesRecord[]
@@ -8542,6 +8573,7 @@ export interface CatTemplatesTemplatesRecord {
 export interface CatThreadPoolRequest extends CatCatRequestBase {
   thread_pool_patterns?: Names
   time?: TimeUnit
+  local?: boolean
 }
 
 export type CatThreadPoolResponse = CatThreadPoolThreadPoolRecord[]
@@ -10460,7 +10492,6 @@ export interface FleetSearchRequest extends RequestBase {
   ignore_unavailable?: boolean
   lenient?: boolean
   max_concurrent_shard_requests?: long
-  min_compatible_shard_node?: VersionString
   preference?: string
   pre_filter_shard_size?: long
   request_cache?: boolean
@@ -11111,6 +11142,8 @@ export interface IndicesIndexTemplate {
   _meta?: Metadata
   allow_auto_create?: boolean
   data_stream?: IndicesIndexTemplateDataStreamConfiguration
+  deprecated?: boolean
+  ignore_missing_component_templates?: Names
 }
 
 export interface IndicesIndexTemplateDataStreamConfiguration {
@@ -11628,7 +11661,6 @@ export interface IndicesExistsAliasRequest extends RequestBase {
   allow_no_indices?: boolean
   expand_wildcards?: ExpandWildcards
   ignore_unavailable?: boolean
-  local?: boolean
 }
 
 export type IndicesExistsAliasResponse = boolean
@@ -11783,7 +11815,6 @@ export interface IndicesGetAliasRequest extends RequestBase {
   allow_no_indices?: boolean
   expand_wildcards?: ExpandWildcards
   ignore_unavailable?: boolean
-  local?: boolean
 }
 
 export type IndicesGetAliasResponse = Record<IndexName, IndicesGetAliasIndexAliases>
@@ -12291,7 +12322,6 @@ export interface IndicesSegmentsRequest extends RequestBase {
   allow_no_indices?: boolean
   expand_wildcards?: ExpandWildcards
   ignore_unavailable?: boolean
-  verbose?: boolean
 }
 
 export interface IndicesSegmentsResponse {
@@ -13007,6 +13037,16 @@ export interface IngestInferenceProcessor extends IngestProcessorBase {
   inference_config?: IngestInferenceConfig
 }
 
+export interface IngestIpLocationProcessor extends IngestProcessorBase {
+  database_file?: string
+  field: Field
+  first_only?: boolean
+  ignore_missing?: boolean
+  properties?: string[]
+  target_field?: Field
+  download_database_on_pipeline_creation?: boolean
+}
+
 export interface IngestJoinProcessor extends IngestProcessorBase {
   field: Field
   separator: string
@@ -13101,6 +13141,7 @@ export interface IngestProcessorContainer {
   fail?: IngestFailProcessor
   fingerprint?: IngestFingerprintProcessor
   foreach?: IngestForeachProcessor
+  ip_location?: IngestIpLocationProcessor
   geo_grid?: IngestGeoGridProcessor
   geoip?: IngestGeoIpProcessor
   grok?: IngestGrokProcessor
@@ -13569,6 +13610,7 @@ export interface MigrationDeprecationsRequest extends RequestBase {
 export interface MigrationDeprecationsResponse {
   cluster_settings: MigrationDeprecationsDeprecation[]
   index_settings: Record<string, MigrationDeprecationsDeprecation[]>
+  data_streams: Record<string, MigrationDeprecationsDeprecation[]>
   node_settings: MigrationDeprecationsDeprecation[]
   ml_settings: MigrationDeprecationsDeprecation[]
 }
@@ -17188,6 +17230,7 @@ export interface QueryRulesListRulesetsQueryRulesetListItem {
   ruleset_id: Id
   rule_total_count: integer
   rule_criteria_types_counts: Record<string, integer>
+  rule_type_counts: Record<string, integer>
 }
 
 export interface QueryRulesListRulesetsRequest extends RequestBase {
@@ -17601,21 +17644,31 @@ export interface SearchableSnapshotsStatsResponse {
   total: any
 }
 
+export interface SecurityAccess {
+  replication?: SecurityReplicationAccess[]
+  search?: SecuritySearchAccess[]
+}
+
 export interface SecurityApiKey {
-  creation?: long
-  expiration?: long
   id: Id
-  invalidated?: boolean
   name: Name
-  realm?: string
+  type: SecurityApiKeyType
+  creation: EpochTime<UnitMillis>
+  expiration?: EpochTime<UnitMillis>
+  invalidated: boolean
+  invalidation?: EpochTime<UnitMillis>
+  username: Username
+  realm: string
   realm_type?: string
-  username?: Username
-  profile_uid?: string
-  metadata?: Metadata
+  metadata: Metadata
   role_descriptors?: Record<string, SecurityRoleDescriptor>
   limited_by?: Record<string, SecurityRoleDescriptor>[]
+  access?: SecurityAccess
+  profile_uid?: string
   _sort?: SortResults
 }
+
+export type SecurityApiKeyType = 'rest' | 'cross_cluster'
 
 export interface SecurityApplicationGlobalUserPrivileges {
   manage: SecurityManageUserPrivileges
@@ -17636,7 +17689,7 @@ export interface SecurityClusterNode {
   name: Name
 }
 
-export type SecurityClusterPrivilege = 'all' | 'cancel_task' | 'create_snapshot' | 'cross_cluster_replication' | 'cross_cluster_search' | 'delegate_pki' | 'grant_api_key' | 'manage' | 'manage_api_key' | 'manage_autoscaling' | 'manage_behavioral_analytics' | 'manage_ccr' | 'manage_data_frame_transforms' | 'manage_data_stream_global_retention' | 'manage_enrich' | 'manage_ilm' | 'manage_index_templates' | 'manage_inference' | 'manage_ingest_pipelines' | 'manage_logstash_pipelines' | 'manage_ml' | 'manage_oidc' | 'manage_own_api_key' | 'manage_pipeline' | 'manage_rollup' | 'manage_saml' | 'manage_search_application' | 'manage_search_query_rules' | 'manage_search_synonyms' | 'manage_security' | 'manage_service_account' | 'manage_slm' | 'manage_token' | 'manage_transform' | 'manage_user_profile' | 'manage_watcher' | 'monitor' | 'monitor_data_frame_transforms' | 'monitor_data_stream_global_retention' | 'monitor_enrich' | 'monitor_inference' | 'monitor_ml' | 'monitor_rollup' | 'monitor_snapshot' | 'monitor_text_structure' | 'monitor_transform' | 'monitor_watcher' | 'none' | 'post_behavioral_analytics_event' | 'read_ccr' | 'read_fleet_secrets' | 'read_ilm' | 'read_pipeline' | 'read_security' | 'read_slm' | 'transport_client' | 'write_connector_secrets' | 'write_fleet_secrets' | string
+export type SecurityClusterPrivilege = 'all' | 'cancel_task' | 'create_snapshot' | 'cross_cluster_replication' | 'cross_cluster_search' | 'delegate_pki' | 'grant_api_key' | 'manage' | 'manage_api_key' | 'manage_autoscaling' | 'manage_behavioral_analytics' | 'manage_ccr' | 'manage_data_frame_transforms' | 'manage_data_stream_global_retention' | 'manage_enrich' | 'manage_ilm' | 'manage_index_templates' | 'manage_inference' | 'manage_ingest_pipelines' | 'manage_logstash_pipelines' | 'manage_ml' | 'manage_oidc' | 'manage_own_api_key' | 'manage_pipeline' | 'manage_rollup' | 'manage_saml' | 'manage_search_application' | 'manage_search_query_rules' | 'manage_search_synonyms' | 'manage_security' | 'manage_service_account' | 'manage_slm' | 'manage_token' | 'manage_transform' | 'manage_user_profile' | 'manage_watcher' | 'monitor' | 'monitor_data_frame_transforms' | 'monitor_data_stream_global_retention' | 'monitor_enrich' | 'monitor_inference' | 'monitor_ml' | 'monitor_rollup' | 'monitor_snapshot' | 'monitor_stats' | 'monitor_text_structure' | 'monitor_transform' | 'monitor_watcher' | 'none' | 'post_behavioral_analytics_event' | 'read_ccr' | 'read_fleet_secrets' | 'read_ilm' | 'read_pipeline' | 'read_security' | 'read_slm' | 'transport_client' | 'write_connector_secrets' | 'write_fleet_secrets' | string
 
 export interface SecurityCreatedStatus {
   created: boolean
@@ -17663,7 +17716,7 @@ export type SecurityIndexPrivilege = 'all' | 'auto_configure' | 'create' | 'crea
 
 export interface SecurityIndicesPrivileges {
   field_security?: SecurityFieldSecurity
-  names: IndexName[]
+  names: IndexName | IndexName[]
   privileges: SecurityIndexPrivilege[]
   query?: SecurityIndicesPrivilegesQuery
 }
@@ -17679,13 +17732,31 @@ export interface SecurityRealmInfo {
   type: string
 }
 
+export type SecurityRemoteClusterPrivilege = 'monitor_enrich' | 'monitor_stats'
+
+export interface SecurityRemoteClusterPrivileges {
+  clusters: Names
+  privileges: SecurityRemoteClusterPrivilege[]
+}
+
 export interface SecurityRemoteIndicesPrivileges {
   clusters: Names
   field_security?: SecurityFieldSecurity
-  names: IndexName[]
+  names: IndexName | IndexName[]
   privileges: SecurityIndexPrivilege[]
   query?: SecurityIndicesPrivilegesQuery
 }
+
+export interface SecurityReplicationAccess {
+  names: IndexName | IndexName[]
+  allow_restricted_indices?: boolean
+}
+
+export interface SecurityRestriction {
+  workflows: SecurityRestrictionWorkflow[]
+}
+
+export type SecurityRestrictionWorkflow = 'search_application_query' | string
 
 export interface SecurityRoleDescriptor {
   cluster?: SecurityClusterPrivilege[]
@@ -17695,6 +17766,7 @@ export interface SecurityRoleDescriptor {
   metadata?: Metadata
   run_as?: string[]
   description?: string
+  restriction?: SecurityRestriction
   transient_metadata?: Record<string, any>
 }
 
@@ -17706,6 +17778,7 @@ export interface SecurityRoleDescriptorRead {
   metadata?: Metadata
   run_as?: string[]
   description?: string
+  restriction?: SecurityRestriction
   transient_metadata?: Record<string, any>
 }
 
@@ -17743,6 +17816,12 @@ export interface SecurityRoleTemplateScript {
   options?: Record<string, string>
 }
 
+export interface SecuritySearchAccess {
+  field_security?: SecurityFieldSecurity
+  names: IndexName | IndexName[]
+  query?: SecurityIndicesPrivilegesQuery
+}
+
 export type SecurityTemplateFormat = 'string' | 'json'
 
 export interface SecurityUser {
@@ -17757,7 +17836,7 @@ export interface SecurityUser {
 
 export interface SecurityUserIndicesPrivileges {
   field_security?: SecurityFieldSecurity[]
-  names: IndexName[]
+  names: IndexName | IndexName[]
   privileges: SecurityIndexPrivilege[]
   query?: SecurityIndicesPrivilegesQuery[]
   allow_restricted_indices: boolean
@@ -17804,11 +17883,16 @@ export interface SecurityActivateUserProfileRequest extends RequestBase {
 
 export type SecurityActivateUserProfileResponse = SecurityUserProfileWithMetadata
 
+export interface SecurityAuthenticateAuthenticateApiKey {
+  id: Id
+  name?: Name
+}
+
 export interface SecurityAuthenticateRequest extends RequestBase {
 }
 
 export interface SecurityAuthenticateResponse {
-  api_key?: SecurityApiKey
+  api_key?: SecurityAuthenticateAuthenticateApiKey
   authentication_realm: SecurityRealmInfo
   email?: string | null
   full_name?: Name | null
@@ -17935,6 +18019,24 @@ export interface SecurityCreateApiKeyRequest extends RequestBase {
 export interface SecurityCreateApiKeyResponse {
   api_key: string
   expiration?: long
+  id: Id
+  name: Name
+  encoded: string
+}
+
+export interface SecurityCreateCrossClusterApiKeyRequest extends RequestBase {
+  /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
+  body?: {
+    access: SecurityAccess
+    expiration?: Duration
+    metadata?: Metadata
+    name: Name
+  }
+}
+
+export interface SecurityCreateCrossClusterApiKeyResponse {
+  api_key: string
+  expiration?: DurationValue<UnitMillis>
   id: Id
   name: Name
   encoded: string
@@ -18081,7 +18183,7 @@ export interface SecurityGetBuiltinPrivilegesRequest extends RequestBase {
 }
 
 export interface SecurityGetBuiltinPrivilegesResponse {
-  cluster: string[]
+  cluster: SecurityClusterPrivilege[]
   index: IndexName[]
 }
 
@@ -18099,7 +18201,7 @@ export interface SecurityGetRoleRequest extends RequestBase {
 export type SecurityGetRoleResponse = Record<string, SecurityGetRoleRole>
 
 export interface SecurityGetRoleRole {
-  cluster: string[]
+  cluster: SecurityClusterPrivilege[]
   indices: SecurityIndicesPrivileges[]
   metadata: Metadata
   run_as: string[]
@@ -18672,6 +18774,20 @@ export interface SecurityUpdateApiKeyRequest extends RequestBase {
 }
 
 export interface SecurityUpdateApiKeyResponse {
+  updated: boolean
+}
+
+export interface SecurityUpdateCrossClusterApiKeyRequest extends RequestBase {
+  id: Id
+  /** @deprecated The use of the 'body' key has been deprecated, move the nested keys to the top level object. */
+  body?: {
+    access: SecurityAccess
+    expiration?: Duration
+    metadata?: Metadata
+  }
+}
+
+export interface SecurityUpdateCrossClusterApiKeyResponse {
   updated: boolean
 }
 
@@ -19550,7 +19666,7 @@ export interface TasksListRequest extends RequestBase {
   actions?: string | string[]
   detailed?: boolean
   group_by?: TasksGroupBy
-  node_id?: string[]
+  nodes?: NodeIds
   parent_task_id?: Id
   master_timeout?: Duration
   timeout?: Duration
@@ -20280,6 +20396,7 @@ export interface WatcherReportingEmailAttachment {
 export type WatcherResponseContentType = 'json' | 'yaml' | 'text'
 
 export interface WatcherScheduleContainer {
+  timezone?: string
   cron?: WatcherCronExpression
   daily?: WatcherDailySchedule
   hourly?: WatcherHourlySchedule
@@ -20644,6 +20761,7 @@ export interface XpackInfoFeatures {
   graph: XpackInfoFeature
   ilm: XpackInfoFeature
   logstash: XpackInfoFeature
+  logsdb: XpackInfoFeature
   ml: XpackInfoFeature
   monitoring: XpackInfoFeature
   rollup: XpackInfoFeature
@@ -21138,7 +21256,6 @@ export interface SpecUtilsCommonCatQueryParameters {
   format?: string
   h?: Names
   help?: boolean
-  local?: boolean
   master_timeout?: Duration
   s?: Names
   v?: boolean
