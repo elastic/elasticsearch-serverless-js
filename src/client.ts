@@ -48,7 +48,7 @@ import API from './api'
 import packageJson from '../package.json'
 import transportPackageJson from '@elastic/transport/package.json'
 
-console.warn(`This package is deprecated and no longer being supported or maintained. All Elasticsearch serverless functionality has been merged back into @elastic/elasticsearch.`)
+console.warn('This package is deprecated and no longer being supported or maintained. All Elasticsearch serverless functionality has been merged back into @elastic/elasticsearch.')
 
 const kChild = Symbol('elasticsearchjs-child')
 const kInitialOptions = Symbol('elasticsearchjs-initial-options')
