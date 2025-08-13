@@ -40,7 +40,3 @@ spec:
         build_tags: false
       env:
         ELASTIC_PR_COMMENTS_ENABLED: 'true'
-      schedules:
-        main_semi_daily:
-          branch: 'main'
-          cronline: '0 */12 * * *'
